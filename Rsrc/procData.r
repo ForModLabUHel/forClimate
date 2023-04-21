@@ -91,7 +91,7 @@ for(i in 1:nLayers){
 }
 siteX <- data.frame(read_excel("data/Daesung_meta for PREBAS.xlsx", sheet = "KPL_meta"))
 
-if(FALSE){
+if(TRUE){
   ###extract weather (start)
     library (rgdal)
     library(sf)
@@ -200,8 +200,8 @@ if(FALSE){
                               multiNthin = multiNThin,
                               multiThin = as.matrix(thinnings2))
 
-  save(initPrebas,file = "initPrebas.rdata")
-  save(initPrebas2,file = "initPrebas2.rdata")
+  save(initPrebas,file = "data/initPrebas.rdata")
+  save(initPrebas2,file = "data/initPrebas2.rdata")
   save(dataX,file="data/dataX.rdata")
 }
 
