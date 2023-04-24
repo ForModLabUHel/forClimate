@@ -4,9 +4,9 @@ library(Rprebasso)
 library(ggplot2)
 
 ###load data and model inputs
-load("data/dataX.rdata")
-load("data/initPrebas.rdata")
-load("data/initPrebas2.rdata")
+load("../data/dataX.rdata")
+load("../data/initPrebas.rdata")
+load("../data/initPrebas2.rdata")
 
 ###Run PREBAS and process output (start)
 test <- multiPrebas(initPrebas)
