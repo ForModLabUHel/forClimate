@@ -4,9 +4,9 @@ library(Rprebasso)
 library(ggplot2)
 
 ###load data and model inputs
-load("../data/dataX.rdata")
-load("../data/initPrebas.rdata")
-load("../data/initPrebas2.rdata")
+load("data/dataX.rdata")
+load("data/initPrebas.rdata")
+load("data/initPrebas2.rdata")
 
 ###Run PREBAS and process output (start)
 test <- multiPrebas(initPrebas)
@@ -50,7 +50,7 @@ dataX[yearSim>0, Vsim2:= simX]
 
 
 ####produce plots by site and variables
-siteX <- 1   ####vary this between 1 and 35 to see other sites
+siteX <- 5 #(35,33,5,3)   ####vary this between 1 and 35 to see other sites
 varX=11
 plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l')
 dataX[siteID==siteX & compnt==2,points(yearSim,Hsim,col=1,pch=1)]
@@ -79,6 +79,7 @@ lines(test2$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l'
 dataX[siteID==siteX & compnt==2,points(yearSim,Gsim2,col=3,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Gsim2,col=3,pch=3)]
 varX=12
+plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Dsim,DW)],test$multiOut[siteX,,varX,1,1],na.rm=T))
 plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l')
 dataX[siteID==siteX & compnt==2,points(yearSim,Dsim,col=1,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Dsim,col=1,pch=3)]
@@ -87,6 +88,15 @@ dataX[siteID==siteX & compnt==1,points(yearSim,DW,col=2,pch=4)]
 lines(test2$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',col=3)
 dataX[siteID==siteX & compnt==2,points(yearSim,Dsim2,col=3,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Dsim2,col=3,pch=3)]
+varX=17
+plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Nsim,N)],test$multiOut[siteX,,varX,1,1],na.rm=T))
+dataX[siteID==siteX & compnt==2,points(yearSim,Nsim,col=1,pch=1)]
+dataX[siteID==siteX & compnt==1,points(yearSim,Nsim,col=1,pch=3)]
+dataX[siteID==siteX & compnt==2,points(yearSim,N,col=2,pch=20)]
+dataX[siteID==siteX & compnt==1,points(yearSim,N,col=2,pch=4)]
+lines(test2$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',col=3)
+dataX[siteID==siteX & compnt==2,points(yearSim,Nsim2,col=3,pch=1)]
+dataX[siteID==siteX & compnt==1,points(yearSim,Nsim2,col=3,pch=3)]
 
 #####scatter plots with all data
 ggplot(dataX[yearSim>0]) + 
