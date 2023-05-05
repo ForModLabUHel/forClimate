@@ -52,7 +52,7 @@ dataX[yearSim>0, Vsim2:= simX]
 ####produce plots by site and variables
 siteX <- 5 #(35,33,5,3)   ####vary this between 1 and 35 to see other sites
 varX=11
-plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l')
+plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Hsim,HW)],test$multiOut[siteX,,varX,1,1],na.rm=T))
 dataX[siteID==siteX & compnt==2,points(yearSim,Hsim,col=1,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Hsim,col=1,pch=3)]
 dataX[siteID==siteX & compnt==2,points(yearSim,HW,col=2,pch=20)]
@@ -61,7 +61,7 @@ lines(test2$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l'
 dataX[siteID==siteX & compnt==2,points(yearSim,Hsim2,col=3,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Hsim2,col=3,pch=3)]
 varX=30
-plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l')
+plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Vsim,V)],test$multiOut[siteX,,varX,1,1],na.rm=T))
 dataX[siteID==siteX & compnt==2,points(yearSim,Vsim,col=1,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Vsim,col=1,pch=3)]
 dataX[siteID==siteX & compnt==2,points(yearSim,V,col=2,pch=20)]
@@ -70,7 +70,7 @@ lines(test2$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l'
 dataX[siteID==siteX & compnt==2,points(yearSim,Vsim2,col=3,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Vsim2,col=3,pch=3)]
 varX=13
-plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l')
+plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Gsim,G)],test$multiOut[siteX,,varX,1,1],na.rm=T))
 dataX[siteID==siteX & compnt==2,points(yearSim,Gsim,col=1,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Gsim,col=1,pch=3)]
 dataX[siteID==siteX & compnt==2,points(yearSim,G,col=2,pch=20)]
@@ -80,7 +80,6 @@ dataX[siteID==siteX & compnt==2,points(yearSim,Gsim2,col=3,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Gsim2,col=3,pch=3)]
 varX=12
 plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Dsim,DW)],test$multiOut[siteX,,varX,1,1],na.rm=T))
-plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l')
 dataX[siteID==siteX & compnt==2,points(yearSim,Dsim,col=1,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Dsim,col=1,pch=3)]
 dataX[siteID==siteX & compnt==2,points(yearSim,DW,col=2,pch=20)]
@@ -124,3 +123,36 @@ ggplot(dataX[yearSim>0]) +
   geom_point(aes(x=Nsim2,y=N),col=3) +
   geom_abline(intercept = 0,slope = 1)
 
+
+obsVars <- rep(NA,54)
+varIDs <- c(11:13,17,30)
+obsVars[varIDs] <- c("HW","DW","G","N","V")
+
+nSites <- max(dataX$siteID)
+plots <-  list()[1:nSites]
+
+# siteX=3
+# varX=11
+for(siteX in 1:nSites){
+    for(varX in varIDs){
+      message(siteX)
+      message(varX)
+      plots[[siteX]][[varNames[varX]]] <- local({
+        siteX <- siteX
+        varX <- varX
+        
+        simX1 <- test$multiOut[siteX,,varX,1,1]
+        simX2 <- test2$multiOut[siteX,,varX,1,1]
+        simYears <- 1:length(simX2)
+        prebOut <- data.table(sim1=simX1,sim2=simX2,simYears=simYears)
+
+        print(
+          ggplot(dataX[siteID==siteX & yearSim>0]) +
+            geom_line(data=prebOut,mapping=aes(x=simYears,y=simX1),col=3) + 
+            geom_line(data=prebOut,mapping=aes(x=simYears,y=simX2),col=4) + 
+            geom_point(aes(x=yearSim, y=get(obsVars[varX])),col=2) + 
+            ylab(NULL) + xlab("simulation year") +
+            ggtitle(varNames[varX]))
+        })
+  }
+}
