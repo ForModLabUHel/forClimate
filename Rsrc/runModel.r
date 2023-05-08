@@ -248,6 +248,14 @@ ggp_all <- (pBA + pV) / (pDmean + pH + pN) +    # Create grid of plots with titl
   plot_annotation(title = "allData") & 
   theme(plot.title = element_text(hjust = 0.5))
 print(ggp_all)
+ggp_all <- (pBApine + pVpine) / (pDmeanPine + pHpine + pNpine) +    # Create grid of plots with title
+  plot_annotation(title = "pine") & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
+ggp_all <- (pBAspruce + pVspruce) / (pDmeanSpruce + pHspruce + pNspruce) +    # Create grid of plots with title
+  plot_annotation(title = "allData") & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
 for(siteX in 1:35){
   ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
   plot_annotation(title = paste0("site ",siteX)) & 
@@ -255,4 +263,3 @@ for(siteX in 1:35){
   print(ggp_all)
 }
 dev.off()
-initPrebas$multiInitVar[,1,1]
