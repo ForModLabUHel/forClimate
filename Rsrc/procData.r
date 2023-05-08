@@ -8,6 +8,8 @@ dataX <- data.table(read_excel("data/Daesung_stand for PREBAS.xlsx", sheet = "KP
 thinX <- data.table(read_excel("data/Daesung_thin for PREBAS.xlsx", sheet = "KPL_thin"))
 # siteX <- data.table(read_excel("Daten_JR_Projekt_ESA_22022023.xls", sheet = "Jahre und Koordinaten"))
 
+dataX$Dmean <- sqrt(dataX$G/dataX$N /pi *10000) *2
+
 nSites <- nrow(unique(dataX[,.(stand,plot)]))
 dataX[,startYear := min(year),by=.(stand,plot)]
 dataX[,yearSim := year-startYear]
@@ -84,7 +86,7 @@ for(i in 1:nLayers){
   initVars[,1,i] <- initData$speciesID
   initVars[,2,i] <- initData$age
   initVars[,3,i] <- initData$HW
-  initVars[,4,i] <- initData$DW
+  initVars[,4,i] <- initData$Dmean
   initVars[,5,i] <- initData$G
   ###Hc negative Lc = 15% of H
   # initVars[,6,i] <- pmin(dataX[speciesID==spID[i]]$AVG_KRONHO5/10,dataX[speciesID==spID[i]]$AVG_HOEHE5/10*0.85)
