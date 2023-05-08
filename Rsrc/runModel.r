@@ -1,3 +1,5 @@
+library("patchwork")
+library(ggpubr)
 library(data.table)
 library("readxl")
 library(Rprebasso)
@@ -46,6 +48,7 @@ simX <- test$multiOut[indX]
 dataX[yearSim>0, Vsim:= simX]
 simX <- test2$multiOut[indX]
 dataX[yearSim>0, Vsim2:= simX]
+dataX$speciesID <- as.factor(dataX$speciesID)
 ###Run PREBAS and process output (end)
 
 
@@ -98,27 +101,80 @@ dataX[siteID==siteX & compnt==2,points(yearSim,Nsim2,col=3,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Nsim2,col=3,pch=3)]
 
 #####scatter plots with all data
-ggplot(dataX[yearSim>0]) + 
+pV <- ggplot(dataX[yearSim>0]) + 
+  geom_point(aes(x=Vsim,y=V,shape=speciesID),col=2) + 
+  geom_point(aes(x=Vsim2,y=V,shape=speciesID),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pVpine <- ggplot(dataX[yearSim>0 & speciesID==1]) + 
+  geom_point(aes(x=Vsim,y=V),col=2) + 
+  geom_point(aes(x=Vsim2,y=V),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pVspruce <- ggplot(dataX[yearSim>0 & speciesID==2]) + 
   geom_point(aes(x=Vsim,y=V),col=2) + 
   geom_point(aes(x=Vsim2,y=V),col=3) +
   geom_abline(intercept = 0,slope = 1)
 
-ggplot(dataX[yearSim>0]) + 
+pBA <- ggplot(dataX[yearSim>0]) + 
+  geom_point(aes(x=Gsim,y=G,shape=speciesID),col=2) + 
+  geom_point(aes(x=Gsim2,y=G,shape=speciesID),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pBApine <- ggplot(dataX[yearSim>0 & speciesID==1]) + 
+  geom_point(aes(x=Gsim,y=G),col=2) + 
+  geom_point(aes(x=Gsim2,y=G),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pBAspruce <- ggplot(dataX[yearSim>0 & speciesID==2]) + 
   geom_point(aes(x=Gsim,y=G),col=2) + 
   geom_point(aes(x=Gsim2,y=G),col=3) +
   geom_abline(intercept = 0,slope = 1)
 
-ggplot(dataX[yearSim>0]) + 
+pDW <- ggplot(dataX[yearSim>0]) + 
+  geom_point(aes(x=Dsim,y=DW,shape=speciesID),col=2) + 
+  geom_point(aes(x=Dsim2,y=DW,shape=speciesID),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pDWpine <- ggplot(dataX[yearSim>0 & speciesID==1]) + 
+  geom_point(aes(x=Dsim,y=DW),col=2) + 
+  geom_point(aes(x=Dsim2,y=DW),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pDWspruce <- ggplot(dataX[yearSim>0 & speciesID==2]) + 
   geom_point(aes(x=Dsim,y=DW),col=2) + 
   geom_point(aes(x=Dsim2,y=DW),col=3) +
   geom_abline(intercept = 0,slope = 1)
 
-ggplot(dataX[yearSim>0]) + 
+pDmean <- ggplot(dataX[yearSim>0]) + 
+  geom_point(aes(x=Dsim,y=Dmean,shape=speciesID),col=2) + 
+  geom_point(aes(x=Dsim2,y=Dmean,shape=speciesID),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pDmeanPine <- ggplot(dataX[yearSim>0 & speciesID==1]) + 
+  geom_point(aes(x=Dsim,y=Dmean),col=2) + 
+  geom_point(aes(x=Dsim2,y=Dmean),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pDmeanSpruce <- ggplot(dataX[yearSim>0 & speciesID==2]) + 
+  geom_point(aes(x=Dsim,y=Dmean),col=2) + 
+  geom_point(aes(x=Dsim2,y=Dmean),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+
+pH <- ggplot(dataX[yearSim>0]) + 
+  geom_point(aes(x=Hsim,y=HW,shape=speciesID),col=2) + 
+  geom_point(aes(x=Hsim2,y=HW,shape=speciesID),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pHpine <- ggplot(dataX[yearSim>0 & speciesID==1]) + 
+  geom_point(aes(x=Hsim,y=HW),col=2) + 
+  geom_point(aes(x=Hsim2,y=HW),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pHspruce <- ggplot(dataX[yearSim>0 & speciesID==2]) + 
   geom_point(aes(x=Hsim,y=HW),col=2) + 
   geom_point(aes(x=Hsim2,y=HW),col=3) +
   geom_abline(intercept = 0,slope = 1)
 
-ggplot(dataX[yearSim>0]) + 
+pN <- ggplot(dataX[yearSim>0]) + 
+  geom_point(aes(x=Nsim,y=N,shape=speciesID),col=2) + 
+  geom_point(aes(x=Nsim2,y=N,shape=speciesID),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pNpine <- ggplot(dataX[yearSim>0 & speciesID==1]) + 
+  geom_point(aes(x=Nsim,y=N),col=2) + 
+  geom_point(aes(x=Nsim2,y=N),col=3) +
+  geom_abline(intercept = 0,slope = 1)
+pNspruce <- ggplot(dataX[yearSim>0 & speciesID==2]) + 
   geom_point(aes(x=Nsim,y=N),col=2) + 
   geom_point(aes(x=Nsim2,y=N),col=3) +
   geom_abline(intercept = 0,slope = 1)
@@ -126,7 +182,7 @@ ggplot(dataX[yearSim>0]) +
 
 obsVars <- rep(NA,54)
 varIDs <- c(11:13,17,30)
-obsVars[varIDs] <- c("HW","DW","G","N","V")
+obsVars[varIDs] <- c("HW","Dmean","G","N","V")
 
 nSites <- max(dataX$siteID)
 plots <-  list()[1:nSites]
@@ -147,7 +203,7 @@ for(siteX in 1:nSites){
         prebOut <- data.table(sim1=simX1,sim2=simX2,simYears=simYears)
 
         print(
-          ggplot(dataX[siteID==siteX & yearSim>0]) +
+          ggplot(dataX[siteID==siteX]) +
             geom_line(data=prebOut,mapping=aes(x=simYears,y=simX1),col=3) + 
             geom_line(data=prebOut,mapping=aes(x=simYears,y=simX2),col=4) + 
             geom_point(aes(x=yearSim, y=get(obsVars[varX])),col=2) + 
@@ -157,5 +213,46 @@ for(siteX in 1:nSites){
   }
 }
 
+save(plots,file="data/prebasPlots.rdata")
+
+pdf(file="selectedSites.pdf")
+siteX=5
+ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
+  plot_annotation(title = paste0("site ",siteX)) & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
+
+siteX=3
+ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
+  plot_annotation(title = paste0("site ",siteX)) & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
+
+siteX=35
+ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
+  plot_annotation(title = paste0("site ",siteX)) & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
+siteX=33
+ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
+  plot_annotation(title = paste0("site ",siteX)) & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
+dev.off()
 
 
+
+
+pdf(file="allSites.pdf")
+ggp_all <- (pBA + pV) / (pDmean + pH + pN) +    # Create grid of plots with title
+  plot_annotation(title = "allData") & 
+  theme(plot.title = element_text(hjust = 0.5))
+print(ggp_all)
+for(siteX in 1:35){
+  ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
+  plot_annotation(title = paste0("site ",siteX)) & 
+  theme(plot.title = element_text(hjust = 0.5))
+  print(ggp_all)
+}
+dev.off()
+initPrebas$multiInitVar[,1,1]
