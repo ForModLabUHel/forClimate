@@ -253,7 +253,7 @@ ggp_all <- (pBApine + pVpine) / (pDmeanPine + pHpine + pNpine) +    # Create gri
   theme(plot.title = element_text(hjust = 0.5))
 print(ggp_all)
 ggp_all <- (pBAspruce + pVspruce) / (pDmeanSpruce + pHspruce + pNspruce) +    # Create grid of plots with title
-  plot_annotation(title = "allData") & 
+  plot_annotation(title = "spruce") & 
   theme(plot.title = element_text(hjust = 0.5))
 print(ggp_all)
 for(siteX in 1:35){
