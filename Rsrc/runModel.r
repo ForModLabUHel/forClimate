@@ -213,9 +213,9 @@ for(siteX in 1:nSites){
   }
 }
 
-save(plots,file="data/prebasPlots.rdata")
+save(plots,file="plots/prebasPlots.rdata")
 
-pdf(file="selectedSites.pdf")
+pdf(file="plots/selectedSites.pdf")
 siteX=5
 ggp_all <- (plots[[siteX]]$BA + plots[[siteX]]$V) / (plots[[siteX]]$D + plots[[siteX]]$H + plots[[siteX]]$N) +    # Create grid of plots with title
   plot_annotation(title = paste0("site ",siteX)) & 
@@ -243,7 +243,7 @@ dev.off()
 
 
 
-pdf(file="allSites.pdf")
+pdf(file="plots/allSites.pdf")
 ggp_all <- (pBA + pV) / (pDmean + pH + pN) +    # Create grid of plots with title
   plot_annotation(title = "allData") & 
   theme(plot.title = element_text(hjust = 0.5))
