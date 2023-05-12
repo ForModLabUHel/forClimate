@@ -201,9 +201,49 @@ if(TRUE){
                               ClCut = 0,
                               multiNthin = multiNThin,
                               multiThin = as.matrix(thinnings2))
+  
+  ###new ParametersRun PREBAS and process output (start)
+  #read new parameters
+  load("data/cal_pPRELES.rdata")
+  load("data/cal_pCROBAS.rdata")
+  # pPRELESnew <- pPREL
+  # pTab <- read.csv("data/parCal_PREL.csv")
+  # pPRELESnew[pTab$parSel_PREL] <- pTab$parCal
+  # pCROBASnew <- pCROB
+  # pTab <- read.csv("data/parCal_CROB.csv")
+  # pCROBASnew[pTab$parSel_CROB,1] <- pTab$parCal_P
+  # pCROBASnew[pTab$parSel_CROB,2] <- pTab$parCal_S
+  # pCROBASnew[pTab$parSel_CROB,3] <- pTab$parCal_B
+  # 
 
+  initPrebas_newCal <- InitMultiSite(nYearsMS=rep(60,nSites),
+                              pPRELES = cal_pPRELES,
+                              pCROBAS = cal_pCROBAS,
+                              siteInfo = siteInfo,
+                              multiInitVar = initVars,
+                              PAR = PAR, TAir = TAir,
+                              VPD = VPD, CO2 = CO2, 
+                              Precip = Precip,defaultThin = 0,
+                              ClCut = 0,
+                              multiNthin = multiNThin,
+                              multiThin = as.matrix(thinnings))
+  
+  initPrebas2_newCal <- InitMultiSite(nYearsMS=rep(60,nSites),
+                               pPRELES = cal_pPRELES,
+                               pCROBAS = cal_pCROBAS,
+                               siteInfo = siteInfo,
+                               multiInitVar = initVars,
+                               PAR = PAR, TAir = TAir,
+                               VPD = VPD, CO2 = CO2, 
+                               Precip = Precip,defaultThin = 0,
+                               ClCut = 0,
+                               multiNthin = multiNThin,
+                               multiThin = as.matrix(thinnings2))
   save(initPrebas,file = "data/initPrebas.rdata")
   save(initPrebas2,file = "data/initPrebas2.rdata")
+  save(initPrebas_newCal,file = "data/initPrebas_newCal.rdata")
+  save(initPrebas2_newCal,file = "data/initPrebas2_newCal.rdata")
+  
   save(dataX,file="data/dataX.rdata")
 }
 
