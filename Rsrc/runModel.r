@@ -49,7 +49,7 @@ testNewPar2 <- multiPrebas(initPrebas2_newCal)
 testNewPar2$multiOut[,,c(13,17,30),,2] <- testNewPar2$multiOut[,,c(13,17,30),,1] + 
   testNewPar2$multiOut[,,c(13,17,30),,2]
 
-
+####processng the outputs (start)
 varX=11
 indX <- as.matrix(dataX[yearSim>0,.(siteID,yearSim,variable=varX,layer=1,statusInd)])
 simX <- test$multiOut[indX]
@@ -101,6 +101,7 @@ simXnewpar <- testNewPar2$multiOut[indX]
 dataX[yearSim>0, Vsim2:= simX]
 dataX[yearSim>0, Vsim2_newCal:= simXnewpar]
 dataX$speciesID <- as.factor(dataX$speciesID)
+####processng the outputs (start)
 ###Run PREBAS and process output (end)
 
 
