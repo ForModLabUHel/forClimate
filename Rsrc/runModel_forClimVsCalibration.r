@@ -15,6 +15,28 @@ load("data/init_set3.rdata")
 load("data/cal_pPRELES.rdata")
 load("data/cal_pCROBAS.rdata")
 
+for(i in 1:init_set2$nSites){
+  siteTypeX <- init_set2$siteInfo[i,3]
+  init_set2$multiOut[i,,3,,1] <- siteTypeX
+  spX <- init_set2$multiInitVar[i,1,1]
+  init_set2$multiOut[i,,3,1,2] <- init_set2$pCROBAS[20+siteTypeX,spX]
+}
+        
+for(i in 1:init_set3$nSites){
+  siteTypeX <- init_set3$siteInfo[i,3]
+  init_set3$multiOut[i,,3,,1] <- siteTypeX
+  spX <- init_set3$multiInitVar[i,1,1]
+  if(spX>0)init_set3$multiOut[i,,3,1,2] <- init_set3$pCROBAS[20+siteTypeX,spX]
+  spX <- init_set3$multiInitVar[i,1,2]
+  if(spX>0)init_set3$multiOut[i,,3,2,2] <- init_set3$pCROBAS[20+siteTypeX,spX]
+  spX <- init_set3$multiInitVar[i,1,3]
+  if(spX>0)init_set3$multiOut[i,,3,3,2] <- init_set3$pCROBAS[20+siteTypeX,spX]
+}
+
+init_set2$LUEtrees <- init_set3$LUEtrees <- initPrebas$LUEtrees
+init_set2$LUEgv <- init_set3$LUEgv <- initPrebas$LUEgv
+init_set2$alpharNcalc <- init_set3$alpharNcalc <- initPrebas$alpharNcalc
+
 ####set mortality model for managed and unmaneged forests
 thinnedSites <- which(initPrebas$nThinning>0)
 unmanFor <- which(initPrebas$nThinning==0)
@@ -51,6 +73,10 @@ testNewPar2$multiOut[,,c(13,17,30),,2] <- testNewPar2$multiOut[,,c(13,17,30),,1]
 
 # initPrebas and calibrated parameters - testCal in the legend
 initPrebasCheck<-initPrebas
+initPrebasCheck$multiInitVar[5,,] <- init_set3$multiInitVar[181,,1]
+initPrebasCheck$multiOut[5,1,,,] <- init_set3$multiOut[181,1,,1,]
+initPrebasCheck$multiInitVar[35,,] <- init_set2$multiInitVar[162,,1]
+initPrebasCheck$multiOut[35,1,,,] <- init_set2$multiOut[162,1,,1,]
 initPrebasCheck$pCROBAS<-cal_pCROBAS
 initPrebasCheck$pPRELES<-cal_pPRELES
 testNewParCheck <- multiPrebas(initPrebasCheck)
@@ -177,6 +203,16 @@ siteX <- 35 #(35,33,5,3)   ####vary this between 1 and 35 to see other sites ###
 siteYp <- 162
 siteYs <- 181
 varX=11
+
+# varX=11
+# plot(testNewParCheck$multiOut[35,,varX,1,1])
+# lines(modOut2Cal$multiOut[siteYp,,varX,1,1])
+# plot(testNewParCheck$multiOut[5,,varX,1,1])
+# lines(modOut3Cal$multiOut[siteYs,,varX,1,1])
+# 
+# varX=25
+# cbind(modOut3Cal$multiOut[siteYs,1:15,varX,1,1],testNewParCheck$multiOut[5,1:15,varX,1,1])
+# 
 par(mar=c(10, 4, 4, 4), xpd=TRUE)
 plot(test$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',ylim=range(dataX[siteID==siteX & compnt==2,.(Hsim,HW)],test$multiOut[siteX,,varX,1,1],modOut2$multiOut[siteYp,1:44,varX,1,1],na.rm=T))
 dataX[siteID==siteX & compnt==2,points(yearSim,Hsim,col=1,pch=1)]
@@ -189,26 +225,31 @@ dataX[siteID==siteX & compnt==1,points(yearSim,HW,col=2,pch=4)]
 lines(testNewParCheck$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year",type='l',col=4)
 dataX[siteID==siteX & compnt==2,points(yearSim,Hsim_newCalCheck,col=4,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Hsim_newCalCheck,col=4,pch=3)]
+
 ### calset pine
-lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
-lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
-lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
-lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
-points(Hdata_s2$outData[which(Hdata_s2$outData[,1]==siteYp),2],Hdata_s2$obs[which(Hdata_s2$outData[,1]==siteYp)],col=6,pch=20)
+if(siteX==35){
+  lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
+  lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
+  lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
+  lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
+  points(Hdata_s2$outData[which(Hdata_s2$outData[,1]==siteYp),2],Hdata_s2$obs[which(Hdata_s2$outData[,1]==siteYp)],col=6,pch=20)
+}
 ### calset spruce
-lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
-lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
-lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
-lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
-points(Hdata_s3$outData[which(Hdata_s3$outData[,1]==siteYs),2],Hdata_s3$obs[which(Hdata_s3$outData[,1]==siteYs)],col=3,pch=20)
+if(siteX==5){
+  lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
+  lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
+  lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
+  lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
+  points(Hdata_s3$outData[which(Hdata_s3$outData[,1]==siteYs),2],Hdata_s3$obs[which(Hdata_s3$outData[,1]==siteYs)],col=3,pch=20)
+}
 ###legend
 legend('bottom', legend = c('test', 'testCal', 'modOut', 'modOutinitD', 'modOutCal', 'modOutCalD'),title = paste0('site',siteX),
        lwd = 1, col = c(1,4,3,7,6,8), cex=1, ncol = 3, inset = c(0, -0.275), bty = "n", xpd = TRUE) 
@@ -228,25 +269,29 @@ lines(testNewParCheck$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year
 dataX[siteID==siteX & compnt==2,points(yearSim,Vsim_newCalCheck,col=4,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Vsim_newCalCheck,col=4,pch=3)]
 ### calset pine
-lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
-lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
-lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
-lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
-points(Vdata_s2$outData[which(Vdata_s2$outData[,1]==siteYp),2],Vdata_s2$obs[which(Vdata_s2$outData[,1]==siteYp)],col=3,pch=20)
+if(siteX==35){
+  lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
+  lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
+  lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
+  lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
+  points(Vdata_s2$outData[which(Vdata_s2$outData[,1]==siteYp),2],Vdata_s2$obs[which(Vdata_s2$outData[,1]==siteYp)],col=3,pch=20)
+}
 ### calset spruce
-lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
-lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
-lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
-lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
-points(Vdata_s3$outData[which(Vdata_s3$outData[,1]==siteYs),2],Vdata_s3$obs[which(Vdata_s3$outData[,1]==siteYs)],col=3,pch=20)
+if(siteX==5){
+  lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
+  lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
+  lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
+  lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
+  points(Vdata_s3$outData[which(Vdata_s3$outData[,1]==siteYs),2],Vdata_s3$obs[which(Vdata_s3$outData[,1]==siteYs)],col=3,pch=20)
+}
 ###legend
 legend('bottom', legend = c('test', 'testCal', 'modOut', 'modOutinitD', 'modOutCal', 'modOutCalD'),title = paste0('site',siteX),
        lwd = 1, col = c(1,4,3,7,6,8), cex=1, ncol = 3, inset = c(0, -0.275), bty = "n", xpd = TRUE) 
@@ -266,25 +311,29 @@ lines(testNewParCheck$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year
 dataX[siteID==siteX & compnt==2,points(yearSim,Gsim_newCalCheck,col=4,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Gsim_newCalCheck,col=4,pch=3)]
 ### calset pine
-lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
-lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
-lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
-lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
-points(Bdata_s2$outData[which(Bdata_s2$outData[,1]==siteYp),2],Bdata_s2$obs[which(Bdata_s2$outData[,1]==siteYp)],col=3,pch=20)
+if(siteX==35){
+  lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
+  lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
+  lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
+  lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
+  points(Bdata_s2$outData[which(Bdata_s2$outData[,1]==siteYp),2],Bdata_s2$obs[which(Bdata_s2$outData[,1]==siteYp)],col=3,pch=20)
+}
 ### calset spruce
-lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
-lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
-lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
-lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
-points(Bdata_s3$outData[which(Bdata_s3$outData[,1]==siteYs),2],Bdata_s3$obs[which(Bdata_s3$outData[,1]==siteYs)],col=3,pch=20)
+if(siteX==5){
+  lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
+  lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
+  lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
+  lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
+  points(Bdata_s3$outData[which(Bdata_s3$outData[,1]==siteYs),2],Bdata_s3$obs[which(Bdata_s3$outData[,1]==siteYs)],col=3,pch=20)
+}
 ###legend
 legend('bottom', legend = c('test', 'testCal', 'modOut', 'modOutinitD', 'modOutCal', 'modOutCalD'),title = paste0('site',siteX),
        lwd = 1, col = c(1,4,3,7,6,8), cex=1, ncol = 3, inset = c(0, -0.275), bty = "n", xpd = TRUE) 
@@ -305,25 +354,29 @@ lines(testNewParCheck$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year
 dataX[siteID==siteX & compnt==2,points(yearSim,Dsim_newCalCheck,col=4,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Dsim_newCalCheck,col=4,pch=3)]
 ### calset pine
-lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
-lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
-lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
-lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
-points(Ddata_s2$outData[which(Ddata_s2$outData[,1]==siteYp),2],Ddata_s2$obs[which(Ddata_s2$outData[,1]==siteYp)],col=3,pch=20)
+if(siteX==35){
+  lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
+  lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
+  lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
+  lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
+  points(Ddata_s2$outData[which(Ddata_s2$outData[,1]==siteYp),2],Ddata_s2$obs[which(Ddata_s2$outData[,1]==siteYp)],col=3,pch=20)
+}
 ### calset spruce
-lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
-lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
-lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
-lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
-points(Ddata_s3$outData[which(Ddata_s3$outData[,1]==siteYs),2],Ddata_s3$obs[which(Ddata_s3$outData[,1]==siteYs)],col=3,pch=20)
+if(siteX==5){
+  lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
+  lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
+  lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
+  lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
+  points(Ddata_s3$outData[which(Ddata_s3$outData[,1]==siteYs),2],Ddata_s3$obs[which(Ddata_s3$outData[,1]==siteYs)],col=3,pch=20)
+}
 ###legend
 legend('bottom', legend = c('test', 'testCal', 'modOut', 'modOutinitD', 'modOutCal', 'modOutCalD'),title = paste0('site',siteX),
        lwd = 1, col = c(1,4,3,7,6,8), cex=1, ncol = 3, inset = c(0, -0.275), bty = "n", xpd = TRUE) 
@@ -344,22 +397,25 @@ lines(testNewParCheck$multiOut[siteX,,varX,1,1],ylab = varNames[varX],xlab="year
 dataX[siteID==siteX & compnt==2,points(yearSim,Nsim_newCalCheck,col=4,pch=1)]
 dataX[siteID==siteX & compnt==1,points(yearSim,Nsim_newCalCheck,col=4,pch=3)]
 ### calset pine
-lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
-lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
-lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
-lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
-points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
-### calset spruce
-lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
-points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
-lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
-points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
-lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
-points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
-# lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+if(siteX==35){
+  lines(modOut2$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,7,18,31,38,43), modOut2$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=3)
+  lines(modOut2Cal$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,7,18,31,38,43), modOut2Cal$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=6)
+  lines(modOut2D$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,7,18,31,38,43), modOut2D$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=7)
+  lines(modOut2CalD$multiOut[siteYp,1:44,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
+  points(c(1,7,18,31,38,43), modOut2CalD$multiOut[siteYp,c(1,7,18,31,38,43),varX,1,1], pch=1, col=8)
+}
+if(siteX==5){
+  ### calset spruce
+  lines(modOut3$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=3)
+  points(c(1,6,12,17,23,32), modOut3$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=3)
+  lines(modOut3Cal$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=6)
+  points(c(1,6,12,17,23,32), modOut3Cal$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=6)
+  lines(modOut3D$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=7)
+  points(c(1,6,12,17,23,32), modOut3D$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=7)
+}# lines(modOut3CalD$multiOut[siteYs,1:33,varX,1,1], ylab = varNames[varX],xlab="year",type='l',col=8)
 # points(c(1,6,12,17,23,32), modOut3CalD$multiOut[siteYs,c(1,6,12,17,23,32),varX,1,1], pch=1, col=8)
 ###legend
 legend('bottom', legend = c('test', 'testCal', 'modOut', 'modOutinitD', 'modOutCal', 'modOutCalD'),title = paste0('site',siteX),
