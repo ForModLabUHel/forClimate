@@ -1,18 +1,18 @@
-library(Rprebasso)
 
-load("data/inputDataDeltaexample.rda")
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
- 
-# ####create new weather
-PARx <- PARtran + 20
-CO2x <- CO2tran + 50
-TAirx <- TAirtran + 7
-VPDx <- VPDtran #+ 20
-Precipx <- Preciptran #+ 20
+# Example code to run the dGrowthPrebas
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+dGrowthPrebas is a function that runs prebas with the current weather and different weather inputs (climate change) and calculates the deltas in gross growth
+
+## dGrowthPrebas function
 
 
-
-###function for delta growth calculation
+``` r
 #' dGrowthPrebas
 #'
 #' @param nYears number of year for the simulations
@@ -69,7 +69,33 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
   dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   return(dGrowth)
 }
+```
 
+## Run the function 
+
+load Rprebasso library and data
+
+``` r
+library(Rprebasso)
+load("data/inputDataDeltaexample.rda")
+```
+
+## Create new weather data
+
+Modify the current weather inputs to generate an alternative weather
+
+``` r
+# ####create new weather
+PARx <- PARtran + 20
+CO2x <- CO2tran + 50
+TAirx <- TAirtran + 7
+VPDx <- VPDtran #+ 20
+Precipx <- Preciptran #+ 20
+```
+
+## Run the function
+
+``` r
 nYears=20
 dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
              currPar=PARtran,newPAR=PARx,
@@ -77,12 +103,28 @@ dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
              currPrecip=Preciptran,newPrecip=Precipx,
              currVPD=VPDtran,newVPD=VPDx,
              currCO2=CO2tran,newCO2=CO2x)
+```
 
 
+## Plots
+
+generate some plots
+
+``` r
+#dimensions of output
   dim(dGrowthExample)
-  plot(dGrowthExample[1,,1])
-  points(dGrowthExample[1,,2],col=2)
-  points(dGrowthExample[1,,3],col=3)
-hist(dGrowthExample)
-dGrowthStand <- apply(dGrowthExample,1:2,sum)
-hist(dGrowthStand)
+  
+# choose a site and generate a plot for each layer
+siteX=1
+  plot(dGrowthExample[siteX,,1])
+  points(dGrowthExample[siteX,,2],col=2)
+  points(dGrowthExample[siteX,,3],col=3)
+
+# make histograms of all Dealtas (all sites, years and layers)
+ hist(dGrowthExample)
+
+# make summs of delta accross layers (site total) and make histograms of site deltas for all sites and years.
+ dGrowthStand <- apply(dGrowthExample,1:2,sum)
+ hist(dGrowthStand)
+```
+
