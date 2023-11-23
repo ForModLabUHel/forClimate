@@ -67,7 +67,9 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                             multiInitVar = initVar)
   modOutNew <- multiPrebas(initNew)
   dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
-  return(dGrowth)
+  dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
+  dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
+  return(list(dGrowth=dGrowth,dH=dH,dD=dD))
 }
 
 nYears=20
