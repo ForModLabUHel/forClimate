@@ -29,7 +29,7 @@ Precipx <- Preciptran #+ 20
 #' @param currCO2 CO2 for current weather (nSites x nYears*365 matrix) A numeric matrix of air CO2, ppm, for each site.
 #' @param newCO2 CO2for new weather (nSites x nYears*365 matrix) A numeric matrix of air CO2, ppm, for each site.
 #'
-#' @return 3-dimensional array of deltas with dimensions: nSites x nYears x nLayers
+#' @return a list of 3 3-dimensional array (nSites x nYears x nLayers) of deltas for gross growth (dGrowth), Height (dH) and dbh (dD)
 #' 
 #' @export
 #'
@@ -81,10 +81,32 @@ dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
              currCO2=CO2tran,newCO2=CO2x)
 
 
-  dim(dGrowthExample)
-  plot(dGrowthExample[1,,1])
-  points(dGrowthExample[1,,2],col=2)
-  points(dGrowthExample[1,,3],col=3)
-hist(dGrowthExample)
-dGrowthStand <- apply(dGrowthExample,1:2,sum)
+#plot results for GrossGrowth
+  dim(dGrowthExample$dGrowth)
+  plot(dGrowthExample$dGrowth[1,,1])
+  points(dGrowthExample$dGrowth[1,,2],col=2)
+  points(dGrowthExample$dGrowth[1,,3],col=3)
+hist(dGrowthExample$dGrowth)
+dGrowthStand <- apply(dGrowthExample$dGrowth,1:2,sum)
 hist(dGrowthStand)
+
+
+
+#plot results for dH
+dim(dGrowthExample$dH)
+plot(dGrowthExample$dH[1,,1])
+points(dGrowthExample$dH[1,,2],col=2)
+points(dGrowthExample$dH[1,,3],col=3)
+hist(dGrowthExample$dH)
+dHStand <- apply(dGrowthExample$dH,1:2,sum)
+hist(dHStand)
+
+
+#plot results for dD
+dim(dGrowthExample$dD)
+plot(dGrowthExample$dD[1,,1])
+points(dGrowthExample$dD[1,,2],col=2)
+points(dGrowthExample$dD[1,,3],col=3)
+hist(dGrowthExample$dD)
+dDStand <- apply(dGrowthExample$dD,1:2,sum)
+hist(dDStand)
