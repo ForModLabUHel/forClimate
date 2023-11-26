@@ -1,5 +1,5 @@
 ## \file mottiprebas.py
-## \brief Framwork to run PREBAS and Motti under changing climate.
+## \brief Framework to run PREBAS and Motti under changing climate.
 ##
 ## One idea is to use Python as a glue to run PREBAS (i.e. R)
 ## and Motti (i.e. Pascal binary or shared library) interchangeably.
@@ -11,13 +11,15 @@
 ##
 ## \par Installation
 ## The following software must be present:
-## -# PREBAS: Download from GitHub and use the instructions for GitHub installation in R.
+## -# Rprebasso: Download from GitHub and use the instructions in GitHub to install in R.
 ##    -# mottiprebas.py requires that Rprebasso package (i.e. PREBAS) is installed in R.
 ## -# forClimate: Download from GitHub.
-## -# Python: Tested with Python 3.10 but any "close by version" should do.
+## -# Python: Tested with Python 3.10 but any "close enough" version of Python 3.x should do.
+## -# R: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribition should do
 ## -# Create Python virtual environment:
 ##    -# Install with `pip` rpy2, numpy and pandas packages.
 ##    -# pip install numpy pandas rpy2
+##
 ## \par Run mottiprebas.py
 ## Start the Python virtual environment, go to forClimate directory and type `python mottiprebas.py`
 ## Currently mottiprebas.py repeats the demonstration in *exampleFunctionDelta.r*
@@ -29,6 +31,7 @@ import rpy2
 # r is the handler to R interface
 from rpy2.robjects import r
 # Create R like objects from Python and vice versa.
+##It seems that after `activate` the "Python magic" happens behind the screen.
 from rpy2.robjects import numpy2ri
 numpy2ri.activate()
 
@@ -40,7 +43,7 @@ numpy2ri.activate()
 r.load("data/inputDataDeltaexample.rda")
 # The PREBAS package must be installed in R.
 r.library("Rprebasso")
-# Function to run PREBAS twice to produce deltas of ceratin forest characteristcs
+# Function to run PREBAS twice to produce deltas of certain forest characteristics of interest
 r.source("Rsrc/dGrowthPrebas.r")
 
 initVar = r['initVar']
