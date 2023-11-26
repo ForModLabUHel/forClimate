@@ -1,4 +1,4 @@
-# Framework to run PREBAS and Motti under changing climate.
+# Framework to run PREBAS and Motti under changing climate
 One idea is to use Python as a glue to run PREBAS (i.e. R)
 and Motti (i.e. Pascal binary or shared library) interchangeably.
 The data exchange can be with files and Motti command line parameters.
@@ -9,6 +9,7 @@ is certainly trickier with no prior experience.
 
 ## Installation
 The following software must be present:
+
 	+ Rprebasso: Download from GitHub and use the instructions in GitHub to install in R.
 		- mottiprebas.py requires that Rprebasso package (i.e. PREBAS) is installed in R.
 	+ forClimate: Download from GitHub.
