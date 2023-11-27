@@ -31,7 +31,7 @@ import rpy2
 # r is the handler to R interface
 from rpy2.robjects import r
 # Create R like objects from Python and vice versa.
-##It seems that after `activate` the "Python magic" happens behind the screen.
+# It seems that after `activate` the "Python magic" happens behind the screen.
 from rpy2.robjects import numpy2ri
 numpy2ri.activate()
 
@@ -67,16 +67,20 @@ res = r['dGrowthPrebas'](20,siteInfo,initVar,
                          VPDtran,VPDtran,
                          CO2tran,CO2x)
 #Print with  R  print
-print("PRINT AS R")
+print("PRINT R, FIRST ITEM")
+print("SHAPE", r.dim(res[0]))
 r.print(res[0][0][:,0])
 print("PRINTED R")
-#To see the same in python matrix transposes T are need 
+#To see the same in python matrix transposes T are needed
 resT = res[0].T
 resTT = [x.T for x in resT]
-print("PRINT PYTHON")
+print("PRINT PYTHON, FIRST ITEM")
+print("SHAPE",np.shape(res[0]),'-->',np.shape(resT))
 print(resTT[0][0])
 print("PRINTED PYTHON")
 #Save results to R data file
+#Assign `res`to R environment
 r.assign("PrebasRes",res)
+#Then save data
 r.save("PrebasRes",file='PrebasRes.RData')
 print("DONE")
