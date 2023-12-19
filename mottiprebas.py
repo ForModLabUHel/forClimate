@@ -34,7 +34,21 @@ from rpy2.robjects import r
 # It seems that after `activate` the "Python magic" happens behind the screen.
 from rpy2.robjects import numpy2ri
 numpy2ri.activate()
-
+# Motti Growth coefficients (i.e. the results to Motti)  
+# Data frame column names
+# Site Info Table
+# Default values [1,1,3, 160, 0, 0, 20, 413.,0.45, 0.118] or c(NA,NA,3,160,0,0,20,nLayers,3,413,0.45,0.118)
+site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "CWinit (initial crown water)", "SOGinit (initial snow on ground)",\
+                  "Sinit (initial temperature acclimation state)", "Nlayers", "Nspecies", "SoilDepth", "Effective field capacity", "Permanent wilthing point"]
+# Initial Variables (descriptive)
+# (nSite x 7 x nLayer array)
+# SpeciesID (a number corresponding to the species parameter values of pPRELES columns), Age (years), average height of the layer (H, m),
+# average diameter at breast height of the layer (D, cm), basal area of the layer (BA, m2 ha-1), average height of the crown base of the layer (Hc, m).
+# 8th column is updated automatically to Ac
+init_var_cols = ["SpeciesID","Age(years)","H(m)","D(cm)","BA(m2ha-1)","Hc(m)","Ac(prebas_ex_officio)"]
+# Motti results, coefficients from the results
+motti_coeffient_cols = ["dGrowth5Mean","dH5Mean","dD5Mean"]
+layers = "Layers"
 # Load and source necessary files. dGrowthPrebas.r contains
 # the PREBAS function dGrowthPrebas that will compute the deltas
 # of interesting forest characteristics (biomass, dominant height etc).
@@ -58,29 +72,61 @@ TAirx = r['TAirtran'] + 7
 VPDtran = r['VPDtran']
 Preciptran = r['Preciptran']
 
-print("BEGIN")
-# Call dGrowthPrebas
-res = r['dGrowthPrebas'](20,siteInfo,initVar,
-                         PARtran,PARx,
-                         TAirtran,TAirx,
-                         Preciptran,Preciptran,
-                         VPDtran,VPDtran,
-                         CO2tran,CO2x)
-#Print with  R  print
-print("PRINT R, FIRST ITEM")
-print("SHAPE", r.dim(res[0]))
-r.print(res[0][0][:,0])
-print("PRINTED R")
-#To see the same in python matrix transposes T are needed
-resT = res[0].T
-resTT = [x.T for x in resT]
-print("PRINT PYTHON, FIRST ITEM")
-print("SHAPE",np.shape(res[0]),'-->',np.shape(resT))
-print(resTT[0][0])
-print("PRINTED PYTHON")
-#Save results to R data file
-#Assign `res`to R environment
-r.assign("PrebasRes",res)
-#Then save data
-r.save("PrebasRes",file='PrebasRes.RData')
-print("DONE")
+def mottiprebas(year,siteInfo,initVar):
+    print("BEGIN")
+    # Call dGrowthPrebas
+    res = r['dGrowthPrebas'](year,siteInfo,initVar,
+        PARtran,PARx,
+        TAirtran,TAirx,
+        Preciptran,Preciptran,
+        VPDtran,VPDtran,
+        CO2tran,CO2x)
+    #Print with  R  print
+    print("PRINT R, FIRST ITEM")
+    print("SHAPE", r.dim(res[0]))
+    r.print(res[0][0][:,0])
+    print("PRINTED R")
+    #To see the same in python matrix transposes T are needed
+    resT = res[0].T
+    resTT = [x.T for x in resT]
+    print("PRINT PYTHON, FIRST ITEM")
+    print("SHAPE",np.shape(res[0]),'-->',np.shape(resT))
+    print(resTT[0][0])
+    print("PRINTED PYTHON")
+    return res
+
+if __name__ == "__main__":
+    res = mottiprebas(5,siteInfo,initVar)
+    #Save results to R data file
+    #Assign `res`to R environment
+    r.assign("PrebasRes",res)
+    #Then save data
+    print("SAVE RESULTS")
+    #All results as RData file 
+    r.save("PrebasRes",file='PrebasRes.RData')
+    #For testing purposes save initVar (first site) and SiteInfo
+    dfInitVar = pd.DataFrame(initVar[0].T)
+    dfInitVar.columns = init_var_cols
+    dfInitVar.index.name = layers
+    dfInitVar.to_excel('PrebasInitVar.xlsx')
+    dfSiteInfo = pd.DataFrame(siteInfo)
+    dfSiteInfo.columns = site_info_cols
+    dfSiteInfo.to_excel('PrebasSiteInfo.xlsx')
+    #Motti input data, coefficients from results
+    dG = res[0]
+    dH = res[1]
+    dD = res[2]
+    dG0 = dG[0]
+    dH0 = dH[0]
+    dD0 = dD[0]
+    dGmean = np.mean(dG0.T,axis=1)
+    dHmean = np.mean(dH0.T,axis=1)
+    dDmean = np.mean(dD0.T,axis=1)
+    dfdGmean = pd.DataFrame(dGmean)
+    dfHmean = pd.DataFrame(dHmean)
+    dfDmean = pd.DataFrame(dDmean)
+    dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
+    dfmotti.columns = motti_coeffient_cols
+    dfmotti.index.name=layers
+    dfmotti.to_excel("MottiCoeffients.xlsx")
+    print("DONE")
