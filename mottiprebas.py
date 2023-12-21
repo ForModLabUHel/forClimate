@@ -24,6 +24,8 @@
 ## Start the Python virtual environment, go to forClimate directory and type `python mottiprebas.py`
 ## Currently mottiprebas.py repeats the demonstration in *exampleFunctionDelta.r*
 ## and saves the results in RData file.
+
+import subprocess
 import numpy as np
 import pandas as pd
 # rpy2 is the glue between Python and R
@@ -89,6 +91,7 @@ def read_motti_site_info(f:str)->float:
 def read_motti_model_tree_info(f:str):
     """
     Read Motti model tree info and return dataframe of model tree data for Prebas
+    @note Currently assuming one stand and one tree species
     @param f Motti model tree info file
     @return Data frame of model tree info, Number of model trees, number of tree species
     """
@@ -182,4 +185,10 @@ if __name__ == "__main__":
     dfmotticoeff = pd.concat([dfInitVar,dfSiteInfo,dfmotti],keys=['InitVar','SiteInfo','MottiCoeff'])
     dfmotticoeff.to_excel("MottiCoefficients.xlsx")
     dfmotticoeff.to_csv("MottiCoefficients.txt",sep=" ")
+    #To run Motti use subprocess run
+    #Initial forest stand for prebas
+    #subprocess.run(['mottiWB.exe','PREBAS','INISTATE','-in','mottiFileOriginal.tx','-out','mottiFile2.txt',-outprbs',prebasPara1.txt'],cwd='/Motti/location',capture_output=True,text=True]
+    #Motti growth 
+    #subprocess.run(['mottiWB.exe','PREBAS','-simulate','5','-in','mottiFile2.txt',-prebascoeff,'PrebasCoeffient.txt','-out','mottiFile3.txt','-outprbs','prebasPara2.txt'],
+    #                 cwd='/Motti/location',capture_output=True,text=True]
     print("DONE")
