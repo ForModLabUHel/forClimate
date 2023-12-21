@@ -39,7 +39,7 @@ numpy2ri.activate()
 # Site Info Table
 # Default values [1,1,3, 160, 0, 0, 20, 413.,0.45, 0.118] or c(NA,NA,3,160,0,0,20,nLayers,3,413,0.45,0.118)
 site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "CWinit (initial crown water)", "SOGinit (initial snow on ground)",\
-                  "Sinit (initial temperature acclimation state)", "Nlayers", "Nspecies", "SoilDepth", "Effective field capacity", "Permanent wilthing point"]
+                  "Sinit (initial temperature acclimation state)", "NLayers", "NSpecies", "SoilDepth", "Effective field capacity", "Permanent wilthing point"]
 # Initial Variables (descriptive)
 # (nSite x 7 x nLayer array)
 # SpeciesID (a number corresponding to the species parameter values of pPRELES columns), Age (years), average height of the layer (H, m),
@@ -47,8 +47,10 @@ site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "
 # 8th column is updated automatically to Ac
 init_var_cols = ["SpeciesID","Age(years)","H(m)","D(cm)","BA(m2ha-1)","Hc(m)","Ac(prebas_ex_officio)"]
 # Motti results, coefficients from the results
-motti_coeffient_cols = ["dGrowth5Mean","dH5Mean","dD5Mean"]
-layers = "Layers"
+motti_coeffient_cols = ["dGrowth_5YearMean","dH_5YearMean","dD_5YearMean"]
+layers = "Layers/ModelTrees"
+#SIte type index in Motti stand file
+SITE_TYPE_INDEX = 22
 # Load and source necessary files. dGrowthPrebas.r contains
 # the PREBAS function dGrowthPrebas that will compute the deltas
 # of interesting forest characteristics (biomass, dominant height etc).
@@ -71,6 +73,56 @@ TAirtran = r['TAirtran']
 TAirx = r['TAirtran'] + 7
 VPDtran = r['VPDtran']
 Preciptran = r['Preciptran']
+
+def read_motti_site_info(f:str)->float:
+    """
+    Read Motti stand file and return site type.
+    Currently for one site only
+    @param f Site file
+    @return Site type
+    @retval stype Site type as float 
+    """
+    df = pd.read_csv(f,engine='python',sep='\s+',nrows=30,names=['Index','Value'],header=0)
+    stype = df[df['Index']==SITE_TYPE_INDEX].iloc[0,1]
+    return stype
+
+def read_motti_model_tree_info(f:str):
+    """
+    Read Motti model tree info and return dataframe of model tree data for Prebas
+    @param f Motti model tree info file
+    @return Data frame of model tree info, Number of model trees, number of tree species
+    """
+    df = pd.read_csv(f,engine='python',sep='\s+',nrows=30,names=['INDEX1','INDEX2','INDEX3','VALUE'])
+    dfg = df.groupby(['INDEX3'])
+    ngroups = dfg.ngroups
+    lss = []
+    for n in range(1,ngroups+1):
+        g = dfg.get_group(n)
+        g.reset_index()
+        s = list(g['VALUE'])
+        lss.append(s)
+    df_tree_info = pd.DataFrame(lss)
+    #Hc to  be fixed when available 
+    df_tree_info['Hc'] = 0.0
+    df_tree_info['Ac'] = 0.0
+    df_tree_info.columns = init_var_cols
+    nspecies = len(set(df_tree_info['SpeciesID']))
+    return (df_tree_info,ngroups,nspecies)
+
+def prebas_input(site_info:str,model_tree_info:str):
+    """
+    Create Prebas input data from Motti output files
+    @param site_finfo Motti stand level output file
+    @param model_tree_info Motti tree level output file
+    @return Prebas dataframes for Site info and tree/layer level Initial variables
+    """
+    site_type =  read_motti_site_info(site_info)
+    (df_tree_info,n_model_trees,nspecies) =  read_motti_model_tree_info(model_tree_info)
+    df_site_info = pd.DataFrame(data=0,index=[0],columns=site_info_cols)
+    df_site_info['SiteType'] = site_type
+    df_site_info['NLayers'] = n_model_trees
+    df_site_info['NSpecies'] = nspecies
+    return (df_site_info,df_tree_info)
 
 def mottiprebas(year,siteInfo,initVar):
     print("BEGIN")
@@ -104,14 +156,6 @@ if __name__ == "__main__":
     print("SAVE RESULTS")
     #All results as RData file 
     r.save("PrebasRes",file='PrebasRes.RData')
-    #For testing purposes save initVar (first site) and SiteInfo
-    dfInitVar = pd.DataFrame(initVar[0].T)
-    dfInitVar.columns = init_var_cols
-    dfInitVar.index.name = layers
-    dfInitVar.to_excel('PrebasInitVar.xlsx')
-    dfSiteInfo = pd.DataFrame(siteInfo)
-    dfSiteInfo.columns = site_info_cols
-    dfSiteInfo.to_excel('PrebasSiteInfo.xlsx')
     #Motti input data, coefficients from results
     dG = res[0]
     dH = res[1]
@@ -128,5 +172,14 @@ if __name__ == "__main__":
     dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
     dfmotti.columns = motti_coeffient_cols
     dfmotti.index.name=layers
-    dfmotti.to_excel("MottiCoeffients.xlsx")
+    #For testing purposes save initVar (first site) and SiteInfo
+    dfemptyrow = pd.DataFrame([])
+    dfInitVar = pd.DataFrame(initVar[0].T)
+    dfInitVar.columns = init_var_cols
+    dfInitVar.index.name = layers
+    dfSiteInfo = pd.DataFrame(siteInfo)
+    dfSiteInfo.columns = site_info_cols
+    dfmotticoeff = pd.concat([dfInitVar,dfSiteInfo,dfmotti],keys=['InitVar','SiteInfo','MottiCoeff'])
+    dfmotticoeff.to_excel("MottiCoefficients.xlsx")
+    dfmotticoeff.to_csv("MottiCoefficients.txt",sep=" ")
     print("DONE")
