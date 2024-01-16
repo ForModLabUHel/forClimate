@@ -25,9 +25,16 @@
 ## Currently mottiprebas.py repeats the demonstration in *exampleFunctionDelta.r*
 ## and saves the results in RData file.
 
+import os
 import subprocess
+import pathlib
 import numpy as np
 import pandas as pd
+
+#R_HOME for R
+rhome='/Program Files/R/R-4.3.2/'
+os.environ['R_HOME'] = rhome
+
 # rpy2 is the glue between Python and R
 import rpy2
 # r is the handler to R interface
@@ -36,12 +43,18 @@ from rpy2.robjects import r
 # It seems that after `activate` the "Python magic" happens behind the screen.
 from rpy2.robjects import numpy2ri
 numpy2ri.activate()
+
+
+# Motti runtime location including all necessary shared libraries
+motti_location=pathlib.Path("/Valtori/Applications/mottiprebas/motti/")
+
 # Motti Growth coefficients (i.e. the results to Motti)  
 # Data frame column names
 # Site Info Table
 # Default values [1,1,3, 160, 0, 0, 20, 413.,0.45, 0.118] or c(NA,NA,3,160,0,0,20,nLayers,3,413,0.45,0.118)
 site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "CWinit (initial crown water)", "SOGinit (initial snow on ground)",\
-                  "Sinit (initial temperature acclimation state)", "NLayers", "NSpecies", "SoilDepth", "Effective field capacity", "Permanent wilthing point"]
+                  "Sinit (initial temperature acclimation state)", "NLayers", "NSpecies", "SoilDepth", "Effective field capacity",\
+                  "Permanent wilthing point"]
 # Initial Variables (descriptive)
 # (nSite x 7 x nLayer array)
 # SpeciesID (a number corresponding to the species parameter values of pPRELES columns), Age (years), average height of the layer (H, m),
@@ -51,7 +64,7 @@ init_var_cols = ["SpeciesID","Age(years)","H(m)","D(cm)","BA(m2ha-1)","Hc(m)","A
 # Motti results, coefficients from the results
 motti_coeffient_cols = ["dGrowth_5YearMean","dH_5YearMean","dD_5YearMean"]
 layers = "Layers/ModelTrees"
-#SIte type index in Motti stand file
+#Site type index in Motti stand file
 SITE_TYPE_INDEX = 22
 # Load and source necessary files. dGrowthPrebas.r contains
 # the PREBAS function dGrowthPrebas that will compute the deltas
@@ -76,6 +89,20 @@ TAirx = r['TAirtran'] + 7
 VPDtran = r['VPDtran']
 Preciptran = r['Preciptran']
 
+def test_motti_command_line():
+    #Initial forest stand for prebas
+    print("TEST MOTTI")
+    subprocess.run(['mottiWB.exe','PREBAS','INISTATE','-in',pathlib.Path('prebas/prebasTest.txt'),
+                    '-out',pathlib.Path('prebasSimu/stand0.txt'),'-outprbs',pathlib.Path('prebasSimu/prebasPara0.txt')],
+                    cwd=motti_location,capture_output=True,text=True)
+    print("INIT DONE")
+    #Motti growth 
+    subprocess.run(['mottiWB.exe','PREBAS','-simulate','5','-in',pathlib.Path('prebasSimu/stand0.txt'),
+                    '-out',pathlib.Path('prebasSimu/stand1.txt'),'-outprbs',pathlib.Path('prebasSimu/prebasPara1.txt')],
+                    cwd=motti_location,capture_output=True,text=True)
+    print("GROWTH DONE")
+    print("DONE")
+    
 def read_motti_site_info(f:str)->float:
     """
     Read Motti stand file and return site type.
@@ -186,9 +213,5 @@ if __name__ == "__main__":
     dfmotticoeff.to_excel("MottiCoefficients.xlsx")
     dfmotticoeff.to_csv("MottiCoefficients.txt",sep=" ")
     #To run Motti use subprocess run
-    #Initial forest stand for prebas
-    #subprocess.run(['mottiWB.exe','PREBAS','INISTATE','-in','mottiFileOriginal.tx','-out','mottiFile2.txt',-outprbs',prebasPara1.txt'],cwd='/Motti/location',capture_output=True,text=True]
-    #Motti growth 
-    #subprocess.run(['mottiWB.exe','PREBAS','-simulate','5','-in','mottiFile2.txt',-prebascoeff,'PrebasCoeffient.txt','-out','mottiFile3.txt','-outprbs','prebasPara2.txt'],
-    #                 cwd='/Motti/location',capture_output=True,text=True]
+    
     print("DONE")
