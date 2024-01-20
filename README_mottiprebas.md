@@ -19,7 +19,7 @@ The following software must be present:
 Create Python virtual environment (e.g. *mottiprebas*):
 
 	python -m venv mottiprebas 
-        #Unix like operating system
+ 	#Unix like operating system
 	source mottiprebas/bin/activate
  	#Windows
   	mottiprebas/Scripts/activate
@@ -27,7 +27,7 @@ Create Python virtual environment (e.g. *mottiprebas*):
 Install rpy2, numpy, openpyxl and pandas packages:
 	
  	pip install --upgrade pip
-        pip install setuptools wheel
+  	pip install setuptools wheel
 	pip install numpy pandas openpyxl rpy2
 	
 ## Run mottiprebas.py
