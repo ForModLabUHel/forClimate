@@ -25,7 +25,8 @@ Create Python virtual environment (e.g. *mottiprebas*):
   	mottiprebas/Scripts/activate
 
 Install rpy2, numpy, openpyxl and pandas packages:
-	pip install --upgrade pip
+	
+ 	pip install --upgrade pip
         pip install setuptools wheel
 	pip install numpy pandas openpyxl rpy2
 	
