@@ -39,42 +39,72 @@ Precipx <- Preciptran #+ 20
 #' dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,currPar=PARtran,newPAR=PARx,currTAir=TAirtran,newTAir=TAirx,currPrecip=Preciptran,newPrecip=Precipx,currVPD=VPDtran,newVPD=VPDx,currCO2=CO2tran,newCO2=CO2x)
 
 dGrowthPrebas <- function(nYears,siteInfo,initVar,
-                    currPar,newPAR,
+                    currPAR,newPAR,
                     currTAir,newTAir,
                     currPrecip,newPrecip,
                     currVPD,newVPD,
                     currCO2,newCO2
                     ){
-  nSites <- nrow(siteInfo)
+  if(is.null(nrow(siteInfo)) & length(siteInfo==12)){
+    nSites <- 1
+  }else{
+    nSites <- nrow(siteInfo)  
+  }
   
-  initCurr <- InitMultiSite(nYearsMS = rep(nYears,nSites),
-                      PAR = currPar,
-                      VPD = currVPD,
-                      CO2 = currCO2,
-                      TAir = currTAir,
-                      Precip = currPrecip,
-                      siteInfo = siteInfo,
-                      multiInitVar = initVar)
-  modOutCurr <- multiPrebas(initCurr)
+  if(nSites>1){
+    initCurr <- InitMultiSite(nYearsMS = rep(nYears,nSites),
+                              PAR = currPAR,
+                              VPD = currVPD,
+                              CO2 = currCO2,
+                              TAir = currTAir,
+                              Precip = currPrecip,
+                              siteInfo = siteInfo,
+                              multiInitVar = initVar)
+    modOutCurr <- multiPrebas(initCurr)
+    
+    initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
+                             PAR = newPAR,
+                             VPD = newVPD,
+                             CO2 = newCO2,
+                             TAir = newTAir,
+                             Precip = newPrecip,
+                             siteInfo = siteInfo,
+                             multiInitVar = initVar)
+    modOutNew <- multiPrebas(initNew)
+    dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
+    dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
+    dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
+  }else{
+    modOutCurr <- prebas(nYears = nYears,
+                              PAR = currPAR,
+                              VPD = currVPD,
+                              CO2 = currCO2,
+                              TAir = currTAir,
+                              Precip = currPrecip,
+                              siteInfo = siteInfo,
+                              initVar = initVar)
+    
+    modOutNew <- prebas(nYears = nYears,
+                             PAR = newPAR,
+                             VPD = newVPD,
+                             CO2 = newCO2,
+                             TAir = newTAir,
+                             Precip = newPrecip,
+                             siteInfo = siteInfo,
+                             initVar = initVar)
+    
+    dGrowth <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
+    dH <-modOutNew$output[,11,,1]/modOutCurr$output[,11,,1]
+    dD <-modOutNew$output[,12,,1]/modOutCurr$output[,12,,1]
+  }
   
-  initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
-                            PAR = newPAR,
-                            VPD = newVPD,
-                            CO2 = newCO2,
-                            TAir = newTAir,
-                            Precip = newPrecip,
-                            siteInfo = siteInfo,
-                            multiInitVar = initVar)
-  modOutNew <- multiPrebas(initNew)
-  dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
-  dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
-  dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
   return(list(dGrowth=dGrowth,dH=dH,dD=dD))
 }
 
+###multiite example
 nYears=20
 dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
-             currPar=PARtran,newPAR=PARx,
+             currPAR=PARtran,newPAR=PARx,
              currTAir=TAirtran,newTAir=TAirx,
              currPrecip=Preciptran,newPrecip=Precipx,
              currVPD=VPDtran,newVPD=VPDx,
@@ -109,4 +139,64 @@ points(dGrowthExample$dD[1,,2],col=2)
 points(dGrowthExample$dD[1,,3],col=3)
 hist(dGrowthExample$dD)
 dDStand <- apply(dGrowthExample$dD,1:2,sum)
+hist(dDStand)
+
+
+
+
+###single Site example
+nYears=20
+siteX = 3 #select a site (from 1 to 7 from the previous dataset)
+climID = 2 #select a climate (from 1 to 7 from the previous dataset)
+
+siteInfo_siteX <- siteInfo[siteX,]
+initVar_siteX <- initVar[siteX,,]
+
+PAR_siteX <- PARtran[climID,]
+newPAR_siteX <- PARx[climID,]
+Precip_siteX <- Preciptran[climID,]
+newPrecip_siteX <- Precipx[climID,]
+TAir_siteX <- TAirtran[climID,]
+newTAir_siteX <- TAirx[climID,]
+VPD_siteX <- VPDtran[climID,]
+newVPD_siteX <- VPDx[climID,]
+CO2_siteX <- CO2tran[climID,]
+newCO2_siteX <- CO2x[climID,]
+
+dGrowthExample_siteX <- dGrowthPrebas(nYears,siteInfo_siteX,initVar_siteX,
+                                currPAR=PAR_siteX,newPAR=newPAR_siteX,
+                                currTAir=TAir_siteX,newTAir=newTAir_siteX,
+                                currPrecip=Precip_siteX,newPrecip=newPrecip_siteX,
+                                currVPD=VPD_siteX,newVPD=newVPD_siteX,
+                                currCO2=CO2_siteX,newCO2=newCO2_siteX)
+
+
+#plot results for GrossGrowth
+dim(dGrowthExample_siteX$dGrowth)
+plot(dGrowthExample_siteX$dGrowth[,1])
+points(dGrowthExample_siteX$dGrowth[,2],col=2)
+points(dGrowthExample_siteX$dGrowth[,3],col=3)
+hist(dGrowthExample_siteX$dGrowth)
+dGrowthStand <- apply(dGrowthExample_siteX$dGrowth,1,sum)
+hist(dGrowthStand)
+
+
+
+#plot results for dH
+dim(dGrowthExample_siteX$dH)
+plot(dGrowthExample_siteX$dH[1,,1])
+points(dGrowthExample_siteX$dH[1,,2],col=2)
+points(dGrowthExample_siteX$dH[1,,3],col=3)
+hist(dGrowthExample_siteX$dH)
+dHStand <- apply(dGrowthExample_siteX$dH,1:2,sum)
+hist(dHStand)
+
+
+#plot results for dD
+dim(dGrowthExample_siteX$dD)
+plot(dGrowthExample_siteX$dD[1,,1])
+points(dGrowthExample_siteX$dD[1,,2],col=2)
+points(dGrowthExample_siteX$dD[1,,3],col=3)
+hist(dGrowthExample_siteX$dD)
+dDStand <- apply(dGrowthExample_siteX$dD,1:2,sum)
 hist(dDStand)
