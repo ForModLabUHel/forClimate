@@ -184,19 +184,20 @@ hist(dGrowthStand)
 
 #plot results for dH
 dim(dGrowthExample_siteX$dH)
-plot(dGrowthExample_siteX$dH[1,,1])
-points(dGrowthExample_siteX$dH[1,,2],col=2)
-points(dGrowthExample_siteX$dH[1,,3],col=3)
+plot(dGrowthExample_siteX$dH[,1])
+points(dGrowthExample_siteX$dH[,2],col=2)
+points(dGrowthExample_siteX$dH[,3],col=3)
 hist(dGrowthExample_siteX$dH)
-dHStand <- apply(dGrowthExample_siteX$dH,1:2,sum)
+dHStand <- apply(dGrowthExample_siteX$dH,1,sum)
 hist(dHStand)
 
 
 #plot results for dD
 dim(dGrowthExample_siteX$dD)
-plot(dGrowthExample_siteX$dD[1,,1])
-points(dGrowthExample_siteX$dD[1,,2],col=2)
-points(dGrowthExample_siteX$dD[1,,3],col=3)
+plot(dGrowthExample_siteX$dD[,1])
+points(dGrowthExample_siteX$dD[,2],col=2)
+points(dGrowthExample_siteX$dD[,3],col=3)
 hist(dGrowthExample_siteX$dD)
-dDStand <- apply(dGrowthExample_siteX$dD,1:2,sum)
+dDStand <- apply(dGrowthExample_siteX$dD,1,sum)
 hist(dDStand)
+
