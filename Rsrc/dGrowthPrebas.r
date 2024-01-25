@@ -39,35 +39,75 @@ library(Rprebasso)
 #' dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,currPar=PARtran,newPAR=PARx,currTAir=TAirtran,newTAir=TAirx,currPrecip=Preciptran,newPrecip=Precipx,currVPD=VPDtran,newVPD=VPDx,currCO2=CO2tran,newCO2=CO2x)
 
 dGrowthPrebas <- function(nYears,siteInfo,initVar,
-                    currPar,newPAR,
+                    currPAR,newPAR,
                     currTAir,newTAir,
                     currPrecip,newPrecip,
                     currVPD,newVPD,
                     currCO2,newCO2
                     ){
-  nSites <- nrow(siteInfo)
+  if(is.null(nrow(siteInfo)) & length(siteInfo==12)){
+    nSites <- 1
+    print("ONESITE SITEINFO R")
+    print(siteInfo)
+    print("INITVAR")
+    print(initVar)
+  }else{
+    print("SITEINFO_R")
+    print(siteInfo)
+    print("NROWS")
+    print(nrow(siteInfo))
+    print("LENGTH")
+    print(length(siteInfo))
+    nSites <- nrow(siteInfo)  
+  }
   
-  initCurr <- InitMultiSite(nYearsMS = rep(nYears,nSites),
-                      PAR = currPar,
-                      VPD = currVPD,
-                      CO2 = currCO2,
-                      TAir = currTAir,
-                      Precip = currPrecip,
-                      siteInfo = siteInfo,
-                      multiInitVar = initVar)
-  modOutCurr <- multiPrebas(initCurr)
+  if(nSites>1){
+    initCurr <- InitMultiSite(nYearsMS = rep(nYears,nSites),
+                              PAR = currPAR,
+                              VPD = currVPD,
+                              CO2 = currCO2,
+                              TAir = currTAir,
+                              Precip = currPrecip,
+                              siteInfo = siteInfo,
+                              multiInitVar = initVar)
+    modOutCurr <- multiPrebas(initCurr)
+    
+    initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
+                             PAR = newPAR,
+                             VPD = newVPD,
+                             CO2 = newCO2,
+                             TAir = newTAir,
+                             Precip = newPrecip,
+                             siteInfo = siteInfo,
+                             multiInitVar = initVar)
+    modOutNew <- multiPrebas(initNew)
+    dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
+    dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
+    dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
+  }else{
+    modOutCurr <- prebas(nYears = nYears,
+                              PAR = currPAR,
+                              VPD = currVPD,
+                              CO2 = currCO2,
+                              TAir = currTAir,
+                              Precip = currPrecip,
+                              siteInfo = siteInfo,
+                              initVar = initVar)
+    
+    modOutNew <- prebas(nYears = nYears,
+                             PAR = newPAR,
+                             VPD = newVPD,
+                             CO2 = newCO2,
+                             TAir = newTAir,
+                             Precip = newPrecip,
+                             siteInfo = siteInfo,
+                             initVar = initVar)
+    
+    dGrowth <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
+    dH <-modOutNew$output[,11,,1]/modOutCurr$output[,11,,1]
+    dD <-modOutNew$output[,12,,1]/modOutCurr$output[,12,,1]
+  }
   
-  initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
-                            PAR = newPAR,
-                            VPD = newVPD,
-                            CO2 = newCO2,
-                            TAir = newTAir,
-                            Precip = newPrecip,
-                            siteInfo = siteInfo,
-                            multiInitVar = initVar)
-  modOutNew <- multiPrebas(initNew)
-  dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
-  dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
-  dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
   return(list(dGrowth=dGrowth,dH=dH,dD=dD))
 }
+
