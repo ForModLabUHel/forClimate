@@ -89,7 +89,51 @@ CO2x = r['CO2tran'].ro + 50
 TAirtran = r['TAirtran']
 TAirx = r['TAirtran'] + 7
 VPDtran = r['VPDtran']
+VPDx = r['VPDtran']
 Preciptran = r['Preciptran']
+Precipx = r['Preciptran']
+
+def convert_to_floatmatrix(obj):
+    (rows,cols)=np.shape(obj) 
+    return rpy2.robjects.r.matrix(obj,nrow=rows,ncol=cols)
+
+def convert_to_floatvector(obj):
+    return  rpy2.robjects.vectors.FloatVector(obj)
+
+#Single site example data
+siteX=3
+climID=2
+
+#siteInfo numpy array -> Python indexing
+siteInfo_siteX=siteInfo[siteX-1,:]
+siteInfo_siteX_r = convert_to_floatvector(siteInfo_siteX)
+#3D array
+initVar_siteX=initVar[siteX-1,:,:]
+initVar_siteX_r=convert_to_floatmatrix(initVar_siteX)
+#PAR
+PAR_siteX = PARtran[climID-1,:]
+PAR_siteX_r =  convert_to_floatvector(PAR_siteX)
+newPAR_siteX = PARx[climID-1,:]
+newPAR_siteX_r =  convert_to_floatvector(newPAR_siteX)
+#Precip
+Precip_siteX = Preciptran[climID-1,:]
+Precip_siteX_r =  convert_to_floatvector(Precip_siteX)
+newPrecip_siteX = Precipx[climID-1,:]
+newPrecip_siteX_r =  convert_to_floatvector(newPrecip_siteX)
+#TAir
+TAir_siteX = TAirtran[climID-1,:]
+TAir_siteX_r =  convert_to_floatvector(TAir_siteX)
+newTAir_siteX = TAirx[climID-1,:]
+newTAir_siteX_r =  convert_to_floatvector(newTAir_siteX)
+#VPD
+VPD_siteX = VPDtran[climID-1,:]
+VPD_siteX_r = convert_to_floatvector(VPD_siteX)
+newVPD_siteX = VPDx[climID-1,:]
+newVPD_siteX_r = convert_to_floatvector(newVPD_siteX)
+#Slicing via rx -> R indexing
+CO2_siteX = CO2tran.rx(climID,True)
+newCO2_siteX = CO2x.rx(climID,True)
+
 
 def create_output_file_name(file_name:str,year:int):
     """
@@ -106,6 +150,42 @@ def create_output_file_name(file_name:str,year:int):
     new_file_name = parent.joinpath(pathlib.Path(stem+'_'+str(year))).joinpath(pathlib.Path(suffix))
     return str(new_file_name)
 
+def write_prebas_coefficients_single_site(res,file_name:str):
+    dG = res[0]
+    dH = res[1]
+    dD = res[2]
+    dGmean = np.mean(dG.T,axis=1)
+    dHmean = np.mean(dH.T,axis=1)
+    dDmean = np.mean(dD.T,axis=1)
+    dfdGmean = pd.DataFrame(dGmean)
+    dfHmean = pd.DataFrame(dHmean)
+    dfDmean = pd.DataFrame(dDmean)
+    dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
+    dfmotti.columns = motti_coeffient_cols
+    dfmotti.index.name=layers
+    dfmotti.to_csv(file_name,sep=" ")
+    dfmotti.to_excel("MottiCoefficients.xlsx")
+    
+def write_prebas_coefficients(res,file_name:str):
+    #Motti input data, coefficients from results
+    dG = res[0]
+    dH = res[1]
+    dD = res[2]
+    dG0 = dG[0]
+    dH0 = dH[0]
+    dD0 = dD[0]
+    dGmean = np.mean(dG0.T,axis=1)
+    dHmean = np.mean(dH0.T,axis=1)
+    dDmean = np.mean(dD0.T,axis=1)
+    dfdGmean = pd.DataFrame(dGmean)
+    dfHmean = pd.DataFrame(dHmean)
+    dfDmean = pd.DataFrame(dDmean)
+    dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
+    dfmotti.columns = motti_coeffient_cols
+    dfmotti.index.name=layers
+    dfmotti.to_csv(file_name,sep=" ")
+    dfmotti.to_excel("MottiCoefficients.xlsx")
+    
 def motti_init(motti_init:str,stand_data_out:str,prebas_out:str):
     """
     The first MOTTI initialization run before simulation
@@ -218,31 +298,18 @@ def prebas_input(site_info:str,model_tree_info:str):
     df_site_info['NSpecies'] = nspecies
     return (df_site_info,df_tree_info)
 
-def dgrowthprebas(year,siteInfo,initVar):
-    print("BEGIN")
+def dgrowthprebas(year,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtran,
+                  Preciptran,New_Preciptran,VPDtran,New_VPDtran,CO2tran,New_CO2tran):
+    print("DGROWTHPREBAS BEGIN")
     # Call dGrowthPrebas
-    print("SITEINFO")
-    print(siteInfo)
-    print("INITVAR")
-    print(initVar)
     res = r['dGrowthPrebas'](year,siteInfo,initVar,
-        PARtran,PARx,
-        TAirtran,TAirx,
-        Preciptran,Preciptran,
-        VPDtran,VPDtran,
-        CO2tran,CO2x)
-    #Print with  R  print
-    print("PRINT R, FIRST ITEM")
-    print("SHAPE", r.dim(res[0]))
-    r.print(res[0][0][:,0])
-    print("PRINTED R")
+        PARtran,New_PARtran,
+        TAirtran,New_TAirtran,
+        Preciptran,New_Preciptran,
+        VPDtran,New_VPDtran,
+        CO2tran,New_CO2tran)
     #To see the same in python matrix transposes T are needed
-    resT = res[0].T
-    resTT = [x.T for x in resT]
-    print("PRINT PYTHON, FIRST ITEM")
-    print("SHAPE",np.shape(res[0]),'-->',np.shape(resT))
-    print(resTT[0][0])
-    print("PRINTED PYTHON")
+    print("DGROWTH PREABS END")
     return res
 
 if __name__ == "__main__":
@@ -273,7 +340,18 @@ if __name__ == "__main__":
         #Run MOTTI and repeat
         #Prebas testing purposes
         print("DGROWTH ALL SITES")
-        res = dgrowthprebas(5,siteInfo,initVar)
-        print("DGROWTH ONE SITE")
-        res1 = dgrowthprebas(5,siteInfo[0],initVar[0])
+        res = dgrowthprebas(5,siteInfo,initVar,PARtran,PARx,TAirtran,TAirx,
+                            Preciptran,Precipx,VPDtran,VPDx,CO2tran,CO2x)
+        write_prebas_coefficients(res,"PrebasCoefficients.csv")
+        print("CO2_SITEX")
+        print(CO2tran)
+        print("END")
+        res1 = dgrowthprebas(5,siteInfo_siteX_r,initVar_siteX_r,
+                             PAR_siteX_r,newPAR_siteX_r,
+                             TAir_siteX_r,newTAir_siteX_r,
+                             Precip_siteX_r,newPrecip_siteX_r,
+                             VPD_siteX_r,newVPD_siteX_r,
+                             CO2_siteX,newCO2_siteX)
+        print("RESULT ONE SITE")
+        write_prebas_coefficients_single_site(res1,"PrebasCoefficientsSingleSite.csv")
         print("DONE")
