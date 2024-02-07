@@ -16,24 +16,24 @@ The following software must be present:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
 	
-Create Python virtual environment (e.g. *mottiprebas*) and install rpy2, numpy and pandas packages:
+Create Python virtual environment (e.g. *mottiprebas*):
 
-	#Unix like operating system
 	python -m venv mottiprebas 
+ 	#Unix like operating system
 	source mottiprebas/bin/activate
-	pip install --upgrade pip
-	pip install numpy pandas rpy2
+ 	#Windows
+  	mottiprebas/Scripts/activate
+
+Install rpy2, numpy, openpyxl and pandas packages:
 	
-	#Windows
-	python -m venv mottiprebas 
-	mottiprebas/Scripts/activate
-	pip install --upgrade pip
-	pip install numpy pandas rpy2
+ 	pip install --upgrade pip
+  	pip install setuptools wheel
+	pip install numpy pandas openpyxl rpy2
 	
 ## Run mottiprebas.py
 Start the Python virtual environment, go to *forClimate* directory and type 
 
-	python mottiprebas.py
+	python mottiprebas.py -h
 	
 Currently mottiprebas.py repeats the demonstration in *exampleFunctionDelta.r*
 and saves the results in *PrebasRes.RData* file that appears in forClimate directory.
