@@ -16,24 +16,50 @@ The following software must be present:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
 	
-Create Python virtual environment (e.g. *mottiprebas*):
+Create Python virtual environment (e.g. *mottiprebas*) and activate it:
 
 	python -m venv mottiprebas 
- 	#Unix like operating system
-	source mottiprebas/bin/activate
- 	#Windows
+ 
+ Activate in Unix like operating system
+	
+  	source mottiprebas/bin/activate
+ 
+  Activate in Windows operating system
+  
   	mottiprebas/Scripts/activate
 
-Install rpy2, numpy, openpyxl and pandas packages:
+Update pip, install Python package tools and install rpy2, numpy, openpyxl and pandas packages:
 	
  	pip install --upgrade pip
   	pip install setuptools wheel
 	pip install numpy pandas openpyxl rpy2
 	
 ## Run mottiprebas.py
-Start the Python virtual environment, go to *forClimate* directory and type 
+First, locate `mottiprebas.py` and locate the two lines in the beginning of the file:
 
-	python mottiprebas.py -h
+```python
+#R_HOME for R for Windows (comment out for Mac and Linux)
+RHOME='/Program Files/R/R-4.3.2/'
+os.environ['R_HOME'] = RHOME
+# MottiWB RUNTIME LOCATION including all necessary shared libraries
+# Change as needed using '/' for directory path also  in Windows
+MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
+```
+Edit the path strings according to `mottiwb` and `R` installation locations.
+
+Start the Python virtual environment, go to *forClimate* directory and type for command line help:
 	
-Currently mottiprebas.py repeats the demonstration in *exampleFunctionDelta.r*
-and saves the results in *PrebasRes.RData* file that appears in forClimate directory.
+ 	python mottiprebas -h
+
+To run Motti-Prebas simulations type for example:
+
+	python mottiprebas.py -y 15 -d initmotti/prebasTest.txt -s mottistand/Stand0.txt -t mottimodeltree/ModelTrees0.txt -c prebascoeff/PrebasCoeff0.txt -x MottiCoeff.xlsx
+
+ The number 15 is the simulation time. *prebasTest.txt* is used with the Motti initialization run (i.e. it must exist with 
+ reasonable content). *Stand0.txt* is is the first Motti stand level data file. *Modeltrees0.txt* is the first model tree data file. 
+ *PrebasCoeff0.txt* is the first set of Prebas coefficients dat file for Motti. *MottiCoeff.xlsx* collects generated 
+ Prebas coefficients to a single Excel file. The default growth step is 5 years.
+
+ More data files will appear in their respective directories. **Note** that the directories for data files must exist before 
+ simulation. **Note** there is currently 20 years of weather data to demonstrate the linking between Motti and Prebas.	
+
