@@ -276,7 +276,7 @@ if __name__ == "__main__":
 
     df_ls=[]
     year_ls=[]
-    for year in range(0,simulation_time+simulation_step,simulation_step):
+    for year in range(0,simulation_time,simulation_step):
         print("YEAR",year)
         (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file)
         new_stand_file = create_new_file_name(orig_stand_file,year+simulation_step)
