@@ -32,7 +32,7 @@ import argparse
 import numpy as np
 import pandas as pd
 
-#R_HOME for R, uncomment for Mac and Linux
+#R_HOME for R for Windows (comment out for Mac and Linux)
 RHOME='/Program Files/R/R-4.3.2/'
 os.environ['R_HOME'] = RHOME
 # MottiWB RUNTIME LOCATION including all necessary shared libraries
@@ -44,14 +44,24 @@ import rpy2
 # r is the handler to R interface
 from rpy2.robjects import r
 # Create R like objects from Python and vice versa.
-# It seems that after `activate` the "Python magic" happens behind the screen.
 from rpy2.robjects import numpy2ri
 numpy2ri.activate()
 
-# Motti Growth coefficients (i.e. the results to Motti)  
+# The PREBAS package must be installed in R.
+r.library("Rprebasso")
+# Function to run PREBAS twice to produce deltas of certain forest characteristics of interest
+# dGrowthPrebas is in forClimate project
+r.source("Rsrc/dGrowthPrebas.r")
+# Load and source necessary weather data files.
+# Replace sample data with real data.
+import demodata as dd
+
+#Convert dataframes to vectors or 2D arrays
+from rfunc import convert_r
+
 # Data frame column names
 # Site Info Table
-# Default values [1,1,3, 160, 0, 0, 20, 413.,0.45, 0.118] or c(NA,NA,3,160,0,0,20,nLayers,3,413,0.45,0.118)
+# Default values c(1,2,3,160,0,0,20,nLayers,3,413,0.45,0.118)
 site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "CWinit (initial crown water)", "SOGinit (initial snow on ground)",\
                   "Sinit (initial temperature acclimation state)", "NLayers", "NSpecies", "SoilDepth", "Effective field capacity",\
                   "Permanent wilthing point"]
@@ -66,76 +76,9 @@ motti_coeffient_cols = ["dGrowth_5YearMean","dH_5YearMean","dD_5YearMean"]
 layers = "Layers/ModelTrees"
 #Site type index in Motti stand file
 SITE_TYPE_INDEX = 22
-# Load and source necessary files. dGrowthPrebas.r contains
-# the PREBAS function dGrowthPrebas that will compute the deltas
-# of interesting forest characteristics (biomass, dominant height etc).
-# inputDataDeltaexample.rda contains sample input data for PREBAS.
-# Replace sample data with real data.
-r.load("data/inputDataDeltaexample.rda")
-# The PREBAS package must be installed in R.
-r.library("Rprebasso")
-# Function to run PREBAS twice to produce deltas of certain forest characteristics of interest
-# dGrowthPrebas is in forClimate project
-r.source("Rsrc/dGrowthPrebas.r")
-
-#Data variables available for Prebas after 'r.load() above'
-initVar = r['initVar']
-siteInfo = r['siteInfo']
-PARtran = r['PARtran']
-PARx = r['PARtran'] + 20
-CO2tran = r['CO2tran']
-#Note the R and Pythonic addition with matrices
-CO2x = r['CO2tran'].ro + 50
-TAirtran = r['TAirtran']
-TAirx = r['TAirtran'] + 7
-VPDtran = r['VPDtran']
-VPDx = r['VPDtran']
-Preciptran = r['Preciptran']
-Precipx = r['Preciptran']
-
-def convert_to_floatmatrix(obj):
-    (rows,cols)=np.shape(obj) 
-    return rpy2.robjects.r.matrix(obj,nrow=rows,ncol=cols)
-
-def convert_to_floatvector(obj):
-    return  rpy2.robjects.vectors.FloatVector(obj)
-
-#Single site example data
-siteX=3
-climID=2
-
-#siteInfo numpy array -> Python indexing
-siteInfo_siteX=siteInfo[siteX-1,:]
-siteInfo_siteX_r = convert_to_floatvector(siteInfo_siteX)
-#3D array
-initVar_siteX=initVar[siteX-1,:,:]
-initVar_siteX_r=convert_to_floatmatrix(initVar_siteX)
-#PAR
-PAR_siteX = PARtran[climID-1,:]
-PAR_siteX_r =  convert_to_floatvector(PAR_siteX)
-newPAR_siteX = PARx[climID-1,:]
-newPAR_siteX_r =  convert_to_floatvector(newPAR_siteX)
-#Precip
-Precip_siteX = Preciptran[climID-1,:]
-Precip_siteX_r =  convert_to_floatvector(Precip_siteX)
-newPrecip_siteX = Precipx[climID-1,:]
-newPrecip_siteX_r =  convert_to_floatvector(newPrecip_siteX)
-#TAir
-TAir_siteX = TAirtran[climID-1,:]
-TAir_siteX_r =  convert_to_floatvector(TAir_siteX)
-newTAir_siteX = TAirx[climID-1,:]
-newTAir_siteX_r =  convert_to_floatvector(newTAir_siteX)
-#VPD
-VPD_siteX = VPDtran[climID-1,:]
-VPD_siteX_r = convert_to_floatvector(VPD_siteX)
-newVPD_siteX = VPDx[climID-1,:]
-newVPD_siteX_r = convert_to_floatvector(newVPD_siteX)
-#Slicing via rx -> R indexing
-CO2_siteX = CO2tran.rx(climID,True)
-newCO2_siteX = CO2x.rx(climID,True)
 
 
-def create_output_file_name(file_name:str,year:int):
+def create_new_file_name(file_name:str,year:int):
     """
     Create new output file name by appending current simualtion year to original file name
     @param file_name Full path of the original output file name
@@ -147,10 +90,15 @@ def create_output_file_name(file_name:str,year:int):
     stem=p.stem
     parent=p.parent
     suffix=p.suffix
-    new_file_name = parent.joinpath(pathlib.Path(stem+'_'+str(year))).joinpath(pathlib.Path(suffix))
+    new_file_name = parent.joinpath(pathlib.Path(stem+'_'+str(year)+str(suffix)))
     return str(new_file_name)
 
-def write_prebas_coefficients_single_site(res,file_name:str):
+def motti_coefficients_mean(res):
+    """
+    Write the mean of dGrowthPrebas values to file for Motti
+    @param res dGrowthPrebas coeffients 
+    @retval dfmotti DataFrame of the means of coefficients in `res`.
+    """
     dG = res[0]
     dH = res[1]
     dD = res[2]
@@ -163,11 +111,25 @@ def write_prebas_coefficients_single_site(res,file_name:str):
     dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
     dfmotti.columns = motti_coeffient_cols
     dfmotti.index.name=layers
+    return dfmotti
+
+def write_prebas_coefficients_single_site(res,file_name:str):
+    """
+    Write the means of dGrowthPrebas values to file for Motti
+    @param res dGrowthPrebas coeffients 
+    @param file_name Output file name
+    @return Write to file the mean of coefficients in `res`.
+    """
+    dfmotti = motti_coefficients_mean(res)
     dfmotti.to_csv(file_name,sep=" ")
-    dfmotti.to_excel("MottiCoefficients.xlsx")
     
 def write_prebas_coefficients(res,file_name:str):
-    #Motti input data, coefficients from results
+    """
+    Write the mean of dGrowthPrebas values to file for Motti
+    @param res dGrowthPrebas coeffients 
+    @param file_name Output file name
+    @return Write to file the mean of coefficients in `res`.
+    """
     dG = res[0]
     dH = res[1]
     dD = res[2]
@@ -184,68 +146,35 @@ def write_prebas_coefficients(res,file_name:str):
     dfmotti.columns = motti_coeffient_cols
     dfmotti.index.name=layers
     dfmotti.to_csv(file_name,sep=" ")
-    dfmotti.to_excel("MottiCoefficients.xlsx")
     
-def motti_init(motti_init:str,stand_data_out:str,prebas_out:str):
+def motti_init(motti_init_file:str,motti_stand_file:str,prebas_model_tree_file:str):
     """
     The first MOTTI initialization run before simulation
-    @param motti_init the PREINIT file for MOTTI
-    @param stand_data_out The stand data output file and input data for Prebas
-    @param prebas_out The output tree level data and input data for Prebas
+    @param motti_init_file the PREINIT file for MOTTI
+    @param stand_data_file The stand data output file and input data for Prebas
+    @param prebas_model_tree_file The output model tree data and for Prebas
     """
     print("INIT BEGIN")
     subprocess.run([str(MOTTI_LOCATION.joinpath('mottiwb.exe')),'PREBAS','INISTATE',
-                    '-in',motti_init,'-out',stand_data_out,'-outprbs',prebas_out],
+                    '-in',motti_init_file,'-out',motti_stand_file,'-outprbs',prebas_model_tree_file],
                     capture_output=True,text=True)
     print("INIT DONE")
  
-def test_motti_growth_command_line():
-    #Motti growth
-    print("GROWTH BEGIN")
-    subprocess.run([str(motti_location.joinpath('mottiwb.exe')),'PREBAS','-simulate','5',
-                    '-in',str(pathlib.Path('prebasSimu/stand0.txt')),
-                    '-out',str(pathlib.Path('prebasSimu/stand1.txt')),
-                    '-outprbs',str(pathlib.Path('prebasSimu/prebasPara1.txt'))],
-                    cwd=str(motti_location),capture_output=True,text=True)
-    print("GROWTH DONE")
-
-def test_mottiprebas(site_info,init_var):
-    res = mottiprebas(5,site_info,init_var)
-    #Save results to R data file
-    #Assign `res`to R environment
-    r.assign("PrebasRes",res)
-    #Then save data
-    print("SAVE RESULTS")
-    #All results as RData file 
-    r.save("PrebasRes",file='PrebasRes.RData')
-    #Motti input data, coefficients from results
-    dG = res[0]
-    dH = res[1]
-    dD = res[2]
-    dG0 = dG[0]
-    dH0 = dH[0]
-    dD0 = dD[0]
-    dGmean = np.mean(dG0.T,axis=1)
-    dHmean = np.mean(dH0.T,axis=1)
-    dDmean = np.mean(dD0.T,axis=1)
-    dfdGmean = pd.DataFrame(dGmean)
-    dfHmean = pd.DataFrame(dHmean)
-    dfDmean = pd.DataFrame(dDmean)
-    dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
-    dfmotti.columns = motti_coeffient_cols
-    dfmotti.index.name=layers
-    dfmotti.to_csv("MottiCoefficients.txt",sep=" ")
-    dfmotti.to_excel("MottiCoefficients.xlsx")
-    #For testing purposes save initVar (first site) and SiteInfo
-    dfemptyrow = pd.DataFrame([])
-    dfInitVar = pd.DataFrame(initVar[0].T)
-    dfInitVar.columns = init_var_cols
-    dfInitVar.index.name = layers
-    dfSiteInfo = pd.DataFrame(siteInfo)
-    dfSiteInfo.columns = site_info_cols
-    dfmotticoeff = pd.concat([dfInitVar,dfSiteInfo,dfmotti],keys=['InitVar','SiteInfo','MottiCoeff'])
-    dfmotticoeff.to_excel("MottPrebas.xlsx")  
-    print("DONE")
+def motti_growth(years,motti_input_stand_file:str,motti_output_stand_file:str,prebas_model_tree_file:str,prebas_coeff_file:str):
+    """
+    Motti growth
+    @param years Simulation years
+    @param motti_input_stand_file  Motti stand file
+    @param motti_output_stand_file Motti stand file after simulation
+    @param prebas_model_tree_file Motti model tree file for Prebas
+    @param prebas_coeff_file Coefficients from Prebas to be used in Motti
+    """
+    print("MOTTI GROWTH BEGIN")
+    subprocess.run([str(MOTTI_LOCATION.joinpath('mottiwb.exe')),'PREBAS','-simulate',str(years),
+                    '-in',motti_input_stand_file,'-out',motti_output_stand_file,
+                    '-outprbs',prebas_model_tree_file,'-prebascoeff',prebas_coeff_file],
+                   capture_output=True,text=True)
+    print("MOTTI GROWTH DONE")
 
 def read_motti_site_type(f:str)->float:
     """
@@ -266,16 +195,15 @@ def read_motti_model_tree_info(f:str):
     @param f Motti model tree info file
     @return Data frame of model tree info, Number of model trees, number of tree species
     """
-    df = pd.read_csv(f,engine='python',sep='\s+',nrows=30,decimal=',',names=['INDEX1','INDEX2','INDEX3','VALUE'])
-    dfg = df.groupby(['INDEX3'])
+    df = pd.read_csv(f,engine='python',sep='\s+',decimal=',',names=['INDEX0','INDEX1','INDEX2','VALUE'])
+    dfg = df.groupby(['INDEX2'])
     ngroups = dfg.ngroups
     lss = []
     for n in range(1,ngroups+1):
-        g = dfg.get_group(n)
+        g = dfg.get_group((n,))
         g.reset_index()
         s = list(g['VALUE'])
         lss.append(s)
-    print(lss[0])
     df_tree_info = pd.DataFrame(lss)
     df_tree_info['Ac'] = 0.0
     df_tree_info.columns = init_var_cols
@@ -290,68 +218,91 @@ def prebas_input(site_info:str,model_tree_info:str):
     @return Prebas dataframes for Site info and tree/layer level Initial variables
     """
     site_type =  read_motti_site_type(site_info)
-    print(site_type)
     (df_tree_info,n_model_trees,nspecies) =  read_motti_model_tree_info(model_tree_info)
     df_site_info = pd.DataFrame(data=0,index=[0],columns=site_info_cols)
+    df_site_info['SiteID'] = 1
+    df_site_info['climID'] = 2
     df_site_info['SiteType'] = site_type
+    df_site_info['SWinit (initial soil water)'] = 160.0
+    df_site_info['Sinit (initial temperature acclimation state)'] = 20.0
     df_site_info['NLayers'] = n_model_trees
     df_site_info['NSpecies'] = nspecies
+    df_site_info['SoilDepth'] = 413.0
+    df_site_info["Effective field capacity"] = 45.0
+    df_site_info["Permanent wilthing point"] = 0.118
+    
     return (df_site_info,df_tree_info)
 
-def dgrowthprebas(year,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtran,
+def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtran,
                   Preciptran,New_Preciptran,VPDtran,New_VPDtran,CO2tran,New_CO2tran):
+    """
+    Call to dGrowthPrebas
+    @param years Number of years to simulate
+    @param siteInfo Site data from Motti plus Prebas default values
+    @param initVar Model tree data from Motti
+    \note PARtran - New_CO2tran weather data for Prebas
+    """
     print("DGROWTHPREBAS BEGIN")
     # Call dGrowthPrebas
-    res = r['dGrowthPrebas'](year,siteInfo,initVar,
+    res = r['dGrowthPrebas'](years,siteInfo,initVar,
         PARtran,New_PARtran,
         TAirtran,New_TAirtran,
         Preciptran,New_Preciptran,
         VPDtran,New_VPDtran,
         CO2tran,New_CO2tran)
     #To see the same in python matrix transposes T are needed
-    print("DGROWTH PREABS END")
+    print("DGROWTH PREBAS END")
     return res
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-y","--years",dest="y",type=int,required=True,help="Total simulation years")
     parser.add_argument("-i","--interval",dest="i",type=int,default=5,help="Prebas simulation years (interval), default 5 years")
-    parser.add_argument("-d","--initdata",dest="d",type=str,required=True,help="Read Motti initial data file")
-    parser.add_argument("-s","--stand",dest="s", type=str,required=True,help="Motti stand output file (full path)")
-    parser.add_argument("-p","--prebas",dest="p",type=str,required=True,help="Prebas data file (full path)")
+    parser.add_argument("-d","--initdata",dest="d",type=str,required=True,help="Motti initial data file (full path)")
+    parser.add_argument("-s","--stand",dest="s", type=str,required=True,help="Motti stand  file (full path)")
+    parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,help="Motti model tree file (full path)")
+    parser.add_argument("-c","--coeff",dest="c",type=str,required=True,help="Prebas coefficients")
+    parser.add_argument("-x","--excel_file",dest="x",type=str,default="MottiCoefficients.xlsx",help="Motti coefficients excel file")
     args = parser.parse_args()
-    
-    motti_init(args.d,args.s,args.p)
 
-    current_stand_file = args.s
-    current_prebas_file = args.p
-    for year in range(args.i,args.y+args.i,args.i):
-        (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_prebas_file)
-        print(df_site_info)
-        print(df_tree_info)
-        site_info_array = df_site_info.to_numpy()
-        #R and python have different views to matrices
-        #Transposse Python matrix to get R matrix
-        tree_info_array = df_tree_info.T.to_numpy()
-        #Run dGrowthPrebas
-        #res = dgrowthprebas(args.i,site_info_array,tree_info_array)
-        #Write the results 'res' to Prebas coeffients file
-        #Update 'current_stand_file' and 'current_prebas_file'  
-        #Run MOTTI and repeat
-        #Prebas testing purposes
-        print("DGROWTH ALL SITES")
-        res = dgrowthprebas(5,siteInfo,initVar,PARtran,PARx,TAirtran,TAirx,
-                            Preciptran,Precipx,VPDtran,VPDx,CO2tran,CO2x)
-        write_prebas_coefficients(res,"PrebasCoefficients.csv")
-        print("CO2_SITEX")
-        print(CO2tran)
-        print("END")
-        res1 = dgrowthprebas(5,siteInfo_siteX_r,initVar_siteX_r,
-                             PAR_siteX_r,newPAR_siteX_r,
-                             TAir_siteX_r,newTAir_siteX_r,
-                             Precip_siteX_r,newPrecip_siteX_r,
-                             VPD_siteX_r,newVPD_siteX_r,
-                             CO2_siteX,newCO2_siteX)
-        print("RESULT ONE SITE")
-        write_prebas_coefficients_single_site(res1,"PrebasCoefficientsSingleSite.csv")
-        print("DONE")
+    
+    orig_stand_file = current_stand_file = args.s
+    orig_model_tree_file = current_model_tree_file = args.t
+    orig_coeff_file = current_coeff_file = args.c
+    initial_data_file = args.d
+    simulation_time = args.y 
+    simulation_step = args.i
+    motti_init(initial_data_file,current_stand_file,current_model_tree_file)
+
+    df_ls=[]
+    year_ls=[]
+    for year in range(0,simulation_time+simulation_step,simulation_step):
+        print("YEAR",year)
+        (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file)
+        new_stand_file = create_new_file_name(orig_stand_file,year+simulation_step)
+        new_model_tree_file = create_new_file_name(orig_model_tree_file,year+simulation_step)
+        current_coeff_file = create_new_file_name(orig_coeff_file,year+simulation_step)
+        #Site info is data frame but Prebas reuires data array 
+        #Tree info is N trees x 7 data frame but Prebas requires 7 x N trees matrix (2D data array)
+        (site_info_r,tree_info_r) = convert_r(df_site_info,df_tree_info.T)
+        #Using Francesco data max 20 years
+        #Slice vectors to start at the right point 
+        res = dgrowthprebas(simulation_step,site_info_r,tree_info_r,
+                             dd.PAR_siteX_r[365*year:],dd.newPAR_siteX_r[365*year:],
+                             dd.TAir_siteX_r[365*year:],dd.newTAir_siteX_r[365*year:],
+                             dd.Precip_siteX_r[365*year:],dd.newPrecip_siteX_r[365*year:],
+                             dd.VPD_siteX_r[365*year:],dd.newVPD_siteX_r[365*year:],
+                             dd.CO2_siteX[365*year:],dd.newCO2_siteX[365*year:])
+        write_prebas_coefficients_single_site(res,current_coeff_file)
+        df = motti_coefficients_mean(res)
+        df_ls.append(df)
+        year_ls.append(str(year))
+        motti_growth(simulation_step,current_stand_file,new_stand_file,new_model_tree_file,current_coeff_file)
+        current_stand_file = new_stand_file
+        current_model_tree_file = new_model_tree_file
+
+    #As extra write coeffients to excel file
+    excel_writer = pd.ExcelWriter(args.x, engine='openpyxl')
+    for (df,year) in zip(df_ls,year_ls):
+        df.to_excel(excel_writer,sheet_name="Year "+year)
+    excel_writer.close()
