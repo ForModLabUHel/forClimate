@@ -12,7 +12,7 @@ The following software must be present:
 
 + Rprebasso: Download from GitHub and use the instructions in GitHub to install in R.
   - mottiprebas.py requires that Rprebasso package (i.e. PREBAS) is installed in R.
-+ forClimate: Download from GitHub.
++ forClimate: This project. Download from GitHub.
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
 	
