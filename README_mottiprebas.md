@@ -35,7 +35,7 @@ Update pip, install Python package tools and install rpy2, numpy, openpyxl and p
 	pip install numpy pandas openpyxl rpy2
 	
 ## Run mottiprebas.py
-First, find `mottiprebas.py` and locate the two lines in the beginning of the file:
+First, find `mottiprebas.py` and locate the two lines in the beginning of the file for RHOME and MOTTI_LOCATION:
 
 ```python
 #R_HOME for R for Windows (comment out for Mac and Linux)
@@ -45,7 +45,7 @@ os.environ['R_HOME'] = RHOME
 # Change as needed using '/' for directory path also  in Windows
 MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
 ```
-Edit the path strings according to `mottiwb` and `R` installation locations.
+Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and `mottiwb` installation locations respectively.
 
 Start the Python virtual environment, go to *forClimate* directory and type for command line help:
 	
