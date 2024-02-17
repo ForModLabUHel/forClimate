@@ -78,11 +78,11 @@ layers = "Layers/ModelTrees"
 SITE_TYPE_INDEX = 22
 
 
-def create_new_file_name(file_name:str,year:int):
+def create_new_file_name(file_name:str,year):
     """
     Create new output file name by appending current simualtion year to original file name
     @param file_name Full path of the original output file name
-    @param year Current simulation years
+    @param year Current simulation years or some other description 
     @return New file name with 'year' appended to the stem of the 'file_name'
     @retval new_file_name New file name as string
     """
@@ -281,7 +281,7 @@ if __name__ == "__main__":
         (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file)
         new_stand_file = create_new_file_name(orig_stand_file,year+simulation_step)
         new_model_tree_file = create_new_file_name(orig_model_tree_file,year+simulation_step)
-        current_coeff_file = create_new_file_name(orig_coeff_file,year+simulation_step)
+        current_coeff_file = create_new_file_name(orig_coeff_file,str(year)+'-'+str(year+simulation_step))
         #Site info is data frame but Prebas reuires data array 
         #Tree info is N trees x 7 data frame but Prebas requires 7 x N trees matrix (2D data array)
         (site_info_r,tree_info_r) = convert_r(df_site_info,df_tree_info.T)
@@ -296,7 +296,7 @@ if __name__ == "__main__":
         write_prebas_coefficients_single_site(res,current_coeff_file)
         df = motti_coefficients_mean(res)
         df_ls.append(df)
-        year_ls.append(str(year))
+        year_ls.append(year)
         motti_growth(simulation_step,current_stand_file,new_stand_file,new_model_tree_file,current_coeff_file)
         current_stand_file = new_stand_file
         current_model_tree_file = new_model_tree_file
@@ -304,5 +304,5 @@ if __name__ == "__main__":
     #As extra write coeffients to excel file
     excel_writer = pd.ExcelWriter(args.x, engine='openpyxl')
     for (df,year) in zip(df_ls,year_ls):
-        df.to_excel(excel_writer,sheet_name="Year "+year)
+        df.to_excel(excel_writer,sheet_name="Year "+str(year)+'-'+str(year+simulation_step))
     excel_writer.close()
