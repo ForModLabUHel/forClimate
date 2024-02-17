@@ -262,7 +262,7 @@ if __name__ == "__main__":
     parser.add_argument("-s","--stand",dest="s", type=str,required=True,help="Motti stand  file (full path)")
     parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,help="Motti model tree file (full path)")
     parser.add_argument("-c","--coeff",dest="c",type=str,required=True,help="Prebas coefficients")
-    parser.add_argument("-x","--excel_file",dest="x",type=str,default="MottiCoefficients.xlsx",help="Motti coefficients excel file")
+    parser.add_argument("-x","--excel_file",dest="x",type=str,default=None,help="Motti coefficients excel file")
     args = parser.parse_args()
 
     
@@ -302,7 +302,8 @@ if __name__ == "__main__":
         current_model_tree_file = new_model_tree_file
 
     #As extra write coeffients to excel file
-    excel_writer = pd.ExcelWriter(args.x, engine='openpyxl')
-    for (df,year) in zip(df_ls,year_ls):
-        df.to_excel(excel_writer,sheet_name="Year "+str(year)+'-'+str(year+simulation_step))
-    excel_writer.close()
+    if args.x:
+        excel_writer = pd.ExcelWriter(args.x, engine='openpyxl')
+        for (df,year) in zip(df_ls,year_ls):
+            df.to_excel(excel_writer,sheet_name="Year "+str(year)+'-'+str(year+simulation_step))
+        excel_writer.close()
