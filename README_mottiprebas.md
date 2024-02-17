@@ -53,14 +53,15 @@ Start the Python virtual environment, go to *forClimate* directory and type for 
 
 To run Motti-Prebas simulations type for example:
 
-	python mottiprebas.py -y 20 -d initmotti/prebasTest.txt -s mottistand/Stand0.txt -t mottimodeltree/ModelTrees0.txt -c prebascoeff/PrebasCoeff0.txt -x MottiCoeff.xlsx
+	python mottiprebas.py -y 20 -d initmotti/prebasTest.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoeff.txt -x prebascoeff/MottiCoeff.xlsx
 
  The number 20 is the simulation time (years). The last growth step is from 15 to 20, i.e the growth step  is 5 by default.  
  *prebasTest.txt* is used with the Motti initialization run (the file must exist with reasonable content).
- *Stand0.txt* is is the first Motti stand level data file. *Modeltrees0.txt* is the first model tree data file. 
- *PrebasCoeff0.txt* is the first set of Prebas coefficients dat file for Motti. *MottiCoeff.xlsx* collects generated 
- Prebas coefficients to a single Excel file.
+ *Stand.txt* is is the first Motti stand level data file. *Modeltrees.txt* will the first model tree data file.
+ They also provide name templates for files to be created during simulation.  *PrebasCoeff.txt* is the name
+ template for Prebas coeffient files. *MottiCoeff.xlsx* collects generated Prebas coefficients to a single Excel file (optional).
 
- More data files will appear in their respective directories. **Note** that the directories for data files must exist before 
- simulation. **Note** there is currently 20 years of weather data to demonstrate the linking between Motti and Prebas.	
+ Data files will appear in their respective directories and named using simulation steps. **Note** that the directories
+ for data files must exist before simulation. **Note** there is currently 20 years of weather data to demonstrate the
+ linking between Motti and Prebas.	
 
