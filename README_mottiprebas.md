@@ -58,7 +58,7 @@ To run Motti-Prebas simulations type for example:
  **Note** that the directories for data files must exist before simulation. The number 20 is the simulation time (years). 
  The last growth step is from 15 to 20, i.e the growth step  is 5 by default.  *prebasTest.txt* is used with the Motti initialization 
  run (the file must exist with reasonable content). *Stand.txt* is is the first Motti stand level data file and 
- *ModelTrees.txt* will the first model tree data file after the initialization run. They also provide name templates 
+ *ModelTrees.txt* is the first model tree data file after the initialization run. They also provide name templates 
  for files to be created during simulation. *PrebasCoeff.txt* is the name template for Prebas coeffient files. 
  *PrebasCoeff.xlsx* collects generated Prebas coefficients in a single Excel file (optional).
 
