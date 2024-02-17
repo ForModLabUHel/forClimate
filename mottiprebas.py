@@ -279,8 +279,8 @@ if __name__ == "__main__":
     for year in range(0,simulation_time,simulation_step):
         print("YEAR",year)
         (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file)
-        new_stand_file = create_new_file_name(orig_stand_file,year+simulation_step)
-        new_model_tree_file = create_new_file_name(orig_model_tree_file,year+simulation_step)
+        new_stand_file = create_new_file_name(orig_stand_file,str(year)+'-'+str(year+simulation_step))
+        new_model_tree_file = create_new_file_name(orig_model_tree_file,str(year)+'-'+str(year+simulation_step))
         current_coeff_file = create_new_file_name(orig_coeff_file,str(year)+'-'+str(year+simulation_step))
         #Site info is data frame but Prebas reuires data array 
         #Tree info is N trees x 7 data frame but Prebas requires 7 x N trees matrix (2D data array)
