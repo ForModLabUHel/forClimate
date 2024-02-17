@@ -35,7 +35,7 @@ Update pip, install Python package tools and install rpy2, numpy, openpyxl and p
 	pip install numpy pandas openpyxl rpy2
 	
 ## Run mottiprebas.py
-First, locate `mottiprebas.py` and locate the two lines in the beginning of the file:
+First, find `mottiprebas.py` and locate the two lines in the beginning of the file:
 
 ```python
 #R_HOME for R for Windows (comment out for Mac and Linux)
