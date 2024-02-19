@@ -38,6 +38,8 @@ os.environ['R_HOME'] = RHOME
 # MottiWB RUNTIME LOCATION including all necessary shared libraries
 # Change as needed using '/' for directory path also  in Windows
 MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
+#Motti workbench
+MOTTIWB='mottiwb.exe'
 
 # rpy2 is the glue between Python and R
 import rpy2
@@ -155,7 +157,7 @@ def motti_init(motti_init_file:str,motti_stand_file:str,prebas_model_tree_file:s
     @param prebas_model_tree_file The output model tree data and for Prebas
     """
     print("INIT BEGIN")
-    subprocess.run([str(MOTTI_LOCATION.joinpath('mottiwb.exe')),'PREBAS','INISTATE',
+    subprocess.run([str(MOTTI_LOCATION.joinpath(MOTTIWB)),'PREBAS','INISTATE',
                     '-in',motti_init_file,'-out',motti_stand_file,'-outprbs',prebas_model_tree_file],
                     capture_output=True,text=True)
     print("INIT DONE")
@@ -170,7 +172,7 @@ def motti_growth(years,motti_input_stand_file:str,motti_output_stand_file:str,pr
     @param prebas_coeff_file Coefficients from Prebas to be used in Motti
     """
     print("MOTTI GROWTH BEGIN")
-    subprocess.run([str(MOTTI_LOCATION.joinpath('mottiwb.exe')),'PREBAS','-simulate',str(years),
+    subprocess.run([str(MOTTI_LOCATION.joinpath(MOTTIWB)),'PREBAS','-simulate',str(years),
                     '-in',motti_input_stand_file,'-out',motti_output_stand_file,
                     '-outprbs',prebas_model_tree_file,'-prebascoeff',prebas_coeff_file],
                    capture_output=True,text=True)
