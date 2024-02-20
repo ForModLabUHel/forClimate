@@ -63,7 +63,7 @@ MOTTIWB is the name of the Motti workbench binary.
 To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
 go to *forClimate* directory and type for command line help:
 	
- 	python mottiprebas -h
+ 	python mottiprebas.py -h
 
 To run Motti-Prebas simulations type for example:
 
