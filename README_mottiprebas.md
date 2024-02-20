@@ -12,28 +12,57 @@ The following software must be present:
 
 + Rprebasso: Download from GitHub and use the instructions in GitHub to install in R.
   - mottiprebas.py requires that Rprebasso package (i.e. PREBAS) is installed in R.
-+ forClimate: Download from GitHub.
++ forClimate: This project. Download from GitHub.
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
 	
-Create Python virtual environment (e.g. *mottiprebas*):
+Create Python virtual environment (e.g. *mottiprebas*) and activate it:
 
 	python -m venv mottiprebas 
- 	#Unix like operating system
-	source mottiprebas/bin/activate
- 	#Windows
+ 
+ Activate in Unix like operating system
+	
+  	source mottiprebas/bin/activate
+ 
+  Activate in Windows operating system
+  
   	mottiprebas/Scripts/activate
 
-Install rpy2, numpy, openpyxl and pandas packages:
+Update pip, install Python package tools and install rpy2, numpy, openpyxl and pandas packages:
 	
  	pip install --upgrade pip
   	pip install setuptools wheel
 	pip install numpy pandas openpyxl rpy2
 	
 ## Run mottiprebas.py
-Start the Python virtual environment, go to *forClimate* directory and type 
+First, find `mottiprebas.py` and locate the two lines in the beginning of the file for RHOME and MOTTI_LOCATION:
 
-	python mottiprebas.py -h
+```python
+#R_HOME for R for Windows (comment out for Mac and Linux)
+RHOME='/Program Files/R/R-4.3.2/'
+os.environ['R_HOME'] = RHOME
+# MottiWB RUNTIME LOCATION including all necessary shared libraries
+# Change as needed using '/' for directory path also  in Windows
+MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
+```
+Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and `mottiwb` installation locations respectively.
+
+Start the Python virtual environment, go to *forClimate* directory and type for command line help:
 	
-Currently mottiprebas.py repeats the demonstration in *exampleFunctionDelta.r*
-and saves the results in *PrebasRes.RData* file that appears in forClimate directory.
+ 	python mottiprebas -h
+
+To run Motti-Prebas simulations type for example:
+
+	python mottiprebas.py -y 20 -d initmotti/prebasTest.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient.txt -x prebascoeff/PrebasCoefficient.xlsx
+
+ **Note** that the directories for data files must exist before simulation. The number 20 is the simulation time (years). 
+ The last growth step is from 15 to 20, i.e the growth step  is 5 by default.  *prebasTest.txt* is used with the Motti initialization 
+ run (the file must exist with reasonable content). *Stand.txt* is is the first Motti stand level data file and 
+ *ModelTrees.txt* is the first model tree data file after the initialization run. They also provide name templates 
+ for files to be created during simulation. *PrebasCoefficient.txt* is the name template for PREBAS coeffient files. 
+ *PrebasCoefficient.xlsx* collects generated Prebas coefficients in a single Excel file (optional).
+
+ Data files will appear in their respective directories and named using simulation steps. For example *PrebasCoeff_5-10.txt* contains 
+ coefficients for the simulation step 5 to 10. **Note** there is currently 20 years of weather data to demonstrate 
+ the linking between Motti and PREBAS.	
+
