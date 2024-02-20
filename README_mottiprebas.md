@@ -36,8 +36,12 @@ Update pip, install Python package tools and install rpy2, numpy, openpyxl and p
   	pip install setuptools wheel
 	pip install numpy pandas openpyxl rpy2
 	
-## Run mottiprebas.py
-First, find `mottiprebas.py` and locate the two lines in the beginning of the file for RHOME and MOTTI_LOCATION:
+## mottiprebas.py
+`mottiprebas.py` runs Motti workbench and PREABAS interchangeably and lets PREABAS to produce a set of coefficients 
+for Motti to take the warming climate into account in simulations.
+
+First, find `mottiprebas.py` in forClimate and locate the three lines in the beginning of the file for 
+RHOME, MOTTI_LOCATION and MOTTIWB:
 
 ```python
 #R_HOME for R for Windows (comment out for Mac and Linux)
@@ -46,10 +50,14 @@ os.environ['R_HOME'] = RHOME
 # MottiWB RUNTIME LOCATION including all necessary shared libraries
 # Change as needed using '/' for directory path also  in Windows
 MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
+#Motti workbench
+MOTTIWB='mottiwb.exe'
 ```
 Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and `mottiwb` installation locations respectively.
+MOTTIWB is the name of the Motti workbench binary.
 
-Start the Python virtual environment, go to *forClimate* directory and type for command line help:
+To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
+go to *forClimate* directory and type for command line help:
 	
  	python mottiprebas -h
 
