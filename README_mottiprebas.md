@@ -12,7 +12,8 @@ The following software must be present:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R/RStudio: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
    - Rtools: Compilers to build R packages in Windows. Download from [R for Windows](https://cran.r-project.org).
-+ Rprebasso: Download from GitHub and use the instructions in GitHub to install in R.
++ [Rprebasso](https://github.com/ForModLabUHel/Rprebasso): Download from GitHub and use the instructions in GitHub
+  to install in R.
    - forClimate requires that Rprebasso package (i.e. PREBAS) is installed in R.
 
 + forClimate: This project. Download from GitHub.
