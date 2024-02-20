@@ -15,7 +15,8 @@ The following software must be present:
 + [Rprebasso](https://github.com/ForModLabUHel/Rprebasso): Download from GitHub and use the instructions in GitHub
   to install in R.
    - forClimate requires that Rprebasso package (i.e. PREBAS) is installed in R.
-
+   - To install from the local download directory):
+      - install.packages('Rprebasso',repos=NULL,type='sources')
 + forClimate: This project. Download from GitHub.
 
 	
