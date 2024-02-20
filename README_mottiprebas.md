@@ -11,13 +11,14 @@ is certainly trickier with no prior experience.
 The following software must be present:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R/RStudio: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
-   - Rtools: Compilers to build R packages in Windows. Download from [R for Windows](https://cran.r-project.org).
-+ [Rprebasso](https://github.com/ForModLabUHel/Rprebasso): Download from GitHub and use the instructions in GitHub
-  to install in R.
+   - Rtools: Compilers to build Fortran and C source files in PREBAS. Download from [R for Windows](https://cran.r-project.org).
++ [Rprebasso](https://github.com/ForModLabUHel/Rprebasso): Download from GitHub. Use the instructions in the GitHub README
+  file to install in R.
    - forClimate requires that Rprebasso package (i.e. PREBAS) is installed in R.
-   - To install from the local download directory):
+   - To install from the local download directory:
       - install.packages('Rprebasso',repos=NULL,type='sources')
 + forClimate: This project. Download from GitHub.
+
 
 	
 Create Python virtual environment (e.g. with the name *mottiprebas*):
