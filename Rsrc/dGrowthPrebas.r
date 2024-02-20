@@ -47,17 +47,7 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                     ){
   if(is.null(nrow(siteInfo)) & length(siteInfo==12)){
     nSites <- 1
-    print("ONESITE SITEINFO R")
-    print(siteInfo)
-    print("INITVAR")
-    print(initVar)
   }else{
-    print("SITEINFO_R")
-    print(siteInfo)
-    print("NROWS")
-    print(nrow(siteInfo))
-    print("LENGTH")
-    print(length(siteInfo))
     nSites <- nrow(siteInfo)  
   }
   
