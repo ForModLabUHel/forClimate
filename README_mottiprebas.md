@@ -19,21 +19,24 @@ The following software must be present:
 + forClimate: This project. Download from GitHub.
 
 	
-Create Python virtual environment (e.g. *mottiprebas*) and activate it:
+Create Python virtual environment (e.g. with the name *mottiprebas*):
 
 	python -m venv mottiprebas 
  
- Activate in Unix like operating system
+ Activate the virtual environment in Unix like operating system
 	
   	source mottiprebas/bin/activate
  
-  Activate in Windows operating system
+  Activate the virtual environment in Windows operating system
   
   	mottiprebas/Scripts/activate
 
-Update pip, install Python package tools and install rpy2, numpy, openpyxl and pandas packages:
-	
- 	pip install --upgrade pip
+Update pip (Python package installation tool):
+
+	python -m pip install --upgrade pip
+    
+Install Python package tools and install rpy2, numpy, openpyxl and pandas packages:
+
   	pip install setuptools wheel
 	pip install numpy pandas openpyxl rpy2
 	
