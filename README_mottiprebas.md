@@ -19,7 +19,7 @@ The following software must be present:
       - install.packages('Rprebasso',repos=NULL,type='sources')
 + forClimate: This project. Download from GitHub.
 
-Python and R/RStudio from Luke Software Center.
+Python and R/RStudio are available from Luke Software Center.
 
 	
 Create Python virtual environment (e.g. with the name *mottiprebas*):
