@@ -8,7 +8,7 @@ for example in some customer projects. Using Pascal shared libraries
 is certainly trickier with no prior experience.
 
 ## Installation
-The following software must be present. Python and R/RStudio are available from Luke Software Center:
+The following software must be present. Python, R/RStudio and RTools are available from Luke Software Center:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R/RStudio: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
    - Rtools: Compilers to build Fortran and C source files in PREBAS. Download from [CRAN/R for Windows](https://cran.r-project.org).
