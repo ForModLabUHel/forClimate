@@ -16,7 +16,7 @@ The following software must be present. Python and R/RStudio are available from 
   file to install the latest development version in R.
    - forClimate requires that Rprebasso package (i.e. PREBAS) is installed in R.
    - To install Rprebasso from the local download directory:
-      - install.packages('Rprebasso',repos=NULL,type='sources')
+      - install.packages('path\to\Rprebasso',repos=NULL,type='sources')
 + forClimate: This project. Download from GitHub.
 	
 Create Python virtual environment (e.g. with the name *mottiprebas*):
