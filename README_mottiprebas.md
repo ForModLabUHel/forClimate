@@ -35,7 +35,7 @@ Update pip (Python package installation tool):
 
 	python -m pip install --upgrade pip
     
-Install Python package tools *setuptools* and *wheel*. Install numpy, pyarrow, pandas, openpyxl* and *rpy2* packages:
+Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, pandas, openpyxl* and *rpy2* packages:
 
   	pip install setuptools wheel
 	pip install numpy pyarrow pandas openpyxl rpy2 
