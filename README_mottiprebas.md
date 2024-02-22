@@ -38,7 +38,7 @@ Update pip (Python package installation tool):
 Install Python package tools and install rpy2, numpy, openpyxl and pandas packages:
 
   	pip install setuptools wheel
-	pip install numpy pandas openpyxl rpy2
+	pip install numpy pyarrow pandas openpyxl rpy2 
 	
 ## mottiprebas.py
 `mottiprebas.py` runs Motti workbench and PREABAS interchangeably and lets PREABAS to produce a set of coefficients 
