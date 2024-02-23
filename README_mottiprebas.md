@@ -60,8 +60,8 @@ MOTTIWB='mottiwb.exe'
 DECIMALPOINT=','
 ```
 Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and Motti workbench installation locations respectively.
-MOTTIWB is the name of the Motti workbench binary. `mottiwb` uses decimal marker according to locale. 
-Change the default decimal separator comma (`,`) for period (`.`)  in DECIMALPOINT if needed.
+MOTTIWB is the name of the Motti workbench binary. The binary (default `mottiwb.exe`) uses decimal marker
+according to locale in use.  Change the default decimal separator comma (`,`) for period (`.`)  in DECIMALPOINT if needed.
 
 To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
 go to *forClimate* directory and type for command line help:
