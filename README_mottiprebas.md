@@ -44,7 +44,7 @@ Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, 
 `mottiprebas.py` runs Motti workbench and PREABAS interchangeably and lets PREABAS to produce a set of coefficients 
 for Motti to take the warming climate into account in simulations.
 
-First, find `mottiprebas.py` in forClimate and locate the three lines in the beginning of the file for 
+First, find `mottiprebas.py` in forClimate and locate the four lines in the beginning of the file for 
 RHOME, MOTTI_LOCATION, MOTTIWB and DECIMALPOINT:
 
 ```python
