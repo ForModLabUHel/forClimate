@@ -59,7 +59,7 @@ MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
 DECIMALPOINT=','
 ```
-Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and `mottiwb` installation locations respectively.
+Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and Motti workbench installation locations respectively.
 MOTTIWB is the name of the Motti workbench binary. `mottiwb` uses decimal marker according to locale. 
 Change the default comma (`,`) for DECIMALPOINT if needed.
 
