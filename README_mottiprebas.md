@@ -45,7 +45,7 @@ Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, 
 for Motti to take the warming climate into account in simulations.
 
 First, find `mottiprebas.py` in forClimate and locate the four lines in the beginning of the file for 
-RHOME, MOTTI_LOCATION, MOTTIWB and DECIMALPOINT:
+RHOME, MOTTI_LOCATION, MOTTIWB and DECIMALMARKER:
 
 ```python
 #R_HOME for R for Windows (comment out for Mac and Linux)
@@ -57,11 +57,11 @@ MOTTI_LOCATION=pathlib.Path("/dev/MyGit/mottiwb/mottiWB")
 #Motti workbench
 MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
-DECIMALPOINT=','
+DECIMALMARKER='.'
 ```
 Edit the path strings for RHOME and MOTTI_LOCATION according to `R` and Motti workbench installation locations respectively.
 MOTTIWB is the name of the Motti workbench binary. The binary (default `mottiwb.exe`) uses decimal marker
-according to locale in use.  Change the default decimal separator comma (`,`) for period (`.`)  in DECIMALPOINT if needed.
+according to locale in use.  Change the default decimal separator in DECIMALMARKER if needed.
 
 To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
 go to *forClimate* directory and type for command line help:
