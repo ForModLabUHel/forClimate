@@ -37,11 +37,11 @@ RHOME='/Program Files/R/R-4.3.2/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
-MOTTI_LOCATION=pathlib.Path("/dev/MyGit/mottiwb/mottiWB/")
+MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
 #Motti workbench executable name
 MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
-DECIMALMARKER='.'
+DECIMALMARKER=','
 
 # rpy2 is the glue between Python and R
 import rpy2
@@ -159,7 +159,7 @@ def motti_init(motti_init_file:str,motti_stand_file:str,prebas_model_tree_file:s
     @param prebas_model_tree_file The output model tree data and for Prebas
     """
     print("INIT BEGIN")
-    print(motti_init_file,motti_stand_file,prebas_model_tree_file)
+    print("INPUT:",motti_init_file,"OUTPUT:",motti_stand_file,prebas_model_tree_file)
     subprocess.run([str(MOTTI_LOCATION.joinpath(MOTTIWB)),'PREBAS','INISTATE',
                         '-in',motti_init_file,'-out',motti_stand_file,'-outprbs',prebas_model_tree_file],
                        capture_output=True,text=True)
