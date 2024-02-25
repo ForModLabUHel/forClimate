@@ -41,7 +41,7 @@ MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
 #Motti workbench executable name
 MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
-DECIMALMARKER=','
+DECIMALMARKER='.'
 
 # rpy2 is the glue between Python and R
 import rpy2
