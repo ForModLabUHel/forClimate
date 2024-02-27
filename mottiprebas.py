@@ -26,6 +26,7 @@
 ## and saves the results in RData file.
 
 import os
+import re
 import subprocess
 import pathlib
 import argparse
@@ -189,7 +190,7 @@ def read_motti_site_type(f:str)->float:
     @return Site type
     @retval stype Site type as float 
     """
-    df = pd.read_csv(f,engine='python',sep='\s+',nrows=30,decimal=DECIMALMARKER,names=['Index','Value'],header=0)
+    df = pd.read_csv(f,engine='python',sep=re.compile(r'\s+'),nrows=30,decimal=DECIMALMARKER,names=['Index','Value'],header=0)
     stype = df[df['Index']==SITE_TYPE_INDEX].iloc[0,1]
     return stype
 
@@ -200,7 +201,7 @@ def read_motti_model_tree_info(f:str):
     @param f Motti model tree info file
     @return Data frame of model tree info, Number of model trees, number of tree species
     """
-    df = pd.read_csv(f,engine='python',sep='\s+',decimal=DECIMALMARKER,names=['INDEX0','INDEX1','INDEX2','VALUE'])
+    df = pd.read_csv(f,engine='python',sep=re.compile(r'\s+'),decimal=DECIMALMARKER,names=['INDEX0','INDEX1','INDEX2','VALUE'])
     dfg = df.groupby(['INDEX2'])
     ngroups = dfg.ngroups
     lss = []
