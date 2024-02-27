@@ -37,11 +37,11 @@ RHOME='/Program Files/R/R-4.3.2/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
-MOTTI_LOCATION=pathlib.Path("/dev/MyGit/mottiwb/mottiWB/")
+MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
 #Motti workbench executable name
 MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
-DECIMALPOINT=','
+DECIMALMARKER='.'
 
 # rpy2 is the glue between Python and R
 import rpy2
@@ -159,7 +159,7 @@ def motti_init(motti_init_file:str,motti_stand_file:str,prebas_model_tree_file:s
     @param prebas_model_tree_file The output model tree data and for Prebas
     """
     print("INIT BEGIN")
-    print(motti_init_file,motti_stand_file,prebas_model_tree_file)
+    print("INPUT:",motti_init_file,"OUTPUT:",motti_stand_file,prebas_model_tree_file)
     subprocess.run([str(MOTTI_LOCATION.joinpath(MOTTIWB)),'PREBAS','INISTATE',
                         '-in',motti_init_file,'-out',motti_stand_file,'-outprbs',prebas_model_tree_file],
                        capture_output=True,text=True)
@@ -189,7 +189,7 @@ def read_motti_site_type(f:str)->float:
     @return Site type
     @retval stype Site type as float 
     """
-    df = pd.read_csv(f,engine='python',sep='\s+',nrows=30,decimal=DECIMALPOINT,names=['Index','Value'],header=0)
+    df = pd.read_csv(f,engine='python',sep='\s+',nrows=30,decimal=DECIMALMARKER,names=['Index','Value'],header=0)
     stype = df[df['Index']==SITE_TYPE_INDEX].iloc[0,1]
     return stype
 
@@ -200,7 +200,7 @@ def read_motti_model_tree_info(f:str):
     @param f Motti model tree info file
     @return Data frame of model tree info, Number of model trees, number of tree species
     """
-    df = pd.read_csv(f,engine='python',sep='\s+',decimal=DECIMALPOINT,names=['INDEX0','INDEX1','INDEX2','VALUE'])
+    df = pd.read_csv(f,engine='python',sep='\s+',decimal=DECIMALMARKER,names=['INDEX0','INDEX1','INDEX2','VALUE'])
     dfg = df.groupby(['INDEX2'])
     ngroups = dfg.ngroups
     lss = []
