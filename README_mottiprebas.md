@@ -42,6 +42,7 @@ Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, 
 
 >[!WARNING]
 >On Windows install *numpy, pyarrow, pandas, openpyxl* and *rpy2* packages one by one, in the order of appearance.
+>You will encounter errors if trying to install all of them at the same time.
 
 ## mottiprebas.py
 `mottiprebas.py` runs Motti workbench and PREABAS interchangeably and lets PREABAS to produce a set of coefficients 
