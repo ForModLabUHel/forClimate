@@ -164,7 +164,7 @@ def motti_init(motti_init_file:str,motti_stand_file:str,prebas_model_tree_file:s
                         '-in',motti_init_file,'-out',motti_stand_file,'-outprbs',prebas_model_tree_file],
                        capture_output=True,text=True)
     print("INIT DONE")
- 
+    
 def motti_growth(years,motti_input_stand_file:str,motti_output_stand_file:str,prebas_model_tree_file:str,prebas_coeff_file:str):
     """
     Motti growth
