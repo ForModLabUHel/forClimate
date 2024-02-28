@@ -38,7 +38,7 @@ RHOME='/Program Files/R/R-4.3.2/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
-MOTTI_LOCATION=pathlib.Path("/Apps/MottiPrebas/MottiPrebas/")
+MOTTI_LOCATION=pathlib.Path("/dev/MyPrograms/MottiWorkBench/Debug/")
 #Motti workbench executable name
 MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
