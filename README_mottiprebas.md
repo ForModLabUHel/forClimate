@@ -78,7 +78,7 @@ To run Motti-Prebas simulations type for example:
 
 >[!NOTE]
 >The data file directories (*initmotti, mottistand, mottimodeltree, prebascoeff*) must exist before simulation.
->Also the file the inital Motti file (in this case *prebasTest.txt') must exists and able to produce
+>Also the inital Motti file (in this case *prebasTest.txt') must exists and able to produce
 >the first *Stand.txt* and *ModelTrees.txt* files.
 
 The number 20 is the simulation time (years). The last growth step is from 15 to 20, i.e the growth step  is 5 by default. 
