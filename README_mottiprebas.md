@@ -77,7 +77,9 @@ To run Motti-Prebas simulations type for example:
 	python mottiprebas.py -y 20 -d initmotti/prebasTest.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient.txt -x prebascoeff/PrebasCoefficient.xlsx
 
 >[!NOTE]
->The data file directories (initmotti, mottistand, mottimodeltree, prebascoeff) must exist before simulation.
+>The data file directories (*initmotti, mottistand, mottimodeltree, prebascoeff*) must exist before simulation.
+>Also the file the inital Motti file (in this case *prebasTest.txt') must exists and able to produce
+>the first *Stand.txt* and *ModelTrees.txt* files.
 
 The number 20 is the simulation time (years). The last growth step is from 15 to 20, i.e the growth step  is 5 by default. 
 *prebasTest.txt* is used with the Motti initialization run (the file must exist with reasonable content). 
