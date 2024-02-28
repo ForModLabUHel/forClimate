@@ -40,7 +40,7 @@ Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, 
   	pip install setuptools wheel
 	pip install numpy pyarrow pandas openpyxl rpy2 
 
->[!WARNING]
+>[!IMPORTANT]
 >On Windows install *numpy, pyarrow, pandas, openpyxl* and *rpy2* packages one by one, in the order of appearance.
 >You will encounter errors if trying to install all of them at the same time.
 
