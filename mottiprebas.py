@@ -33,16 +33,21 @@ import argparse
 import numpy as np
 import pandas as pd
 
+
 #R_HOME for R for Windows (comment out for Mac and Linux)
 RHOME='/Program Files/R/R-4.3.2/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
-MOTTI_LOCATION=pathlib.Path("/dev/MyPrograms/MottiWorkBench/Debug/")
+MOTTI_INST_PATH=pathlib.Path("/dev/MyPrograms/MottiWorkBench/Debug/")
+os.environ['MOTTI_INST_PATH'] = str(MOTTI_INST_PATH) 
 #Motti workbench executable name
 MOTTIWB='mottiwb.exe'
 #Decimal point used in mottiwb depends on locale. 
 DECIMALMARKER='.'
+
+#Pass environment to mottiwb
+environment = os.environ.copy()
 
 # rpy2 is the glue between Python and R
 import rpy2
@@ -161,9 +166,9 @@ def motti_init(motti_init_file:str,motti_stand_file:str,prebas_model_tree_file:s
     """
     print("INIT BEGIN")
     print("INPUT:",motti_init_file,"OUTPUT:",motti_stand_file,prebas_model_tree_file)
-    subprocess.run([str(MOTTI_LOCATION.joinpath(MOTTIWB)),'PREBAS','INISTATE',
+    subprocess.run([str(MOTTI_INST_PATH.joinpath(MOTTIWB)),'PREBAS','INISTATE',
                         '-in',motti_init_file,'-out',motti_stand_file,'-outprbs',prebas_model_tree_file],
-                       capture_output=True,text=True)
+                    env=environment,capture_output=True,text=True)
     print("INIT DONE")
     
 def motti_growth(years,motti_input_stand_file:str,motti_output_stand_file:str,prebas_model_tree_file:str,prebas_coeff_file:str):
@@ -176,10 +181,10 @@ def motti_growth(years,motti_input_stand_file:str,motti_output_stand_file:str,pr
     @param prebas_coeff_file Coefficients from Prebas to be used in Motti
     """
     print("MOTTI GROWTH BEGIN")
-    subprocess.run([str(MOTTI_LOCATION.joinpath(MOTTIWB)),'PREBAS','-simulate',str(years),
+    subprocess.run([str(MOTTI_INST_PATH.joinpath(MOTTIWB)),'PREBAS','-simulate',str(years),
                     '-in',motti_input_stand_file,'-out',motti_output_stand_file,
                     '-outprbs',prebas_model_tree_file,'-prebascoeff',prebas_coeff_file],
-                   capture_output=True,text=True)
+                    env=environment,capture_output=True,text=True)
     print("MOTTI GROWTH DONE")
 
 def read_motti_site_type(f:str)->float:
@@ -190,7 +195,7 @@ def read_motti_site_type(f:str)->float:
     @return Site type
     @retval stype Site type as float 
     """
-    df = pd.read_csv(f,engine='python',sep=re.compile(r'\s+'),nrows=30,decimal=DECIMALMARKER,names=['Index','Value'],header=0)
+    df = pd.read_csv(f,engine='python',sep=r'\s+',nrows=30,decimal=DECIMALMARKER,names=['Index','Value'],header=0)
     stype = df[df['Index']==SITE_TYPE_INDEX].iloc[0,1]
     return stype
 
@@ -201,7 +206,7 @@ def read_motti_model_tree_info(f:str):
     @param f Motti model tree info file
     @return Data frame of model tree info, Number of model trees, number of tree species
     """
-    df = pd.read_csv(f,engine='python',sep=re.compile(r'\s+'),decimal=DECIMALMARKER,names=['INDEX0','INDEX1','INDEX2','VALUE'])
+    df = pd.read_csv(f,engine='python',sep=r'\s+',decimal=DECIMALMARKER,names=['INDEX0','INDEX1','INDEX2','VALUE'])
     dfg = df.groupby(['INDEX2'])
     ngroups = dfg.ngroups
     lss = []
@@ -279,7 +284,6 @@ if __name__ == "__main__":
     simulation_time = args.y 
     simulation_step = args.i
     motti_init(initial_data_file,current_stand_file,current_model_tree_file)
-
     df_ls=[]
     year_ls=[]
     for year in range(0,simulation_time,simulation_step):
