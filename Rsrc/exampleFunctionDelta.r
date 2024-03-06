@@ -79,12 +79,24 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              ClCut = 0,
                              defaultThin = 0)
     modOutNew <- multiPrebas(initNew)
-    dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
-    dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
-    dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
-    dN <-modOutNew$multiOut[,,17,,1]/modOutCurr$multiOut[,,17,,1]
-    dB <-modOutNew$multiOut[,,13,,1]/modOutCurr$multiOut[,,13,,1]
-    dV <-modOutNew$multiOut[,,30,,1]/modOutCurr$multiOut[,,30,,1]
+    if(dim(modOutNew$multiInitVar)[3]>1){
+      dimX <- dim(modOutNew$multiOut[,,11,,1]);dimX[2] <- nYears +1
+      xx <- array(NA,dim = dimX)
+      if (length(dimX)>2){
+        xx[,2:(nYears+1),] <- modOutNew$multiOut[,,11,,1]
+        xx[,1,] <- modOutNew$multiInitVar[,3,]
+        dGrowthH <- xx[,2:(nYears+1),] - xx[,2:(nYears+1),]
+        
+      }
+    }
+    growthCurr <- dGrowthVars(modOutCurr)
+    growthNew <- dGrowthVars(modOutNew)
+
+    dH <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dD <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dN <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dB <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dV <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   }else{
     modOutCurr <- prebas(nYears = nYears,
                               PAR = currPAR,
@@ -104,16 +116,95 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              siteInfo = siteInfo,
                              initVar = initVar)
     
-    dGrowth <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
-    dH <-modOutNew$output[,11,,1]/modOutCurr$output[,11,,1]
-    dD <-modOutNew$output[,12,,1]/modOutCurr$output[,12,,1]
-    dN <-modOutNew$output[,17,,1]/modOutCurr$output[,17,,1]
-    dB <-modOutNew$output[,13,,1]/modOutCurr$output[,13,,1]
-    dV <-modOutNew$output[,30,,1]/modOutCurr$output[,30,,1]
+    growthCurr <- dGrowthVars(modOutCurr)
+    growthNew <- dGrowthVars(modOutNew)
+    
+    dH <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dD <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dN <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dB <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
   }
   
-  return(list(dGrowth=dGrowth,dH=dH,dD=dD,dB=dB,dN=dN,dV=dV))
+  return(list(dH=dH,dD=dD,dB=dB,dN=dN,dV=dV))
 }
+
+
+dGrowthVars <- function(modOut){
+  if(class(modOut)=="multiPrebas"){
+    nYears <- modOut$maxYears
+    dimX <- dim(modOut$multiOut[,,11,,1]);dimX[2] <- nYears +1
+    xx <- array(NA,dim = dimX)
+    if(length(dimX)>2){
+# H
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,11,,1]
+      xx[,1,] <- modOut$multiInitVar[,3,]
+      dGrowthH <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+# D      
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,12,,1]
+      xx[,1,] <- modOut$multiInitVar[,4,]
+      dGrowthD <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+# B
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,13,,1]
+      xx[,1,] <- modOut$multiInitVar[,5,]
+      dGrowthB <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+# N
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,17,,1]
+      xx[,1,] <- modOut$multiInitVar[,5,]/(pi*(modOut$multiInitVar[,4,]/200)^2)
+      dGrowthN <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+    }else{
+        # H
+      xx[,2:(nYears+1)] <- modOut$multiOut[,1:20,11,,1]
+      xx[,1] <- modOut$multiInitVar[,3,]
+      dGrowthH <- xx[,2:(nYears+1)] - xx[,1:nYears]
+      # D      
+      xx[,2:(nYears+1)] <- modOut$multiOut[,,12,,1]
+      xx[,1] <- modOut$multiInitVar[,4,]
+      dGrowthD <- xx[,2:(nYears+1)] - xx[,1:nYears]
+      # B
+      xx[,2:(nYears+1)] <- modOut$multiOut[,,13,,1]
+      xx[,1] <- modOut$multiInitVar[,5,]
+      dGrowthB <- xx[,2:(nYears+1)] - xx[,1:nYears]
+      # N
+      xx[,2:(nYears+1)] <- modOut$multiOut[,,17,,1]
+      xx[,1] <- modOut$multiInitVar[,5,]/(pi*(modOut$multiInitVar[,4,]/200)^2)
+      dGrowthN <- xx[,2:(nYears+1)] - xx[,1:nYears]
+    }
+  }else{####for single site runs
+    nYears <- modOut$nYears
+    if(modOut$nLayers>1){
+      # H
+      xx <- rbind(modOut$initVar[3,],modOut$output[,11,,1])
+      dGrowthH <- xx[2:(nYears+1),] - xx[1:nYears,]
+      # D      
+      xx <- rbind(modOut$initVar[4,],modOut$output[,12,,1])
+      dGrowthD <- xx[2:(nYears+1),] - xx[1:nYears,]
+      # B
+      xx <- rbind(modOut$initVar[5,],modOut$output[,13,,1])
+      dGrowthB <- xx[2:(nYears+1),] - xx[1:nYears,]
+      # N
+      xx <- rbind(modOut$initVar[5,],modOut$output[,17,,1])
+      xx[1,] <- modOut$initVar[5,]/(pi*(modOut$initVar[4,]/200)^2)
+      dGrowthN <- xx[2:(nYears+1),] - xx[1:nYears,]
+    }else{
+      # H
+      xx <- c(modOut$initVar[3],modOut$output[,11,1,1])
+      dGrowthH <- xx[2:(nYears+1)] - xx[1:nYears]
+      # D      
+      xx <- c(modOut$initVar[4],modOut$output[,12,1,1])
+      dGrowthD <- xx[2:(nYears+1)] - xx[1:nYears]
+      # B
+      xx <- c(modOut$initVar[5],modOut$output[,13,1,1])
+      dGrowthB <- xx[2:(nYears+1)] - xx[1:nYears]
+      # N
+      xx <- c(modOut$initVar[5],modOut$output[,17,1,1])
+      xx[1] <- modOut$initVar[5]/(pi*(modOut$initVar[4]/200)^2)
+      dGrowthN <- xx[2:(nYears+1)] - xx[1:nYears]
+    }
+  }
+  return(list(dGrowthH=dGrowthH,dGrowthD=dGrowthD,dGrowthB=dGrowthB,dGrowthN=dGrowthN))
+}
+
 
 ###multiite example
 nYears=20
@@ -126,13 +217,13 @@ dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
 
 
 #plot results for GrossGrowth
-  dim(dGrowthExample$dGrowth)
-  plot(dGrowthExample$dGrowth[1,,1])
-  points(dGrowthExample$dGrowth[1,,2],col=2)
-  points(dGrowthExample$dGrowth[1,,3],col=3)
-hist(dGrowthExample$dGrowth)
-dGrowthStand <- apply(dGrowthExample$dGrowth,1:2,sum)
-hist(dGrowthStand)
+  dim(dGrowthExample$dV)
+  plot(dGrowthExample$dV[1,,1])
+  points(dGrowthExample$dV[1,,2],col=2)
+  points(dGrowthExample$dV[1,,3],col=3)
+hist(dGrowthExample$dV)
+dVstand <- apply(dGrowthExample$dV,1:2,sum)
+hist(dVstand)
 
 
 
@@ -210,13 +301,13 @@ dGrowthExample_siteX <- dGrowthPrebas(nYears,siteInfo_siteX,initVar_siteX,
 
 
 #plot results for GrossGrowth
-dim(dGrowthExample_siteX$dGrowth)
-plot(dGrowthExample_siteX$dGrowth[,1])
-points(dGrowthExample_siteX$dGrowth[,2],col=2)
-points(dGrowthExample_siteX$dGrowth[,3],col=3)
-hist(dGrowthExample_siteX$dGrowth)
-dGrowthStand <- apply(dGrowthExample_siteX$dGrowth,1,sum)
-hist(dGrowthStand)
+dim(dGrowthExample_siteX$dV)
+plot(dGrowthExample_siteX$dV[,1])
+points(dGrowthExample_siteX$dV[,2],col=2)
+points(dGrowthExample_siteX$dV[,3],col=3)
+hist(dGrowthExample_siteX$dV)
+dVstand <- apply(dGrowthExample_siteX$dV,1,sum)
+hist(dVstand)
 
 
 
