@@ -3,7 +3,11 @@ library(Rprebasso)
 load("data/inputDataDeltaexample.rda")
 
  
-# ####create new weather
+#####extract future weather
+
+# select the model and the scenario and load the data
+# ...
+# process the data
 PARx <- PARtran + 20
 CO2x <- CO2tran + 50
 TAirx <- TAirtran + 7
@@ -59,7 +63,9 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                               TAir = currTAir,
                               Precip = currPrecip,
                               siteInfo = siteInfo,
-                              multiInitVar = initVar)
+                              multiInitVar = initVar,
+                              ClCut = 0,
+                              defaultThin = 0)
     modOutCurr <- multiPrebas(initCurr)
     
     initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
@@ -69,11 +75,16 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              TAir = newTAir,
                              Precip = newPrecip,
                              siteInfo = siteInfo,
-                             multiInitVar = initVar)
+                             multiInitVar = initVar,
+                             ClCut = 0,
+                             defaultThin = 0)
     modOutNew <- multiPrebas(initNew)
     dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
     dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
     dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
+    dN <-modOutNew$multiOut[,,17,,1]/modOutCurr$multiOut[,,17,,1]
+    dB <-modOutNew$multiOut[,,13,,1]/modOutCurr$multiOut[,,13,,1]
+    dV <-modOutNew$multiOut[,,30,,1]/modOutCurr$multiOut[,,30,,1]
   }else{
     modOutCurr <- prebas(nYears = nYears,
                               PAR = currPAR,
@@ -96,9 +107,12 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
     dGrowth <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
     dH <-modOutNew$output[,11,,1]/modOutCurr$output[,11,,1]
     dD <-modOutNew$output[,12,,1]/modOutCurr$output[,12,,1]
+    dN <-modOutNew$output[,17,,1]/modOutCurr$output[,17,,1]
+    dB <-modOutNew$output[,13,,1]/modOutCurr$output[,13,,1]
+    dV <-modOutNew$output[,30,,1]/modOutCurr$output[,30,,1]
   }
   
-  return(list(dGrowth=dGrowth,dH=dH,dD=dD))
+  return(list(dGrowth=dGrowth,dH=dH,dD=dD,dB=dB,dN=dN,dV=dV))
 }
 
 ###multiite example
@@ -141,8 +155,32 @@ hist(dGrowthExample$dD)
 dDStand <- apply(dGrowthExample$dD,1:2,sum)
 hist(dDStand)
 
+#plot results for dD
+dim(dGrowthExample$dN)
+plot(dGrowthExample$dN[1,,1])
+points(dGrowthExample$dN[1,,2],col=2)
+points(dGrowthExample$dN[1,,3],col=3)
+hist(dGrowthExample$dN)
+dNStand <- apply(dGrowthExample$dN,1:2,sum)
+hist(dNStand)
 
+#plot results for dB
+dim(dGrowthExample$dB)
+plot(dGrowthExample$dB[1,,1])
+points(dGrowthExample$dB[1,,2],col=2)
+points(dGrowthExample$dB[1,,3],col=3)
+hist(dGrowthExample$dB)
+dBStand <- apply(dGrowthExample$dB,1:2,sum)
+hist(dBStand)
 
+#plot results for dV
+dim(dGrowthExample$dV)
+plot(dGrowthExample$dV[1,,1])
+points(dGrowthExample$dV[1,,2],col=2)
+points(dGrowthExample$dV[1,,3],col=3)
+hist(dGrowthExample$dV)
+dVStand <- apply(dGrowthExample$dV,1:2,sum)
+hist(dVStand)
 
 ###single Site example
 nYears=20
