@@ -82,8 +82,9 @@ site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "
 # 8th column is updated automatically to Ac
 init_var_cols = ["SpeciesID","Age(years)","H(m)","D(cm)","BA(m2ha-1)","Hc(m)","Ac(prebas_ex_officio)"]
 # Motti results, coefficients from the results
-motti_coeffient_cols = ["dGrowth_5YearMean","dH_5YearMean","dD_5YearMean"]
-layers = "Layers/ModelTrees"
+motti_coeffient_cols = ["deltaHGrowth_5YearMean","deltaDGrowth_5YearMean","deltaN_5YearMean",
+                        "deltaB_5YearMean","deltaVGrowth_5YearMean"]
+layers = "PrebasLayers/MottiModelTrees"
 #Site type index in Motti stand file
 SITE_TYPE_INDEX = 22
 
@@ -109,21 +110,27 @@ def motti_coefficients_mean(res):
     @param res dGrowthPrebas coeffients 
     @retval dfmotti DataFrame of the means of coefficients in `res`.
     """
-    dG = res[0]
-    dH = res[1]
-    dD = res[2]
-    dGmean = np.mean(dG.T,axis=1)
+    dH = res[0]
+    dD = res[1]
+    dB = res[2]
+    dN = res[3]
+    dV = res[4]
     dHmean = np.mean(dH.T,axis=1)
     dDmean = np.mean(dD.T,axis=1)
-    dfdGmean = pd.DataFrame(dGmean)
-    dfHmean = pd.DataFrame(dHmean)
-    dfDmean = pd.DataFrame(dDmean)
-    dfmotti = pd.concat([dfdGmean,dfHmean,dfDmean],axis=1,ignore_index=True)
+    dBmean = np.mean(dB.T,axis=1)
+    dNmean = np.mean(dN.T,axis=1)
+    dVmean = np.mean(dV.T,axis=1)
+    dfdHmean = pd.DataFrame(dHmean)
+    dfdDmean = pd.DataFrame(dDmean)
+    dfdBmean = pd.DataFrame(dBmean)
+    dfdNmean = pd.DataFrame(dNmean)
+    dfdVmean = pd.DataFrame(dVmean)
+    dfmotti = pd.concat([dfdHmean,dfdDmean,dfdBmean,dfdNmean,dfdVmean],axis=1,ignore_index=True)
     dfmotti.columns = motti_coeffient_cols
     dfmotti.index.name=layers
     return dfmotti
 
-def write_prebas_coefficients_single_site(res,file_name:str):
+def write_prebas_coefficients_mean_single_site(res,file_name:str):
     """
     Write the means of dGrowthPrebas values to file for Motti
     @param res dGrowthPrebas coeffients 
@@ -303,7 +310,7 @@ if __name__ == "__main__":
                              dd.Precip_siteX_r[365*year:],dd.newPrecip_siteX_r[365*year:],
                              dd.VPD_siteX_r[365*year:],dd.newVPD_siteX_r[365*year:],
                              dd.CO2_siteX[365*year:],dd.newCO2_siteX[365*year:])
-        write_prebas_coefficients_single_site(res,current_coeff_file)
+        write_prebas_coefficients_mean_single_site(res,current_coeff_file)
         df = motti_coefficients_mean(res)
         df_ls.append(df)
         year_ls.append(year)
