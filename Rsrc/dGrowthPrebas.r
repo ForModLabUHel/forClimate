@@ -1,17 +1,3 @@
-library(Rprebasso)
-##Load sample data
-##load("data/inputDataDeltaexample.rda")
-
- 
-# ####create new weather
-##PARx <- PARtran + 20
-##CO2x <- CO2tran + 50
-##TAirx <- TAirtran + 7
-##VPDx <- VPDtran #+ 20
-##Precipx <- Preciptran #+ 20
-
-
-
 ###function for delta growth calculation
 #' dGrowthPrebas
 #'
@@ -39,12 +25,14 @@ library(Rprebasso)
 #' dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,currPar=PARtran,newPAR=PARx,currTAir=TAirtran,newTAir=TAirx,currPrecip=Preciptran,newPrecip=Precipx,currVPD=VPDtran,newVPD=VPDx,currCO2=CO2tran,newCO2=CO2x)
 
 dGrowthPrebas <- function(nYears,siteInfo,initVar,
-                    currPAR,newPAR,
-                    currTAir,newTAir,
-                    currPrecip,newPrecip,
-                    currVPD,newVPD,
-                    currCO2,newCO2
-                    ){
+                          currPAR,newPAR,
+                          currTAir,newTAir,
+                          currPrecip,newPrecip,
+                          currVPD,newVPD,
+                          currCO2,newCO2,
+                          ClCut = 0,
+                          defaultThin = 0
+){
   if(is.null(nrow(siteInfo)) & length(siteInfo==12)){
     nSites <- 1
   }else{
@@ -59,7 +47,9 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                               TAir = currTAir,
                               Precip = currPrecip,
                               siteInfo = siteInfo,
-                              multiInitVar = initVar)
+                              multiInitVar = initVar,
+                              ClCut = ClCut,
+                              defaultThin = defaultThin)
     modOutCurr <- multiPrebas(initCurr)
     
     initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
@@ -69,35 +59,136 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              TAir = newTAir,
                              Precip = newPrecip,
                              siteInfo = siteInfo,
-                             multiInitVar = initVar)
+                             multiInitVar = initVar,
+                             ClCut = ClCut,
+                             defaultThin = defaultThin)
     modOutNew <- multiPrebas(initNew)
-    dGrowth <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
-    dH <-modOutNew$multiOut[,,11,,1]/modOutCurr$multiOut[,,11,,1]
-    dD <-modOutNew$multiOut[,,12,,1]/modOutCurr$multiOut[,,12,,1]
+    if(dim(modOutNew$multiInitVar)[3]>1){
+      dimX <- dim(modOutNew$multiOut[,,11,,1]);dimX[2] <- nYears +1
+      xx <- array(NA,dim = dimX)
+      if (length(dimX)>2){
+        xx[,2:(nYears+1),] <- modOutNew$multiOut[,,11,,1]
+        xx[,1,] <- modOutNew$multiInitVar[,3,]
+        dGrowthH <- xx[,2:(nYears+1),] - xx[,2:(nYears+1),]
+        
+      }
+    }
+    growthCurr <- dGrowthVars(modOutCurr)
+    growthNew <- dGrowthVars(modOutNew)
+    
+    dH <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dD <-growthNew$dGrowthD/growthCurr$dGrowthD
+    dN <-growthNew$dGrowthN/growthCurr$dGrowthN
+    dB <-growthNew$dGrowthB/growthCurr$dGrowthB
+    dV <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   }else{
     modOutCurr <- prebas(nYears = nYears,
-                              PAR = currPAR,
-                              VPD = currVPD,
-                              CO2 = currCO2,
-                              TAir = currTAir,
-                              Precip = currPrecip,
-                              siteInfo = siteInfo,
-                              initVar = initVar)
+                         PAR = currPAR,
+                         VPD = currVPD,
+                         CO2 = currCO2,
+                         TAir = currTAir,
+                         Precip = currPrecip,
+                         siteInfo = siteInfo,
+                         initVar = initVar,
+                         ClCut = ClCut,
+                         defaultThin = defaultThin)
     
     modOutNew <- prebas(nYears = nYears,
-                             PAR = newPAR,
-                             VPD = newVPD,
-                             CO2 = newCO2,
-                             TAir = newTAir,
-                             Precip = newPrecip,
-                             siteInfo = siteInfo,
-                             initVar = initVar)
+                        PAR = newPAR,
+                        VPD = newVPD,
+                        CO2 = newCO2,
+                        TAir = newTAir,
+                        Precip = newPrecip,
+                        siteInfo = siteInfo,
+                        initVar = initVar,
+                        ClCut = ClCut,
+                        defaultThin = defaultThin)
     
-    dGrowth <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
-    dH <-modOutNew$output[,11,,1]/modOutCurr$output[,11,,1]
-    dD <-modOutNew$output[,12,,1]/modOutCurr$output[,12,,1]
+    growthCurr <- dGrowthVars(modOutCurr)
+    growthNew <- dGrowthVars(modOutNew)
+    
+    dH <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dD <-growthNew$dGrowthD/growthCurr$dGrowthD
+    dN <-growthNew$dGrowthN/growthCurr$dGrowthN
+    dB <-growthNew$dGrowthB/growthCurr$dGrowthB
+    dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
   }
   
-  return(list(dGrowth=dGrowth,dH=dH,dD=dD))
+  return(list(dH=dH,dD=dD,dB=dB,dN=dN,dV=dV))
 }
 
+
+dGrowthVars <- function(modOut){
+  if(class(modOut)=="multiPrebas"){
+    nYears <- modOut$maxYears
+    dimX <- dim(modOut$multiOut[,,11,,1]);dimX[2] <- nYears +1
+    xx <- array(NA,dim = dimX)
+    if(length(dimX)>2){
+      # H
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,11,,1]
+      xx[,1,] <- modOut$multiInitVar[,3,]
+      dGrowthH <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+      # D      
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,12,,1]
+      xx[,1,] <- modOut$multiInitVar[,4,]
+      dGrowthD <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+      # B
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,13,,1]
+      xx[,1,] <- modOut$multiInitVar[,5,]
+      dGrowthB <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+      # N
+      xx[,2:(nYears+1),] <- modOut$multiOut[,,17,,1]
+      xx[,1,] <- modOut$multiInitVar[,5,]/(pi*(modOut$multiInitVar[,4,]/200)^2)
+      dGrowthN <- xx[,2:(nYears+1),] - xx[,1:nYears,]
+    }else{
+      # H
+      xx[,2:(nYears+1)] <- modOut$multiOut[,1:20,11,,1]
+      xx[,1] <- modOut$multiInitVar[,3,]
+      dGrowthH <- xx[,2:(nYears+1)] - xx[,1:nYears]
+      # D      
+      xx[,2:(nYears+1)] <- modOut$multiOut[,,12,,1]
+      xx[,1] <- modOut$multiInitVar[,4,]
+      dGrowthD <- xx[,2:(nYears+1)] - xx[,1:nYears]
+      # B
+      xx[,2:(nYears+1)] <- modOut$multiOut[,,13,,1]
+      xx[,1] <- modOut$multiInitVar[,5,]
+      dGrowthB <- xx[,2:(nYears+1)] - xx[,1:nYears]
+      # N
+      xx[,2:(nYears+1)] <- modOut$multiOut[,,17,,1]
+      xx[,1] <- modOut$multiInitVar[,5,]/(pi*(modOut$multiInitVar[,4,]/200)^2)
+      dGrowthN <- xx[,2:(nYears+1)] - xx[,1:nYears]
+    }
+  }else{####for single site runs
+    nYears <- modOut$nYears
+    if(modOut$nLayers>1){
+      # H
+      xx <- rbind(modOut$initVar[3,],modOut$output[,11,,1])
+      dGrowthH <- xx[2:(nYears+1),] - xx[1:nYears,]
+      # D      
+      xx <- rbind(modOut$initVar[4,],modOut$output[,12,,1])
+      dGrowthD <- xx[2:(nYears+1),] - xx[1:nYears,]
+      # B
+      xx <- rbind(modOut$initVar[5,],modOut$output[,13,,1])
+      dGrowthB <- xx[2:(nYears+1),] - xx[1:nYears,]
+      # N
+      xx <- rbind(modOut$initVar[5,],modOut$output[,17,,1])
+      xx[1,] <- modOut$initVar[5,]/(pi*(modOut$initVar[4,]/200)^2)
+      dGrowthN <- xx[2:(nYears+1),] - xx[1:nYears,]
+    }else{
+      # H
+      xx <- c(modOut$initVar[3],modOut$output[,11,1,1])
+      dGrowthH <- xx[2:(nYears+1)] - xx[1:nYears]
+      # D      
+      xx <- c(modOut$initVar[4],modOut$output[,12,1,1])
+      dGrowthD <- xx[2:(nYears+1)] - xx[1:nYears]
+      # B
+      xx <- c(modOut$initVar[5],modOut$output[,13,1,1])
+      dGrowthB <- xx[2:(nYears+1)] - xx[1:nYears]
+      # N
+      xx <- c(modOut$initVar[5],modOut$output[,17,1,1])
+      xx[1] <- modOut$initVar[5]/(pi*(modOut$initVar[4]/200)^2)
+      dGrowthN <- xx[2:(nYears+1)] - xx[1:nYears]
+    }
+  }
+  return(list(dGrowthH=dGrowthH,dGrowthD=dGrowthD,dGrowthB=dGrowthB,dGrowthN=dGrowthN))
+}
