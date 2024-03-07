@@ -6,9 +6,7 @@ load("data/inputDataDeltaexample.rda")
 climateModel <- "CanESM2"       # "CanESM2" or "CNRM"
 rcp <- "rcp45"                  # "rcp45" or "rcp85"
 
-if(climateModel == "CanESM2") load(paste0("data/tranCanESM2.",rcp,".rda"))
-
-if(climateModel == "CNRM")load(paste0("data/tranCNRM.",rcp,".rda"))
+load(paste0("data/tran",climateModel,".",rcp,".rda"))
 
 #load functions
 devtools::source_url("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/Rsrc/dGrowthPrebas.r")
