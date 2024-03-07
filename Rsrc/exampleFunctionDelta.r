@@ -2,19 +2,17 @@ library(Rprebasso)
 
 load("data/inputDataDeltaexample.rda")
 
+### future weather - load the data for selected model and scenario
+climateModel <- "CanESM2"       # "CanESM2" or "CNRM"
+rcp <- "rcp45"                  # "rcp45" or "rcp85"
 
-# climateModel <- "CanESM2"
-# rcp <- "rcp45"
-# 
-# if(climateModel <- "CanESM2")
-# ....
-### future weather - load the data for selected model scenario
-load("data/tranCanESM2.rcp45.rda") # "data/tranCanESM2.rcp45.rda"  "data/tranCanESM2.rcp85.rda" "data/tranCNRM.rcp45.rda" "data/tranCNRM.rcp85.rda"
- 
+if(climateModel == "CanESM2") load(paste0("data/tranCanESM2.",rcp,".rda"))
+
+if(climateModel == "CNRM")load(paste0("data/tranCNRM.",rcp,".rda"))
+
 #load functions
 devtools::source_url("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/Rsrc/dGrowthPrebas.r")
  
-
 ###multiite example
 nYears=20
 dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
