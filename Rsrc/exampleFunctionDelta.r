@@ -47,7 +47,9 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                     currTAir,newTAir,
                     currPrecip,newPrecip,
                     currVPD,newVPD,
-                    currCO2,newCO2
+                    currCO2,newCO2,
+                    ClCut = 0,
+                    defaultThin = 0
                     ){
   if(is.null(nrow(siteInfo)) & length(siteInfo==12)){
     nSites <- 1
@@ -64,8 +66,8 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                               Precip = currPrecip,
                               siteInfo = siteInfo,
                               multiInitVar = initVar,
-                              ClCut = 0,
-                              defaultThin = 0)
+                              ClCut = ClCut,
+                              defaultThin = defaultThin)
     modOutCurr <- multiPrebas(initCurr)
     
     initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
@@ -76,8 +78,8 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              Precip = newPrecip,
                              siteInfo = siteInfo,
                              multiInitVar = initVar,
-                             ClCut = 0,
-                             defaultThin = 0)
+                             ClCut = ClCut,
+                             defaultThin = defaultThin)
     modOutNew <- multiPrebas(initNew)
     if(dim(modOutNew$multiInitVar)[3]>1){
       dimX <- dim(modOutNew$multiOut[,,11,,1]);dimX[2] <- nYears +1
@@ -93,9 +95,9 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
     growthNew <- dGrowthVars(modOutNew)
 
     dH <-growthNew$dGrowthH/growthCurr$dGrowthH
-    dD <-growthNew$dGrowthH/growthCurr$dGrowthH
-    dN <-growthNew$dGrowthH/growthCurr$dGrowthH
-    dB <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dD <-growthNew$dGrowthD/growthCurr$dGrowthD
+    dN <-growthNew$dGrowthN/growthCurr$dGrowthN
+    dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   }else{
     modOutCurr <- prebas(nYears = nYears,
@@ -105,7 +107,9 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                               TAir = currTAir,
                               Precip = currPrecip,
                               siteInfo = siteInfo,
-                              initVar = initVar)
+                              initVar = initVar,
+                              ClCut = ClCut,
+                              defaultThin = defaultThin)
     
     modOutNew <- prebas(nYears = nYears,
                              PAR = newPAR,
@@ -114,15 +118,17 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              TAir = newTAir,
                              Precip = newPrecip,
                              siteInfo = siteInfo,
-                             initVar = initVar)
+                             initVar = initVar,
+                             ClCut = ClCut,
+                             defaultThin = defaultThin)
     
     growthCurr <- dGrowthVars(modOutCurr)
     growthNew <- dGrowthVars(modOutNew)
     
     dH <-growthNew$dGrowthH/growthCurr$dGrowthH
-    dD <-growthNew$dGrowthH/growthCurr$dGrowthH
-    dN <-growthNew$dGrowthH/growthCurr$dGrowthH
-    dB <-growthNew$dGrowthH/growthCurr$dGrowthH
+    dD <-growthNew$dGrowthD/growthCurr$dGrowthD
+    dN <-growthNew$dGrowthN/growthCurr$dGrowthN
+    dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
   }
   
@@ -226,7 +232,6 @@ dVstand <- apply(dGrowthExample$dV,1:2,sum)
 hist(dVstand)
 
 
-
 #plot results for dH
 dim(dGrowthExample$dH)
 plot(dGrowthExample$dH[1,,1])
@@ -308,8 +313,6 @@ points(dGrowthExample_siteX$dV[,3],col=3)
 hist(dGrowthExample_siteX$dV)
 dVstand <- apply(dGrowthExample_siteX$dV,1,sum)
 hist(dVstand)
-
-
 
 #plot results for dH
 dim(dGrowthExample_siteX$dH)
