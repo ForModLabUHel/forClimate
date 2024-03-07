@@ -2,17 +2,15 @@ library(Rprebasso)
 
 load("data/inputDataDeltaexample.rda")
 
+### future weather - load the data for selected model scenario
+load("data/tranCanESM2.rcp45.rda") # "data/tranCanESM2.rcp45.rda"  "data/tranCanESM2.rcp85.rda" "data/tranCNRM.rcp45.rda" "data/tranCNRM.rcp85.rda"
  
 #####extract future weather
-
-# select the model and the scenario and load the data
-# ...
-# process the data
-PARx <- PARtran + 20
-CO2x <- CO2tran + 50
-TAirx <- TAirtran + 7
-VPDx <- VPDtran #+ 20
-Precipx <- Preciptran #+ 20
+# PARx <- PARtran + 20
+# CO2x <- CO2tran + 50
+# TAirx <- TAirtran + 7
+# VPDx <- VPDtran #+ 20
+# Precipx <- Preciptran #+ 20
 
 
 
