@@ -62,9 +62,6 @@ r.library("Rprebasso")
 # Function to run PREBAS twice to produce deltas of certain forest characteristics of interest
 # dGrowthPrebas is in forClimate project
 r.source("Rsrc/dGrowthPrebas.r")
-# Load and source necessary weather data files.
-# Replace sample data with real data.
-import demodata as dd
 
 #Convert dataframes to vectors or 2D arrays
 from rfunc import convert_r
@@ -294,6 +291,10 @@ if __name__ == "__main__":
     initial_data_file = args.d
     simulation_time = args.y 
     simulation_step = args.i
+
+    # Load and source necessary weather data files.
+    # Replace sample demo data with real data.
+    #import demodata as dd
     
     #Set-up climate region and scenario
     region = args.r
