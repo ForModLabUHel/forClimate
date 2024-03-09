@@ -267,22 +267,22 @@ def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtr
         CO2tran,New_CO2tran)
     #To see the same in python matrix transposes T are needed
     print("DGROWTH PREBAS END")
-    print(res)
+    #print(res)
     return res
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-y","--years",dest="y",type=int,required=True,help="Total simulation years")
     parser.add_argument("-i","--interval",dest="i",type=int,default=5,help="Prebas simulation years (interval), default 5 years")
-    parser.add_argument("-d","--initdata",dest="d",type=str,required=True,help="Motti initial data file (full path)")
-    parser.add_argument("-s","--stand",dest="s", type=str,required=True,help="Motti stand  file (full path)")
-    parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,help="Motti model tree file (full path)")
-    parser.add_argument("-c","--coeff",dest="c",type=str,required=True,help="Prebas coefficients")
-    parser.add_argument("-x","--excel_file",dest="x",type=str,default=None,help="Motti coefficients excel file")
+    parser.add_argument("-d","--initdata",dest="d",type=str,required=True,help="Motti initial data file (Motti input, full path)")
+    parser.add_argument("-s","--stand",dest="s", type=str,required=True,help="Motti stand file (Motti output, Prebas input, full path)")
+    parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,help="Motti model tree file (Motti output, Prebas input, full path)")
+    parser.add_argument("-c","--coeff",dest="c",type=str,required=True,help="Prebas coefficients file (Prebas output, Motti input, full path)")
+    parser.add_argument("-x","--excel_file",dest="x",type=str,default=None,help="Motti coefficients excel file (Summary output, full path)")
     parser.add_argument("-r","--climate_region",dest="r",type=int,required=True,choices=[1,2,3,4,5,6,7],
                         help="Climatic region in Finland")
     parser.add_argument("-w","--climate_scenario",dest="w",type=int,required=True,choices=[1,2,3,4,5],
-                        help="Climate scenario")
+                        help="Climate scenario (see climatedata.py for scenario names)")
     args = parser.parse_args()
     #Set-up file names
     orig_stand_file = current_stand_file = args.s
