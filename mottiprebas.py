@@ -270,6 +270,7 @@ def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtr
         CO2tran,New_CO2tran)
     #To see the same in python matrix transposes T are needed
     print("DGROWTH PREBAS END")
+    print(res)
     return res
 
 if __name__ == "__main__":
@@ -281,15 +282,29 @@ if __name__ == "__main__":
     parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,help="Motti model tree file (full path)")
     parser.add_argument("-c","--coeff",dest="c",type=str,required=True,help="Prebas coefficients")
     parser.add_argument("-x","--excel_file",dest="x",type=str,default=None,help="Motti coefficients excel file")
+    parser.add_argument("-r","--climate_region",dest="r",type=int,required=True,choices=[1,2,3,4,5,6,7],
+                        help="Climatic region in Finland")
+    parser.add_argument("-w","--climate_scenario",dest="w",type=int,required=True,choices=[1,2,3,4,5],
+                        help="Climate scenario")
     args = parser.parse_args()
-
-    
+    #Set-up file names
     orig_stand_file = current_stand_file = args.s
     orig_model_tree_file = current_model_tree_file = args.t
     orig_coeff_file = current_coeff_file = args.c
     initial_data_file = args.d
     simulation_time = args.y 
     simulation_step = args.i
+    
+    #Set-up climate region and scenario
+    region = args.r
+    scenario = args.w
+    import climateconfig
+    climateconfig.climateid=region
+    climateconfig.scenarioid=scenario
+    
+    #Set-up climate data, climateconfig is used to select climatic region
+    #and climate scenario  
+    import climatedata as clim
     motti_init(initial_data_file,current_stand_file,current_model_tree_file)
     df_ls=[]
     year_ls=[]
@@ -305,11 +320,11 @@ if __name__ == "__main__":
         #Using Francesco data max 20 years
         #Slice vectors to start at the right point 
         res = dgrowthprebas(simulation_step,site_info_r,tree_info_r,
-                             dd.PAR_siteX_r[365*year:],dd.newPAR_siteX_r[365*year:],
-                             dd.TAir_siteX_r[365*year:],dd.newTAir_siteX_r[365*year:],
-                             dd.Precip_siteX_r[365*year:],dd.newPrecip_siteX_r[365*year:],
-                             dd.VPD_siteX_r[365*year:],dd.newVPD_siteX_r[365*year:],
-                             dd.CO2_siteX[365*year:],dd.newCO2_siteX[365*year:])
+                             clim.PAR_siteX_r[365*year:],clim.newPAR_siteX_r[365*year:],
+                             clim.TAir_siteX_r[365*year:],clim.newTAir_siteX_r[365*year:],
+                             clim.Precip_siteX_r[365*year:],clim.newPrecip_siteX_r[365*year:],
+                             clim.VPD_siteX_r[365*year:],clim.newVPD_siteX_r[365*year:],
+                             clim.CO2_siteX[365*year:],clim.newCO2_siteX[365*year:])
         write_prebas_coefficients_mean_single_site(res,current_coeff_file)
         df = motti_coefficients_mean(res)
         df_ls.append(df)
