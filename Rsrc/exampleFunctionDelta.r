@@ -2,27 +2,52 @@ library(Rprebasso)
 
 load("data/inputDataDeltaexample.rda")
 
+### future weather - load the data for selected model and scenario
+climateModel <- "CanESM2"       # "CanESM2" or "CNRM"
+rcp <- "rcp45"                  # "rcp45" or "rcp85"
 
-# climateModel <- "CanESM2"
-# rcp <- "rcp45"
-# 
-# if(climateModel <- "CanESM2")
-# ....
-### future weather - load the data for selected model scenario
-load("data/tranCanESM2.rcp45.rda") # "data/tranCanESM2.rcp45.rda"  "data/tranCanESM2.rcp85.rda" "data/tranCNRM.rcp45.rda" "data/tranCNRM.rcp85.rda"
- 
+load(paste0("data/tran",climateModel,".",rcp,".rda"))
+
 #load functions
 devtools::source_url("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/Rsrc/dGrowthPrebas.r")
  
+#### set years of simulations, define climatechange starting year of database and simulations
+nYears_sim <- 5 # number of year of simulations
+startYearDataBase <- 2025 ###starting year in the data base
+startYear <- 2031 #start year in the simulations
+
+####process weather data
+nYears_CurrClim <- ncol(PARtran)/365   ###number of available years in current climate
+
+year_sample <- sample(1:nYears_CurrClim,nYears_sim) ###sample 5 years randomly 
+day_sample <- rep((year_sample-1)*365,each=365) + 1:365 ###corresponding days for the sampled years
+ 
+### prepare weather inputs for the current climate
+PAR_sample <- PARtran[,day_sample]
+Precip_sample <- Preciptran[,day_sample]
+TAir_sample <- TAirtran[,day_sample]
+VPD_sample <- VPDtran[,day_sample]
+CO2_sample <- CO2tran[,day_sample]
+
+####extract climate from climate change database
+startYearSim <- startYear - startYearDataBase
+yearsSim <- startYearSim+1:nYears_sim  
+day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
+
+PAR_clChange <- PARx[,day_sample]
+Precip_clChange <- Precipx[,day_sample]
+TAir_clChange <- TAirx[,day_sample]
+VPD_clChange <- VPDx[,day_sample]
+CO2_clChange <- CO2x[,day_sample]
+
 
 ###multiite example
-nYears=20
-dGrowthExample <- dGrowthPrebas(nYears,siteInfo,initVar,
-             currPAR=PARtran,newPAR=PARx,
-             currTAir=TAirtran,newTAir=TAirx,
-             currPrecip=Preciptran,newPrecip=Precipx,
-             currVPD=VPDtran,newVPD=VPDx,
-             currCO2=CO2tran,newCO2=CO2x)
+dGrowthExample <- dGrowthPrebas(nYears_sim,siteInfo,initVar,
+             currPAR=PAR_sample,newPAR=PAR_clChange,
+             currTAir=TAir_sample,newTAir=TAir_clChange,
+             currPrecip=Precip_sample,newPrecip=Precip_clChange,
+             currVPD=VPD_sample,newVPD=VPD_clChange,
+             currCO2=CO2_sample,newCO2=CO2_clChange)
 
 
 #plot results for GrossGrowth
@@ -55,25 +80,24 @@ dDStand <- apply(dGrowthExample$dD,1:2,sum)
 hist(dDStand)
 
 ###single Site example
-nYears=20
 siteX = 3 #select a site (from 1 to 7 from the previous dataset)
 climID = 2 #select a climate (from 1 to 7 from the previous dataset)
 
 siteInfo_siteX <- siteInfo[siteX,]
 initVar_siteX <- initVar[siteX,,]
 
-PAR_siteX <- PARtran[climID,]
-newPAR_siteX <- PARx[climID,]
-Precip_siteX <- Preciptran[climID,]
-newPrecip_siteX <- Precipx[climID,]
-TAir_siteX <- TAirtran[climID,]
-newTAir_siteX <- TAirx[climID,]
-VPD_siteX <- VPDtran[climID,]
-newVPD_siteX <- VPDx[climID,]
-CO2_siteX <- CO2tran[climID,]
-newCO2_siteX <- CO2x[climID,]
+PAR_siteX <- PAR_sample[climID,]
+newPAR_siteX <- PAR_clChange[climID,]
+Precip_siteX <- Precip_sample[climID,]
+newPrecip_siteX <- Precip_clChange[climID,]
+TAir_siteX <- TAir_sample[climID,]
+newTAir_siteX <- TAir_clChange[climID,]
+VPD_siteX <- VPD_sample[climID,]
+newVPD_siteX <- VPD_clChange[climID,]
+CO2_siteX <- CO2_sample[climID,]
+newCO2_siteX <- CO2_clChange[climID,]
 
-dGrowthExample_siteX <- dGrowthPrebas(nYears,siteInfo_siteX,initVar_siteX,
+dGrowthExample_siteX <- dGrowthPrebas(nYears_sim,siteInfo_siteX,initVar_siteX,
                                 currPAR=PAR_siteX,newPAR=newPAR_siteX,
                                 currTAir=TAir_siteX,newTAir=newTAir_siteX,
                                 currPrecip=Precip_siteX,newPrecip=newPrecip_siteX,
