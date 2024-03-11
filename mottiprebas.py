@@ -271,7 +271,9 @@ def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtr
     return res
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    import climateconfig
+    parser = argparse.ArgumentParser(prog="mottiprebas.py",description="Run Motti under climate change with Prebas",
+                                     epilog="Available climate scenarios: "+str(climateconfig.climate_scenarios))
     parser.add_argument("-y","--years",dest="y",type=int,required=True,help="Total simulation years")
     parser.add_argument("-i","--interval",dest="i",type=int,default=5,help="Prebas simulation years (interval), default 5 years")
     parser.add_argument("-d","--initdata",dest="d",type=str,required=True,help="Motti initial data file (Motti input, full path)")
@@ -299,7 +301,6 @@ if __name__ == "__main__":
     #Set-up climate region and scenario
     region = args.r
     scenario = args.w
-    import climateconfig
     climateconfig.climateid=region
     climateconfig.scenarioid=scenario
     
