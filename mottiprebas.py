@@ -35,7 +35,8 @@ import pandas as pd
 
 
 #R_HOME for R for Windows (comment out for Mac and Linux)
-RHOME='/Program Files/R/R-4.3.2/'
+#RHOME='/Program Files/R/R-4.3.2/'
+RHOME='/dev/MyPrograms/R/R-4.3.3/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
@@ -225,7 +226,7 @@ def read_motti_model_tree_info(f:str):
     nspecies = len(set(df_tree_info['SpeciesID']))
     return (df_tree_info,ngroups,nspecies)
 
-def prebas_input(site_info:str,model_tree_info:str):
+def prebas_input(site_info:str,model_tree_info:str,region:int):
     """
     Create Prebas input data from Motti output files
     @param site_info Motti stand level output file
@@ -236,7 +237,7 @@ def prebas_input(site_info:str,model_tree_info:str):
     (df_tree_info,n_model_trees,nspecies) =  read_motti_model_tree_info(model_tree_info)
     df_site_info = pd.DataFrame(data=0,index=[0],columns=site_info_cols)
     df_site_info['SiteID'] = 1
-    df_site_info['climID'] = 2
+    df_site_info['climID'] = region
     df_site_info['SiteType'] = site_type
     df_site_info['SWinit (initial soil water)'] = 160.0
     df_site_info['Sinit (initial temperature acclimation state)'] = 20.0
@@ -267,7 +268,7 @@ def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtr
         CO2tran,New_CO2tran)
     #To see the same in python matrix transposes T are needed
     print("DGROWTH PREBAS END")
-    #print(res)
+    print(res)
     return res
 
 if __name__ == "__main__":
@@ -312,7 +313,7 @@ if __name__ == "__main__":
     year_ls=[]
     for year in range(0,simulation_time,simulation_step):
         print("YEAR",year)
-        (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file)
+        (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file,region)
         new_stand_file = create_new_file_name(orig_stand_file,str(year)+'-'+str(year+simulation_step))
         new_model_tree_file = create_new_file_name(orig_model_tree_file,str(year)+'-'+str(year+simulation_step))
         current_coeff_file = create_new_file_name(orig_coeff_file,str(year)+'-'+str(year+simulation_step))
