@@ -83,7 +83,7 @@ hist(dDStand)
 siteX = 3 #select a site (from 1 to 7 from the previous dataset)
 climID = 2 #select a climate (from 1 to 7 from the previous dataset)
 
-siteInfo_siteX <- siteInfo[siteX,]
+siteInfo_siteX <- siteInfo[siteX,c(1:7,10:12)]
 initVar_siteX <- initVar[siteX,,]
 
 PAR_siteX <- PAR_sample[climID,]
