@@ -113,10 +113,10 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
     # dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
   }
-###filter data
-  dH[which(is.na(dH) | dH<0)] <- 1
-  dD[which(is.na(dD) | dD<0)] <- 1
-  dV[which(is.na(dV) | dV<0)] <- 1
+# ###filter data
+#   dH[which(is.na(dH) | dH<0)] <- 1
+#   dD[which(is.na(dD) | dD<0)] <- 1
+#   dV[which(is.na(dV) | dV<0)] <- 1
   
   return(list(dH=dH,dD=dD,dV=dV)) #,dB=dB,dN=dN
 }
