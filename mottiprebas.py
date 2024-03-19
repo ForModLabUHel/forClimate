@@ -244,7 +244,7 @@ def prebas_input(site_info:str,model_tree_info:str,region:int):
     df_site_info['NLayers'] = n_model_trees
     df_site_info['NSpecies'] = nspecies
     df_site_info['SoilDepth'] = 413.0
-    df_site_info["Effective field capacity"] = 45.0
+    df_site_info["Effective field capacity"] = 0.45
     df_site_info["Permanent wilthing point"] = 0.118
     
     return (df_site_info,df_tree_info)
