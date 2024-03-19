@@ -1,6 +1,9 @@
 library(Rprebasso)
+library(data.table)
 
 load("data/inputDataDeltaexample.rda")
+siteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")
+initVar <- read.csv("data/TestTreeInfo.csv",sep=" ")[,2:26]
 
 ### future weather - load the data for selected model and scenario
 climateModel <- "CanESM2"       # "CanESM2" or "CNRM"

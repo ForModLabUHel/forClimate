@@ -33,7 +33,7 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                     ClCut = 0,
                     defaultThin = 0
                     ){
-  if(is.null(nrow(siteInfo)) & length(siteInfo==12)){
+  if(length(siteInfo)<=12){
     nSites <- 1
   }else{
     nSites <- nrow(siteInfo)  
@@ -78,8 +78,8 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
 
     dH <-growthNew$dGrowthH/growthCurr$dGrowthH
     dD <-growthNew$dGrowthD/growthCurr$dGrowthD
-    dN <-growthNew$dGrowthN/growthCurr$dGrowthN
-    dB <-growthNew$dGrowthB/growthCurr$dGrowthB
+    # dN <-growthNew$dGrowthN/growthCurr$dGrowthN
+    # dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   }else{
     modOutCurr <- prebas(nYears = nYears,
@@ -109,10 +109,14 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
     
     dH <-growthNew$dGrowthH/growthCurr$dGrowthH
     dD <-growthNew$dGrowthD/growthCurr$dGrowthD
-    dN <-growthNew$dGrowthN/growthCurr$dGrowthN
-    dB <-growthNew$dGrowthB/growthCurr$dGrowthB
+    # dN <-growthNew$dGrowthN/growthCurr$dGrowthN
+    # dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
   }
+###filter data
+  dH[which(is.na(dH) | dH<0)] <- 1
+  dD[which(is.na(dD) | dD<0)] <- 1
+  dV[which(is.na(dV) | dV<0)] <- 1
   
   return(list(dH=dH,dD=dD,dB=dB,dN=dN,dV=dV))
 }
