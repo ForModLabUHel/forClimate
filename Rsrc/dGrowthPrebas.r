@@ -118,7 +118,7 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
   dD[which(is.na(dD) | dD<0)] <- 1
   dV[which(is.na(dV) | dV<0)] <- 1
   
-  return(list(dH=dH,dD=dD,dB=dB,dN=dN,dV=dV))
+  return(list(dH=dH,dD=dD,dV=dV)) #,dB=dB,dN=dN
 }
 
 dGrowthVars <- function(modOut){
