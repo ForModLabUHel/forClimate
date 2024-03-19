@@ -7,7 +7,7 @@ siteInfo <- as.numeric(read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)])
 initVar <- as.matrix(read.csv("data/TestTreeInfo.csv",sep=" ")[,2:27])
 
 ### future weather - load the data for selected model and scenario
-climateModel <- "CanESM2"       # "CanESM2" or "CNRM"
+climateModel <- "CNRM"       # "CanESM2" or "CNRM"
 rcp <- "rcp45"                  # "rcp45" or "rcp85"
 
 load(paste0("data/tran",climateModel,".",rcp,".rda"))
@@ -18,7 +18,7 @@ devtools::source_url("https://raw.githubusercontent.com/ForModLabUHel/forClimate
 #### set years of simulations, define climatechange starting year of database and simulations
 nYears_sim <- 5 # number of year of simulations
 startYearDataBase <- 2025 ###starting year in the data base
-startYear <- 2031 #start year in the simulations
+startYear <- 2081 #start year in the simulations
 
 ####process weather data
 nYears_CurrClim <- ncol(PARtran)/365   ###number of available years in current climate
@@ -38,11 +38,11 @@ startYearSim <- startYear - startYearDataBase
 yearsSim <- startYearSim+1:nYears_sim  
 day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
 
-PAR_clChange <- PARx[,day_sample]
-Precip_clChange <- Precipx[,day_sample]
-TAir_clChange <- TAirx[,day_sample]
-VPD_clChange <- VPDx[,day_sample]
-CO2_clChange <- CO2x[,day_sample]
+PAR_clChange <- PARx[,day_climateChange]
+Precip_clChange <- Precipx[,day_climateChange]
+TAir_clChange <- TAirx[,day_climateChange]
+VPD_clChange <- VPDx[,day_climateChange]
+CO2_clChange <- CO2x[,day_climateChange]
 
 
 

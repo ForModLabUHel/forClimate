@@ -37,11 +37,11 @@ startYearSim <- startYear - startYearDataBase
 yearsSim <- startYearSim+1:nYears_sim  
 day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
 
-PAR_clChange <- PARx[,day_sample]
-Precip_clChange <- Precipx[,day_sample]
-TAir_clChange <- TAirx[,day_sample]
-VPD_clChange <- VPDx[,day_sample]
-CO2_clChange <- CO2x[,day_sample]
+PAR_clChange <- PARx[,day_climateChange]
+Precip_clChange <- Precipx[,day_climateChange]
+TAir_clChange <- TAirx[,day_climateChange]
+VPD_clChange <- VPDx[,day_climateChange]
+CO2_clChange <- CO2x[,day_climateChange]
 
 
 ###multiite example
