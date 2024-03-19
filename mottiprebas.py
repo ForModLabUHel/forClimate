@@ -136,7 +136,7 @@ def write_prebas_coefficients_mean_single_site(res,file_name:str):
     @return Write to file the mean of coefficients in `res`.
     """
     dfmotti = motti_coefficients_mean(res)
-    dfmotti.to_csv(file_name,sep=" ")
+    dfmotti.to_csv(file_name,sep=" ",na_rep='NA')
     
 def write_prebas_coefficients(res,file_name:str):
     """
@@ -340,5 +340,5 @@ if __name__ == "__main__":
     if args.x:
         excel_writer = pd.ExcelWriter(args.x, engine='openpyxl')
         for (df,year) in zip(df_ls,year_ls):
-            df.to_excel(excel_writer,sheet_name="Year "+str(year)+'-'+str(year+simulation_step))
+            df.to_excel(excel_writer,sheet_name="Year "+str(year)+'-'+str(year+simulation_step),na_rep='NA')
         excel_writer.close()
