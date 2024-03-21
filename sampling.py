@@ -7,6 +7,7 @@ def current_climate_selector(nyears:int,simyears:int):
     @param nyears Number of years available weather (20 years)
     @param simyears Simulation years (5 years)
     @retval ravel_days Vector of day numbers length of simyears to select daily weather
+    @note Random sampling tries to emulate natural variation in annual weather
     """
     days=365
     #Sample nyears years out of simyears
@@ -28,6 +29,7 @@ def climate_scenario_selector(csdb_start:int,sim_start:int,simyears):
     @param sim_start calendar year for the simulation start
     @param simyears Simulation years
     @retval ravel_days Vector of day numbers to index daily weather data for simulation years
+    @note Selection is determinstic for consecutive `simyears` years.
     """
     days=365
     start_index = sim_start-csdb_start
