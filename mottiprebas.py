@@ -36,7 +36,7 @@ import pandas as pd
 
 
 #R_HOME for R for Windows (comment out for Mac and Linux)
-RHOME='/Program Files/R/R-4.3.2/'
+RHOME='/Program Files/R/R-4.3.3/'
 #RHOME='/dev/MyPrograms/R/R-4.3.3/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
