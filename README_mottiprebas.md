@@ -69,26 +69,69 @@ according to locale in use.  Change the default decimal separator in DECIMALMARK
 
 To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
 go to *forClimate* directory and type for command line help:
-	
- 	python mottiprebas.py -h
+```python
 
-To run Motti-Prebas simulations type for example:
+python mottiprebas.py -h
+usage: mottiprebas.py [-h] -y int [-i int] -d str [-m str] -s str -t str -c str -r {1,2,3,4,5,6,7} -w
+                      {1,2,3,4} [-e int] [-f int]
 
-	python mottiprebas.py -y 20 -d initmotti/prebasTest.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient.txt -x prebascoeff/PrebasCoefficient.xlsx
+Run Motti under climate change with Prebas
+
+options:
+  -h, --help            show this help message and exit
+  -y int, --years int   Total simulation years
+  -i int, --interval int
+                        Prebas simulation years / Motti time step, default 5 years
+  -d str, --initdata str
+                        Motti initial data file(s), regular expression (Motti input, full path)
+  -m str, --result_directory str
+                        Simulation results main directory, default MottiPrebasSimulations
+  -s str, --stand str   Motti stand file (Motti output, Prebas input, full path)
+  -t str, --model_trees str
+                        Motti model tree file (Motti output, Prebas input, full path)
+  -c str, --coeff str   Prebas coefficients file (Prebas output, Motti input, full path)
+  -r {1,2,3,4,5,6,7}, --climate_region {1,2,3,4,5,6,7}
+                        Climatic region in Finland
+  -w {1,2,3,4}, --climate_scenario {1,2,3,4}
+                        Climate scenario (see climatedata.py for scenario names)
+  -e int, --climate_scenario_data_start int
+                        Climate scenario data start year, default 2025
+  -f int, --climate_scenario_start int
+                        Climate scenario start year in simulations, default 2025
+
+Available climate scenarios: 1: data/tranCanESM2.rcp45.rda 2: data/tranCanESM2.rcp85.rda
+3: data/tranCNRM.rcp45.rda 4: data/tranCNRM.rcp85.rda
+```
+
+
+To run Motti-Prebas simulations type for example (or copy-paste from the icon):
+```python
+	python mottiprebas.py -y 20 -i 5 -m MottiPrebasSimulations -d initmotti/prebasTest*.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient -r 2 -w 1 -e 2025 -f 2025
+```
+>[!NOTE]
+>All directories and files for the simulation results will be created programatically.
+>The Motti initialization files (in this case matching the regular esxpression *prebasTest\*.txt*)
+>must exist to be able to produce the first *Stand.txt* and *ModelTrees.txt* files for Prebas.
+
+The option *-y 20* is the simulation time. The last growth step is from 15 to 20, i.e the growth step
+is 5 years (default value for the *-i* option). 
+
+The main directory for results *MottiPrebasSimulations* (the *-m* option) will be created 
+and for each simulation there will be a subdirectory based on the Motti initialization file name. 
+
+The option *-r 2* defines region in Finland (7 in total) and the option *-w 1* selects the climate scenario (4 in total).
+The *-e 2025* option is the start year in the climate scenario data base 
+and the *-f 2025* option is the start year when climate scenario is used.
 
 >[!NOTE]
->The data file directories (*initmotti, mottistand, mottimodeltree, prebascoeff*) must exist before simulation.
->Also the primary  Motti init file (in this case *prebasTest.txt*) must exist and be able to produce
->the first *Stand.txt* and *ModelTrees.txt* files.
+>Current weather will be randomly selected for the simulation step out of 20 years available
+>in the database for the current climate. Climate scenario start is deterministic and moved forward in simulation
+>step intervals beginning from given start year (120 years of scenario data available in total).
+>In other  words the current weather tries to model natural variability in annual weather with randomness
+>but the climate scenarios are base on calendar time.
 
-The option *-y 20* is the simulation time (years). The last growth step is from 15 to 20, i.e the growth step  is 5 by default. 
-*prebasTest.txt* is used with the Motti initialization run (the file must exist with reasonable content). 
-*Stand.txt* is is the first Motti stand level data file and *ModelTrees.txt* is the first model tree data
-file after the initialization run. They also provide name templates for files to be created during simulation. 
-*PrebasCoefficient.txt* is the name template for PREBAS coeffient files. *PrebasCoefficient.xlsx* collects generated Prebas
-coefficients in a single Excel file (optional).
+Results for Motti stand data, Motti model trees and Prebas coefficients will appear in their respective directories
+and named using simulation steps. For example *prebascieff/PrebasCoeff_5-10.txt* contains coefficients for Motti
+for the simulation step 5 to 10. 
 
- Data files will appear in their respective directories and named using simulation steps. For example *PrebasCoeff_5-10.txt* contains 
- coefficients for the simulation step 5 to 10. **Note** there is currently 20 years of weather data to demonstrate 
- the linking between Motti and PREBAS.	
 
