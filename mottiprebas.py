@@ -35,8 +35,8 @@ import pandas as pd
 
 
 #R_HOME for R for Windows (comment out for Mac and Linux)
-RHOME='/Program Files/R/R-4.3.2/'
-#RHOME='/dev/MyPrograms/R/R-4.3.3/'
+#RHOME='/Program Files/R/R-4.3.2/'
+RHOME='/dev/MyPrograms/R/R-4.3.3/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
@@ -80,9 +80,8 @@ site_info_cols = ["SiteID","climID","SiteType", "SWinit (initial soil water)", "
 # 8th column is updated automatically to Ac
 init_var_cols = ["SpeciesID","Age(years)","H(m)","D(cm)","BA(m2ha-1)","Hc(m)","Ac(prebas_ex_officio)"]
 # Motti results, coefficients from the results
-motti_coeffient_cols = ["deltaHGrowth_5YearMean","deltaDGrowth_5YearMean","deltaN_5YearMean",
-                        "deltaB_5YearMean","deltaVGrowth_5YearMean"]
-layers = "PrebasLayers/MottiModelTrees"
+motti_coeffient_cols = ["deltaHGrowth_5YearMean","deltaDGrowth_5YearMean","deltaVGrowth_5YearMean"]
+prebas_layers = "PrebasLayers/MottiModelTrees"
 #Site type index in Motti stand file
 SITE_TYPE_INDEX = 22
 
@@ -110,22 +109,16 @@ def motti_coefficients_mean(res):
     """
     dH = res[0]
     dD = res[1]
-    dB = res[2]
-    dN = res[3]
-    dV = res[4]
+    dV = res[2]
     dHmean = np.mean(dH.T,axis=1)
     dDmean = np.mean(dD.T,axis=1)
-    dBmean = np.mean(dB.T,axis=1)
-    dNmean = np.mean(dN.T,axis=1)
     dVmean = np.mean(dV.T,axis=1)
     dfdHmean = pd.DataFrame(dHmean)
     dfdDmean = pd.DataFrame(dDmean)
-    dfdBmean = pd.DataFrame(dBmean)
-    dfdNmean = pd.DataFrame(dNmean)
     dfdVmean = pd.DataFrame(dVmean)
-    dfmotti = pd.concat([dfdHmean,dfdDmean,dfdBmean,dfdNmean,dfdVmean],axis=1,ignore_index=True)
+    dfmotti = pd.concat([dfdHmean,dfdDmean,dfdVmean],axis=1,ignore_index=True)
     dfmotti.columns = motti_coeffient_cols
-    dfmotti.index.name=layers
+    dfmotti.index.name=prebas_layers
     return dfmotti
 
 def write_prebas_coefficients_mean_single_site(res,file_name:str):
@@ -200,7 +193,8 @@ def read_motti_site_type(f:str)->float:
     @return Site type
     @retval stype Site type as float 
     """
-    df = pd.read_csv(f,engine='python',sep=r'\s+',nrows=30,decimal=DECIMALMARKER,names=['Index','Value'],header=0)
+    df = pd.read_csv(f,engine='python',sep=r'\s+',nrows=30,decimal=DECIMALMARKER,
+                     names=['Index','Value'],header=0)
     stype = df[df['Index']==SITE_TYPE_INDEX].iloc[0,1]
     return stype
 
@@ -232,6 +226,8 @@ def prebas_input(site_info:str,model_tree_info:str,region:int):
     @param site_info Motti stand level output file
     @param model_tree_info Motti tree level output file
     @return Prebas dataframes for Site info and tree/layer level Initial variables
+    @retval (df_site_info,df_tree_info) 2-tuple of Site info and Initial tree/Prebas layer 
+            dataframes respectively 
     """
     site_type =  read_motti_site_type(site_info)
     (df_tree_info,n_model_trees,nspecies) =  read_motti_model_tree_info(model_tree_info)
@@ -248,6 +244,34 @@ def prebas_input(site_info:str,model_tree_info:str,region:int):
     df_site_info["Permanent wilthing point"] = 0.118
     
     return (df_site_info,df_tree_info)
+
+def prebas_input_single_site(site_info:str,model_tree_info:str,region:int):
+    """
+    Create Prebas input data from Motti output files for single site.
+    @note Columns NLayers and NSpecies are removed in Site info dataframes for dGrowthPrebas
+    @param site_info Motti stand level output file
+    @param model_tree_info Motti tree level output file
+    @return Prebas dataframes for Site info and tree/layer level Initial variables
+    @retval (df_site_info,df_tree_info) 2-tuple of Site info and Initial tree/Prebas layer 
+            dataframes respectively 
+    """
+    site_type =  read_motti_site_type(site_info)
+    (df_tree_info,n_model_trees,nspecies) =  read_motti_model_tree_info(model_tree_info)
+    df_site_info = pd.DataFrame(data=0,index=[0],columns=site_info_cols)
+    df_site_info['SiteID'] = 1
+    df_site_info['climID'] = region
+    df_site_info['SiteType'] = site_type
+    df_site_info['SWinit (initial soil water)'] = 160.0
+    df_site_info['Sinit (initial temperature acclimation state)'] = 20.0
+    df_site_info['NLayers'] = n_model_trees
+    df_site_info['NSpecies'] = nspecies
+    df_site_info['SoilDepth'] = 413.0
+    df_site_info["Effective field capacity"] = 0.45
+    df_site_info["Permanent wilthing point"] = 0.118
+    #Remove NLayers and NSpecies
+    df_site_info=df_site_info.drop(columns=['NLayers','NSpecies'])
+    return (df_site_info,df_tree_info)
+
 
 def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtran,
                   Preciptran,New_Preciptran,VPDtran,New_VPDtran,CO2tran,New_CO2tran):
@@ -268,33 +292,56 @@ def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtr
         CO2tran,New_CO2tran)
     #To see the same in python matrix transposes T are needed
     print("DGROWTH PREBAS END")
-    print(res)
     return res
 
 if __name__ == "__main__":
     import climateconfig
-    parser = argparse.ArgumentParser(prog="mottiprebas.py",description="Run Motti under climate change with Prebas",
+    import sampling as samp
+    parser = argparse.ArgumentParser(prog="mottiprebas.py",
+                                     description="Run Motti under climate change with Prebas",
                                      epilog="Available climate scenarios: "+str(climateconfig.climate_scenarios))
     parser.add_argument("-y","--years",dest="y",type=int,required=True,help="Total simulation years")
-    parser.add_argument("-i","--interval",dest="i",type=int,default=5,help="Prebas simulation years (interval), default 5 years")
-    parser.add_argument("-d","--initdata",dest="d",type=str,required=True,help="Motti initial data file (Motti input, full path)")
-    parser.add_argument("-s","--stand",dest="s", type=str,required=True,help="Motti stand file (Motti output, Prebas input, full path)")
-    parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,help="Motti model tree file (Motti output, Prebas input, full path)")
-    parser.add_argument("-c","--coeff",dest="c",type=str,required=True,help="Prebas coefficients file (Prebas output, Motti input, full path)")
-    parser.add_argument("-x","--excel_file",dest="x",type=str,default=None,help="Motti coefficients excel file (Summary output, full path)")
+    parser.add_argument("-i","--interval",dest="i",type=int,default=5,
+                        help="Prebas simulation years (interval), default 5 years")
+    parser.add_argument("-d","--initdata",dest="d",type=str,required=True,
+                        help="Motti initial data file (Motti input, full path)")
+    parser.add_argument("-g","--result_directory",dest="g",type=str,default="MottiPrebasSimulations",
+                        help="Simulation results directory")
+    parser.add_argument("-s","--stand",dest="s", type=str,required=True,
+                        help="Motti stand file (Motti output, Prebas input, full path)")
+    parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,
+                        help="Motti model tree file (Motti output, Prebas input, full path)")
+    parser.add_argument("-c","--coeff",dest="c",type=str,required=True,
+                        help="Prebas coefficients file (Prebas output, Motti input, full path)")
+    parser.add_argument("-x","--excel_file",dest="x",type=str,default=None,
+                        help="Motti coefficients excel file (Summary output, full path)")
     parser.add_argument("-r","--climate_region",dest="r",type=int,required=True,choices=[1,2,3,4,5,6,7],
                         help="Climatic region in Finland")
-    parser.add_argument("-w","--climate_scenario",dest="w",type=int,required=True,choices=[1,2,3,4,5],
+    parser.add_argument("-w","--climate_scenario",dest="w",type=int,required=True,choices=[1,2,3,4],
                         help="Climate scenario (see climatedata.py for scenario names)")
+    parser.add_argument("-e","--climate_scenario_data_start",dest="e",type=int,default=2025,
+                        help="Climate scenario data start year")
+    parser.add_argument("-f","--climate_scenario_start",dest="f",type=int,default=2025,
+                        help="Climate scenario start year")
+                        
     args = parser.parse_args()
+    #Create simulation results directory
+    result_dir = args.g
+    p_results = pathlib.Path(result_dir)
     #Set-up file names
+    initial_data_file = args.d
     orig_stand_file = current_stand_file = args.s
     orig_model_tree_file = current_model_tree_file = args.t
     orig_coeff_file = current_coeff_file = args.c
-    initial_data_file = args.d
+    #Simulation time and time steps
     simulation_time = args.y 
     simulation_step = args.i
-
+    #20 years of current climate data
+    climate_data = 20
+    #Climate scenaria data start year
+    climate_scenario_data_start = args.e
+    #Climate scenario start year
+    climate_scenario_start = args.f
     # Load and source necessary weather data files.
     # Replace sample demo data with real data.
     #import demodata as dd
@@ -305,29 +352,31 @@ if __name__ == "__main__":
     climateconfig.climateid=region
     climateconfig.scenarioid=scenario
     
-    #Set-up climate data, climateconfig is used to select climatic region
-    #and climate scenario  
-    import climatedata as clim
+    #Set-up climate data: "climateconfig" is used to select climatic region (i.e, "climateid")
+    #and climate scenario (i.e., "scenarioid")
+    import climatedata as clim 
     motti_init(initial_data_file,current_stand_file,current_model_tree_file)
     df_ls=[]
     year_ls=[]
     for year in range(0,simulation_time,simulation_step):
         print("YEAR",year)
-        (df_site_info,df_tree_info)= prebas_input(current_stand_file,current_model_tree_file,region)
+        (df_site_info,df_tree_info)= prebas_input_single_site(current_stand_file,current_model_tree_file,region)
         new_stand_file = create_new_file_name(orig_stand_file,str(year)+'-'+str(year+simulation_step))
         new_model_tree_file = create_new_file_name(orig_model_tree_file,str(year)+'-'+str(year+simulation_step))
         current_coeff_file = create_new_file_name(orig_coeff_file,str(year)+'-'+str(year+simulation_step))
-        #Site info is data frame but Prebas reuires data array 
+        #Site info is data frame but Prebas requires data array 
         #Tree info is N trees x 7 data frame but Prebas requires 7 x N trees matrix (2D data array)
         (site_info_r,tree_info_r) = convert_r(df_site_info,df_tree_info.T)
-        #Using Francesco data max 20 years
-        #Slice vectors to start at the right point 
+        cw_select = samp.current_climate_selector(20,simulation_step)
+        cscen_select = samp.climate_scenario_selector(climate_scenario_data_start,climate_scenario_start,
+                                                      simulation_step)
+        climate_scenario_start = climate_scenario_start+simulation_step
         res = dgrowthprebas(simulation_step,site_info_r,tree_info_r,
-                             clim.PAR_siteX_r[365*year:],clim.newPAR_siteX_r[365*year:],
-                             clim.TAir_siteX_r[365*year:],clim.newTAir_siteX_r[365*year:],
-                             clim.Precip_siteX_r[365*year:],clim.newPrecip_siteX_r[365*year:],
-                             clim.VPD_siteX_r[365*year:],clim.newVPD_siteX_r[365*year:],
-                             clim.CO2_siteX[365*year:],clim.newCO2_siteX[365*year:])
+                            clim.PAR_siteX_r.rx(cw_select),clim.newPAR_siteX_r.rx(cscen_select),
+                            clim.TAir_siteX_r.rx(cw_select),clim.newTAir_siteX_r.rx(cscen_select),
+                            clim.Precip_siteX_r.rx(cw_select),clim.newPrecip_siteX_r.rx(cscen_select),
+                            clim.VPD_siteX_r.rx(cw_select),clim.newVPD_siteX_r.rx(cscen_select),
+                            clim.CO2_siteX_r.rx(cw_select),clim.newCO2_siteX_r.rx(cscen_select))
         write_prebas_coefficients_mean_single_site(res,current_coeff_file)
         df = motti_coefficients_mean(res)
         df_ls.append(df)
