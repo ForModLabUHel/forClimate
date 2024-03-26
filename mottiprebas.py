@@ -325,9 +325,9 @@ if __name__ == "__main__":
     parser.add_argument("-w","--climate_scenario",dest="w",type=int,required=True,choices=[1,2,3,4],
                         help="Climate scenario (see climatedata.py for scenario names)")
     parser.add_argument("-e","--climate_scenario_data_start",dest="e",type=int,default=2025,
-                        help="Climate scenario data start year")
+                        help="Climate scenario data start year, default 2025")
     parser.add_argument("-f","--climate_scenario_start",dest="f",type=int,default=2025,
-                        help="Climate scenario start year in simulations")
+                        help="Climate scenario start year in simulations, default 2025")
     args = parser.parse_args()
     #Simulation time and time steps
     simulation_time = args.y 
