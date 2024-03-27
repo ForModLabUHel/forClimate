@@ -111,6 +111,8 @@ To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 ```python
 	python mottiprebas.py -y 20 -i 5 -m MottiPrebasSimulations -d initmotti/prebasTest*.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient -r 2 -w 1 -e 2025 -f 2025
 ```
+Scroll to the right to see the full command line.
+
 >[!IMPORTANT]
 >The mottiprebas.py script must be executed in *forClimate* directory. It will use weather and climate scenario
 >databases installed in *forClimate* project.
