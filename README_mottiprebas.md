@@ -1,6 +1,6 @@
 # Framework to run PREBAS and Motti under changing climate
 >[!NOTE]
->The framework, implemented in the `mottprebas.py` script, can be used with single site Motti initialization files.
+>The framework, put together in the main `mottprebas.py` script, can be used with single site Motti initialization files.
   
 ## Installation
 The following software must be present. Python, R/RStudio and RTools are available from Luke Software Center:
@@ -105,7 +105,7 @@ Available climate scenarios: 1: data/tranCanESM2.rcp45.rda 2: data/tranCanESM2.r
 `mottiprebas.py` runs Motti workbench and PREABAS interchangeably and lets PREABAS to produce a set of coefficients 
 for Motti to take the warming climate into account in simulations. PREBAS simulates forest stand growth
 with current climate and with a given climate scenario in short 5 year time intervals. The ratio or difference 
-of the two runs gives coefficients that Motti will use to correct the stand growth under climate change.
+of the two runs gives coefficients that Motti will use to adjust the stand growth under climate change.
 
 To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 ```python
@@ -116,29 +116,33 @@ To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 >databases installed in *forClimate* project.
 
 The option *-y 20* is the simulation time. The last growth step is from 15 to 20, i.e the growth step
-is 5 years (default value for the *-i* option). The main directory for results *MottiPrebasSimulations* 
-(the *-m* option) and a subdirectory for each Motti initialization file. 
-
-The Motti initialization files are given with the *-d* option and multiple files can be matched with regular expression.
+is 5 years (default value for the *-i* option). The main directory for results is given with *-m MottiPrebasSimulations*.
+Simulation results will appear in subdirectories, one for each Motti initialization file. 
+Motti initialization files are given with the *initmotti/prebasTest*.txt. Note the possibility to use regular expression
+to match multiple initialization files for a single simulation session.
 
 >[!NOTE]
 >Currently each Motti initialization file can have one site only.
 
-Results for Motti stand data (the option *-s*), Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*)
-will appear in their respective directories and named using simulation steps. For example *prebascieff/PrebasCoeff_5-10.txt* 
-contains coefficients for Motti for the simulation step 5 to 10. Directory hierarchies for the simulation
-results will be created programatically.
+Simulation results based on template file names given for Motti stand data (the option *-s*), 
+Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*) will appear 
+in their respective directories and named after simulation steps. For example *prebascieff/PrebasCoeff_5-10.txt* 
+contains coefficients for Motti for the simulation step 5 to 10. Directory hierarchy for the simulation results
+starting from the main directory will be created programatically.
 
 The option *-r 2* defines region in Finland (7 in total) and the option *-w 1* selects the climate scenario (4 in total).
-The *-e 2025* option is the start year in the climate scenario data base 
-and the *-f 2025* option is the start year when climate scenario is used.
+The *-e 2025* option is the start year in the climate scenario data base and the *-f 2025* option is the start year
+when climate scenario is used.
 
 >[!NOTE]
 >Current weather for each 5 year simulation period will be randomly selected for the simulation step out of 20 years available
 >in the database for the current climate. Climate scenario is deterministic beginning from a given start year.
 >There are 120 years of scenario data available in total in each 4 climate scenarios.
 >In other  words the current weather tries to model natural variability in the annual weather with randomness
->but the climate scenarios are base on calendar time.
+>but the climate scenarios have calendar time.
 
+>[!WARNING]
+>Directory hierarchy will be reused if the main directory for results exists. It is up to the user not to override
+>previous results by accident.
 
 
