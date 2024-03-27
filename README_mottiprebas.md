@@ -116,7 +116,7 @@ To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 
 >[!NOTE]
 >All directories and files for the simulation results will be created programatically.
->The Motti initialization files (in the comman line example matching the regular expression *prebasTest\*.txt*)
+>The Motti initialization files (in the command line example matching the regular expression *prebasTest\*.txt*)
 >must exist to be able to produce the first *Stand.txt* and *ModelTrees.txt* files for Prebas.
 >Currently each initialization file can have one site only.
 
