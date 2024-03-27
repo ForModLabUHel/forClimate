@@ -127,7 +127,7 @@ is 5 years (default value for the *-i* option). The main directory for results *
 The Motti initialization files are given with the *-d* option and multiple files can be matched with regular expression.
 
 >[!NOTE]
->Currently each initialization file can have one site only.
+>Currently each Motti initialization file can have one site only.
 
 Results for Motti stand data (the option *-s*), Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*)
 will appear in their respective directories and named using simulation steps. For example *prebascieff/PrebasCoeff_5-10.txt* 
