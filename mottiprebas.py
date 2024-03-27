@@ -31,6 +31,7 @@ import subprocess
 import pathlib
 import glob
 import argparse
+import json
 import numpy as np
 import pandas as pd
 
@@ -424,9 +425,16 @@ if __name__ == "__main__":
             current_stand_file = new_stand_file
             current_model_tree_file = new_model_tree_file
 
-        #As extra write Prebas coeffients to excel file
+        #Write Prebas coeffients to excel file
         full_path_coeff_excel_file = pathlib.Path(orig_coeff_file).with_suffix('.xlsx')
         excel_writer = pd.ExcelWriter(str(full_path_coeff_excel_file), engine='openpyxl')
         for (df,year) in zip(df_ls,year_ls):
             df.to_excel(excel_writer,sheet_name="Year "+str(year)+'-'+str(year+simulation_step),na_rep='NA')
         excel_writer.close()
+        #Write command line
+        p_command_line_dir = p_results.joinpath(pathlib.Path("CommandLine"))
+        p_command_line_dir.mkdir(parents=True,exist_ok=True)
+        p_command_line_file=p_command_line_dir.joinpath(pathlib.Path("command_line.txt"))
+        with open(str(p_command_line_file),'w') as f:
+            json.dump(args.__dict__,f,indent=2)
+        
