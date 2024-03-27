@@ -1,5 +1,7 @@
 # Framework to run PREBAS and Motti under changing climate
-
+>[!NOTE]
+>The framework, implemented in the `mottprebas.py` script, can be used with single site Motti initialization files.
+  
 ## Installation
 The following software must be present. Python, R/RStudio and RTools are available from Luke Software Center:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
