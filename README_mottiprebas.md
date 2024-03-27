@@ -139,10 +139,10 @@ The *-e 2025* option is the start year in the climate scenario data base
 and the *-f 2025* option is the start year when climate scenario is used.
 
 >[!NOTE]
->Current weather will be randomly selected for the simulation step out of 20 years available
+>Current weather for each 5 year simulation period will be randomly selected for the simulation step out of 20 years available
 >in the database for the current climate. Climate scenario is deterministic beginning from a given start year.
->There is 120 years of scenario data available in total in each 4 climate scenarios.
->In other  words the current weather tries to model natural variability in annual weather with randomness
+>There are 120 years of scenario data available in total in each 4 climate scenarios.
+>In other  words the current weather tries to model natural variability in the annual weather with randomness
 >but the climate scenarios are base on calendar time.
 
 
