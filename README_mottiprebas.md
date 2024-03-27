@@ -70,8 +70,8 @@ go to *forClimate* directory and type `python mottiprebas.py -h` for command lin
 ```python
 python mottiprebas.py -h
 
-usage: mottiprebas.py [-h] -y int [-i int] -d str [-m str] -s str -t str -c str -r {1,2,3,4,5,6,7} -w {1,2,3,4} [-e int]
-                      [-f int]
+usage: mottiprebas.py [-h] -y int [-i int] -d str [-m str] -s str -t str -c str -r {1,2,3,4,5,6,7} -w {1,2,3,4}
+                      [-e int] [-f int]
 
 Run Motti under climate change with Prebas
 
