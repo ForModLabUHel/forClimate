@@ -106,11 +106,14 @@ Available climate scenarios: 1: data/tranCanESM2.rcp45.rda 2: data/tranCanESM2.r
 3: data/tranCNRM.rcp45.rda 4: data/tranCNRM.rcp85.rda
 ```
 
-
 To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 ```python
 	python mottiprebas.py -y 20 -i 5 -m MottiPrebasSimulations -d initmotti/prebasTest*.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient -r 2 -w 1 -e 2025 -f 2025
 ```
+>[!IMPORTANT]
+>The mottiprebas.py script must be executed in *forClimate* directory. It will use weather and climate scenario
+>databases installed in *forClimate* project.
+
 >[!NOTE]
 >All directories and files for the simulation results will be created programatically.
 >The Motti initialization files (in the comman line example matching the regular expression *prebasTest\*.txt*)
