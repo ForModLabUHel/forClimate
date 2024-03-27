@@ -114,7 +114,7 @@ To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 Scroll to the right to see the full command line.
 
 >[!IMPORTANT]
->The mottiprebas.py script must be executed in *forClimate* directory. It will use weather and climate scenario
+>The mottiprebas.py script must be executed in the *forClimate* directory. It will use weather and climate scenario
 >databases installed in *forClimate* project.
 
 The option *-y 20* is the simulation time. The last growth step is from 15 to 20, i.e the growth step
