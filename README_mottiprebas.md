@@ -68,34 +68,34 @@ according to locale in use.  Change the default decimal separator in DECIMALMARK
 To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
 go to *forClimate* directory and type `python mottiprebas.py -h` for command line help:
 ```python
-
 python mottiprebas.py -h
-usage: mottiprebas.py [-h] -y int [-i int] -d str [-m str] -s str -t str -c str -r {1,2,3,4,5,6,7} -w
-                      {1,2,3,4} [-e int] [-f int]
+
+usage: mottiprebas.py [-h] -y int [-i int] -d str [-m str] -s str -t str -c str -r {1,2,3,4,5,6,7} -w {1,2,3,4} [-e int]
+                      [-f int]
 
 Run Motti under climate change with Prebas
 
 options:
   -h, --help            show this help message and exit
-  -y int, --years int   Total simulation years
+  -y int, --years int   Total simulation years (default: None)
   -i int, --interval int
-                        Prebas simulation years / Motti time step, default 5 years
+                        Prebas simulation years / Motti time step (default: 5)
   -d str, --initdata str
-                        Motti initial data file(s), regular expression (Motti input, full path)
+                        Motti initial data file(s), regular expression (Motti input, full path) (default: None)
   -m str, --result_directory str
-                        Simulation results main directory, default MottiPrebasSimulations
-  -s str, --stand str   Motti stand file (Motti output, Prebas input, full path)
+                        Simulation results main directory (default: MottiPrebasSimulations)
+  -s str, --stand str   Motti stand file (Motti output, Prebas input, full path) (default: None)
   -t str, --model_trees str
-                        Motti model tree file (Motti output, Prebas input, full path)
-  -c str, --coeff str   Prebas coefficients file (Prebas output, Motti input, full path)
+                        Motti model tree file (Motti output, Prebas input, full path) (default: None)
+  -c str, --coeff str   Prebas coefficients file (Prebas output, Motti input, full path) (default: None)
   -r {1,2,3,4,5,6,7}, --climate_region {1,2,3,4,5,6,7}
-                        Climatic region in Finland
+                        Climatic region in Finland (default: None)
   -w {1,2,3,4}, --climate_scenario {1,2,3,4}
-                        Climate scenario (see climatedata.py for scenario names)
+                        Climate scenario (see climatedata.py for scenario names) (default: None)
   -e int, --climate_scenario_data_start int
-                        Climate scenario data start year, default 2025
+                        Climate scenario data start year (default: 2025)
   -f int, --climate_scenario_start int
-                        Climate scenario start year in simulations, default 2025
+                        Climate scenario start year in simulations (default: 2025)
 
 Available climate scenarios: 1: data/tranCanESM2.rcp45.rda 2: data/tranCanESM2.rcp85.rda
 3: data/tranCNRM.rcp45.rda 4: data/tranCNRM.rcp85.rda
