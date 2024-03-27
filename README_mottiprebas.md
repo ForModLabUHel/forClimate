@@ -113,8 +113,9 @@ To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 ```
 >[!NOTE]
 >All directories and files for the simulation results will be created programatically.
->The Motti initialization files (in this case matching the regular esxpression *prebasTest\*.txt*)
+>The Motti initialization files (in the comman line example matching the regular expression *prebasTest\*.txt*)
 >must exist to be able to produce the first *Stand.txt* and *ModelTrees.txt* files for Prebas.
+>Currently each initialization file can have one site only.
 
 The option *-y 20* is the simulation time. The last growth step is from 15 to 20, i.e the growth step
 is 5 years (default value for the *-i* option). 
