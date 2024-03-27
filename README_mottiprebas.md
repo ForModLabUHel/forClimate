@@ -1,11 +1,4 @@
 # Framework to run PREBAS and Motti under changing climate
-One idea is to use Python as a glue to run PREBAS (i.e. R)
-and Motti (i.e. Pascal binary or shared library) interchangeably.
-The data exchange can be with files and Motti command line parameters.
-
-Examples how to call Motti as binary with python can be found
-for example in some customer projects. Using Pascal shared libraries
-is certainly trickier with no prior experience.
 
 ## Installation
 The following software must be present. Python, R/RStudio and RTools are available from Luke Software Center:
