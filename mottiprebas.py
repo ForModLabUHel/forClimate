@@ -36,8 +36,8 @@ import pandas as pd
 
 
 #R_HOME for R for Windows (comment out for Mac and Linux)
-RHOME='/Program Files/R/R-4.3.3/'
-#RHOME='/dev/MyPrograms/R/R-4.3.3/'
+#RHOME='/Program Files/R/R-4.3.3/'
+RHOME='/dev/MyPrograms/R/R-4.3.3/'
 os.environ['R_HOME'] = RHOME
 #MottiWB RUNTIME LOCATION including all necessary shared libraries
 #Change as needed using '/' for directory path also  in Windows
@@ -300,7 +300,11 @@ def dgrowthprebas(years,siteInfo,initVar,PARtran,New_PARtran,TAirtran,New_TAirtr
 if __name__ == "__main__":
     import climateconfig as climconf
     import sampling as samp
-    parser = argparse.ArgumentParser(prog="mottiprebas.py",formatter_class = argparse.MetavarTypeHelpFormatter,
+    class MetavarAndDefaultFormatter(
+            argparse.MetavarTypeHelpFormatter,argparse.ArgumentDefaultsHelpFormatter):
+        pass
+    
+    parser = argparse.ArgumentParser(prog="mottiprebas.py",formatter_class = MetavarAndDefaultFormatter,
                                      description="Run Motti under climate change with Prebas",
                                      epilog="Available climate scenarios: "+ 
                                              str(1)+": "+climconf.climate_scenarios[0]+" "+
@@ -309,11 +313,11 @@ if __name__ == "__main__":
                                              str(4)+": "+ climconf.climate_scenarios[3])
     parser.add_argument("-y","--years",dest="y",type=int,required=True,help="Total simulation years")
     parser.add_argument("-i","--interval",dest="i",type=int,default=5,
-                        help="Prebas simulation years / Motti time step, default 5 years")
+                        help="Prebas simulation years / Motti time step")
     parser.add_argument("-d","--initdata",dest="d",type=str,required=True,
                         help="Motti initial data file(s), regular expression (Motti input, full path)")
     parser.add_argument("-m","--result_directory",dest="m",type=str,default="MottiPrebasSimulations",
-                        help="Simulation results main directory, default MottiPrebasSimulations")
+                        help="Simulation results main directory")
     parser.add_argument("-s","--stand",dest="s", type=str,required=True,
                         help="Motti stand file (Motti output, Prebas input, full path)")
     parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,
@@ -325,9 +329,9 @@ if __name__ == "__main__":
     parser.add_argument("-w","--climate_scenario",dest="w",type=int,required=True,choices=[1,2,3,4],
                         help="Climate scenario (see climatedata.py for scenario names)")
     parser.add_argument("-e","--climate_scenario_data_start",dest="e",type=int,default=2025,
-                        help="Climate scenario data start year, default 2025")
+                        help="Climate scenario data start year")
     parser.add_argument("-f","--climate_scenario_start",dest="f",type=int,default=2025,
-                        help="Climate scenario start year in simulations, default 2025")
+                        help="Climate scenario start year in simulations")
     args = parser.parse_args()
     #Simulation time and time steps
     simulation_time = args.y 
