@@ -134,12 +134,11 @@ The option *-r 2* defines climatic region in Finland (7 in total) and the option
 The *-e 2025* option is the start year in the climate scenario data base and the *-f 2025* option is the start year
 when climate scenario is used.
 
->[!NOTE]
->Current weather for each 5 year simulation period will be randomly selected for a simulation step out of 20 years available
->in the database for the current climate. Climate scenario is deterministic beginning from a given start year.
->There are 120 years of scenario data available in total in each 4 climate scenarios.
->In other  words the current weather tries to model natural variability in the annual weather with randomness
->but the climate scenarios have calendar time.
+Current weather for each 5 year simulation period will be randomly selected for a simulation step out of 20 years available
+in the database for the current climate. Climate scenario is deterministic beginning from a given start year.
+There are 120 years of scenario data available in total in each 4 climate scenarios.
+In other  words the current weather tries to model natural variability in the annual weather with randomness
+but the climate scenarios have calendar time.
 
 >[!WARNING]
 >Directory hierarchy will be reused if the main directory for results exists. It is up to the user not to override
