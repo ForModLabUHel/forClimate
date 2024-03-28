@@ -315,10 +315,10 @@ if __name__ == "__main__":
     parser.add_argument("-y","--years",dest="y",type=int,required=True,help="Total simulation years")
     parser.add_argument("-i","--interval",dest="i",type=int,default=5,
                         help="Prebas simulation years / Motti time step")
+    parser.add_argument("-m","--result_directory",dest="m",type=str,required=True,
+                        help="Simulation results main directory")
     parser.add_argument("-d","--initdata",dest="d",type=str,required=True,
                         help="Motti initial data file(s), regular expression (Motti input, full path)")
-    parser.add_argument("-m","--result_directory",dest="m",type=str,default="MottiPrebasSimulations",
-                        help="Simulation results main directory")
     parser.add_argument("-s","--stand",dest="s", type=str,required=True,
                         help="Motti stand file (Motti output, Prebas input, full path)")
     parser.add_argument("-t","--model_trees",dest="t",type=str,required=True,
