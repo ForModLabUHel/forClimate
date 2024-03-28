@@ -3,7 +3,7 @@
 >The framework, put together in the main `mottprebas.py` script, can be used with single site Motti initialization files.
   
 ## Installation
-The following software must be present. Python, R/RStudio and RTools are available from Luke Software Center:
+The following software must be present:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R/RStudio: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
 + Rtools: Compilers to build Fortran and C source files in PREBAS.
@@ -15,16 +15,14 @@ The following software must be present. Python, R/RStudio and RTools are availab
 + forClimate: This project. Download from GitHub.
 + Motti workbench `mottiwb`.
 
+Python, R/RStudio and RTools for Windows are available from Luke Software Center.
+
 ### Python virtual environment
 Create Python virtual environment (e.g. with the name *mottiprebas*):
 
 	python -m venv mottiprebas 
  
- Activate the virtual environment in Unix like operating system
-	
-  	source mottiprebas/bin/activate
- 
-  Activate the virtual environment in Windows operating system
+Activate the virtual environment in Windows operating system
   
   	mottiprebas/Scripts/activate
 
@@ -51,7 +49,7 @@ RHOME, MOTTI_INST_PATH, MOTTIWB and DECIMALMARKER:
 
 ```python
 #R_HOME for R for Windows (comment out for Mac and Linux)
-RHOME='/Program Files/R/R-4.3.2/'
+RHOME='/Program Files/R/R-4.3.3/'
 os.environ['R_HOME'] = RHOME
 # MottiWB RUNTIME LOCATION including all necessary shared libraries
 # Change as needed using '/' for directory path also  in Windows
@@ -62,7 +60,7 @@ MOTTIWB='mottiwb.exe'
 DECIMALMARKER='.'
 ```
 Edit the path strings for RHOME and MOTTI_INST_PATH according to `R` and Motti workbench installation locations respectively.
-MOTTIWB is the name of the Motti workbench binary. The binary (default `mottiwb.exe`) uses decimal marker
+MOTTIWB is the name of the Motti workbench binary. The Motti workbench binary (default `mottiwb.exe`) uses decimal marker
 according to locale in use.  Change the default decimal separator in DECIMALMARKER if needed.
 
 To check `mottiprebas.py` and its runtime environment start the Python virtual environment, 
@@ -70,7 +68,7 @@ go to *forClimate* directory and type `python mottiprebas.py -h` for command lin
 ```python
 python mottiprebas.py -h
 
-usage: mottiprebas.py [-h] -y int [-i int] -d str [-m str] -s str -t str -c str -r {1,2,3,4,5,6,7} -w {1,2,3,4}
+usage: mottiprebas.py [-h] -y int [-i int] -m str -d str -s str -t str -c str -r {1,2,3,4,5,6,7} -w {1,2,3,4}
                       [-e int] [-f int]
 
 Run Motti under climate change with Prebas
@@ -80,10 +78,10 @@ options:
   -y int, --years int   Total simulation years (default: None)
   -i int, --interval int
                         Prebas simulation years / Motti time step (default: 5)
+  -m str, --result_directory str
+                        Simulation results main directory (default: None)
   -d str, --initdata str
                         Motti initial data file(s), regular expression (Motti input, full path) (default: None)
-  -m str, --result_directory str
-                        Simulation results main directory (default: MottiPrebasSimulations)
   -s str, --stand str   Motti stand file (Motti output, Prebas input, full path) (default: None)
   -t str, --model_trees str
                         Motti model tree file (Motti output, Prebas input, full path) (default: None)
@@ -114,30 +112,30 @@ To run Motti-Prebas simulations type for example (or copy-paste from the icon):
 Scroll to the right to see the full command line.
 
 >[!IMPORTANT]
->The mottiprebas.py script must be executed in the *forClimate* directory. It will use weather and climate scenario
+>The `mottiprebas.py` script must be executed in the *forClimate* directory. It will use weather and climate scenario
 >databases installed in *forClimate* project.
 
-The option *-y 20* is the simulation time. The last growth step is from 15 to 20, i.e the growth step
+The command line option *-y 20* gives the simulation time. The last growth step is from 15 to 20, i.e the growth step
 is 5 years (default value for the *-i* option). The main directory for results is given with *-m MottiPrebasSimulations*.
 Simulation results will appear in subdirectories, one for each Motti initialization file. 
-Motti initialization files are given with the *initmotti/prebasTest*.txt. Note the possibility to use regular expression
+Motti initialization files are provided with  *-d initmotti/prebasTest\*.txt*. Note the possibility to use regular expression
 to match multiple initialization files for a single simulation session.
 
 >[!NOTE]
 >Currently each Motti initialization file can have one site only.
 
-Simulation results based on template file names given for Motti stand data (the option *-s*), 
-Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*) will appear 
+Simulation result files are based on template file names given for Motti stand data (the option *-s*), 
+Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*). They will appear 
 in their respective directories and named after simulation steps. For example *prebascoeff/PrebasCoeff_5-10.txt* 
 contains coefficients for Motti for the simulation step 5 to 10. Directory hierarchy for the simulation results
 starting from the main directory will be created programatically.
 
-The option *-r 2* defines region in Finland (7 in total) and the option *-w 1* selects the climate scenario (4 in total).
+The option *-r 2* defines climatic region in Finland (7 in total) and the option *-w 1* selects the climate scenario (4 in total).
 The *-e 2025* option is the start year in the climate scenario data base and the *-f 2025* option is the start year
 when climate scenario is used.
 
 >[!NOTE]
->Current weather for each 5 year simulation period will be randomly selected for the simulation step out of 20 years available
+>Current weather for each 5 year simulation period will be randomly selected for a simulation step out of 20 years available
 >in the database for the current climate. Climate scenario is deterministic beginning from a given start year.
 >There are 120 years of scenario data available in total in each 4 climate scenarios.
 >In other  words the current weather tries to model natural variability in the annual weather with randomness
