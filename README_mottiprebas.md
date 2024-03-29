@@ -39,7 +39,7 @@ Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, 
 >On Windows install *numpy, pyarrow, pandas, openpyxl* and *rpy2* packages one by one, in the order of appearance.
 >You will encounter errors if trying to install all of them at the same time.
 
-Keep *Rprebasso* installation up to date. The project is regularly updatedfor.
+Keep *Rprebasso* installation up to date. The project is regularly updated.
 
 ### mottiprebas.py
 
