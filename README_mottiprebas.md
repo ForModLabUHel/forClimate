@@ -123,10 +123,11 @@ to match multiple initialization files for a single simulation session.
 >[!NOTE]
 >Currently each Motti initialization file can have one site only.
 
-Simulation result files are based on user defined template file names given for Motti stand data (the option *-s*), 
-Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*). They will appear 
-in their respective directories and named after simulation steps. For example *prebascoeff/PrebasCoeff_5-10.txt* 
-contains coefficients for Motti for the simulation step 5 to 10. Directory hierarchy for the simulation results
+Simulation result files are based on user defined template file names (including directory paths) 
+given for Motti stand data (the option *-s*), Motti model trees (the option *-t*) 
+and Prebas coefficients (the option *-c*). They will appear in their respective directories 
+and named after simulation steps. For example *prebascoeff/PrebasCoeff_5-10.txt* contains coefficients 
+for Motti for the simulation step 5 to 10. Directory hierarchy for the simulation results
 starting from the main directory will be created programatically.
 
 The option *-r 2* defines climatic region in Finland (7 in total) and the option *-w 1* selects the climate scenario (4 in total).
@@ -140,7 +141,8 @@ In other  words the current weather tries to model natural variability in the an
 but the climate scenarios have calendar time.
 
 >[!CAUTION]
->Directory hierarchy will be reused if the main directory for results exists. It is up to the user not to override
->previous results by accident.
+>Existing directory hierarchy for results will be reused and files present will be overwritten.
+>It is up to the user not to override previous results by accident. No checks for existing files and directories
+>are made.
 
 
