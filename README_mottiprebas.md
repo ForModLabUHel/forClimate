@@ -123,7 +123,7 @@ to match multiple initialization files for a single simulation session.
 >[!NOTE]
 >Currently each Motti initialization file can have one site only.
 
-Simulation result files are based on template file names given for Motti stand data (the option *-s*), 
+Simulation result files are based on user defined template file names given for Motti stand data (the option *-s*), 
 Motti model trees (the option *-t*) and Prebas coefficients (the option *-c*). They will appear 
 in their respective directories and named after simulation steps. For example *prebascoeff/PrebasCoeff_5-10.txt* 
 contains coefficients for Motti for the simulation step 5 to 10. Directory hierarchy for the simulation results
