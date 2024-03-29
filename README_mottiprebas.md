@@ -141,7 +141,7 @@ In other  words the current weather tries to model natural variability in the an
 but the climate scenarios have calendar time.
 
 >[!CAUTION]
->It is up to the user make sure not to override previous results by accident.
+>It is up to the user to make sure not to override previous results by accident.
 >No checks for existing files and directories are made.
 
 
