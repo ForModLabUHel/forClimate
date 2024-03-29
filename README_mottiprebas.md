@@ -1,6 +1,6 @@
 # Framework to run PREBAS and Motti under changing climate
 >[!NOTE]
->The framework, put together in the main `mottprebas.py` script, can now be used with single site Motti initialization files.
+>The framework, put together in the main `mottiprebas.py` script, can be used now with *single site* Motti initialization files.
   
 ## Installation
 The following software must be present:
@@ -141,8 +141,7 @@ In other  words the current weather tries to model natural variability in the an
 but the climate scenarios have calendar time.
 
 >[!CAUTION]
->Existing directory hierarchy for results will be reused and files present will be overwritten.
->It is up to the user not to override previous results by accident. No checks for existing files and directories
->are made.
+>It is up to the user make sure not to override previous results by accident.
+>No checks for existing files and directories are made.
 
 
