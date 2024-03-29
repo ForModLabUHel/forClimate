@@ -135,7 +135,7 @@ when climate scenario is used.
 
 Current weather for each 5 year simulation period will be randomly selected for a simulation step out of 20 years available
 in the database for the current climate. Climate scenario is deterministic beginning from a given start year.
-There are 120 years of scenario data available in total in each 4 climate scenarios.
+There are 120 years of scenario data available in each 4 climate scenarios.
 In other  words the current weather tries to model natural variability in the annual weather with randomness
 but the climate scenarios have calendar time.
 
