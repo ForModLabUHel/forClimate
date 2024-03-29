@@ -1,6 +1,6 @@
 # Framework to run PREBAS and Motti under changing climate
 >[!NOTE]
->The framework, put together in the main `mottprebas.py` script, can be used with single site Motti initialization files.
+>The framework, put together in the main `mottprebas.py` script, can now be used with single site Motti initialization files.
   
 ## Installation
 The following software must be present:
