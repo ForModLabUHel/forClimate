@@ -104,7 +104,7 @@ for Motti to take the warming climate into account in simulations. PREBAS simula
 with current climate and with a given climate scenario in short 5 year time intervals. The ratio or difference 
 of the two runs gives coefficients that Motti will use to adjust the stand growth under climate change.
 
-To run Motti-Prebas simulations type for example (or copy-paste from the icon):
+To run Motti-Prebas simulations type for example (or copy-paste from the code block icon):
 ```python
 	python mottiprebas.py -y 20 -i 5 -m MottiPrebasSimulations -d initmotti/prebasTest*.txt -s mottistand/Stand.txt -t mottimodeltree/ModelTrees.txt -c prebascoeff/PrebasCoefficient -r 2 -w 1 -e 2025 -f 2025
 ```
