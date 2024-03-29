@@ -139,7 +139,7 @@ There are 120 years of scenario data available in total in each 4 climate scenar
 In other  words the current weather tries to model natural variability in the annual weather with randomness
 but the climate scenarios have calendar time.
 
->[!WARNING]
+>[!CAUTION]
 >Directory hierarchy will be reused if the main directory for results exists. It is up to the user not to override
 >previous results by accident.
 
