@@ -36,7 +36,7 @@ Install Python package tools *setuptools* and *wheel*. Install *numpy, pyarrow, 
 	pip install numpy pyarrow pandas openpyxl rpy2 
 
 >[!IMPORTANT]
->On Windows install *numpy, pyarrow, pandas, openpyxl* and *rpy2* packages one by one, in the order of appearance.
+>Under Windows install *numpy, pyarrow, pandas, openpyxl* and *rpy2* packages one by one, in the order of appearance.
 >You will encounter errors if trying to install all of them at the same time.
 
 Keep *Rprebasso* installation up to date. The project is regularly updated.
@@ -47,11 +47,11 @@ First, find `mottiprebas.py` in forClimate and locate the four lines in the begi
 RHOME, MOTTI_INST_PATH, MOTTIWB and DECIMALMARKER:
 
 ```python
-#R_HOME for R for Windows (comment out for Mac and Linux)
+#R_HOME for R under Windows (comment out for Mac and Linux)
 RHOME='/Program Files/R/R-4.3.3/'
 os.environ['R_HOME'] = RHOME
 # MottiWB RUNTIME LOCATION including all necessary shared libraries
-# Change as needed using '/' for directory path also  in Windows
+# Change as needed using '/' for directory path also  under Windows
 MOTTI_INST_PATH=pathlib.Path("/dev/MyPrograms/MottiWorkBench/Debug/")
 #Motti workbench
 MOTTIWB='mottiwb.exe'
