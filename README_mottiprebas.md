@@ -1,20 +1,20 @@
 # Framework to run PREBAS and Motti under changing climate
 >[!NOTE]
->Development status: The framework, put together in the main `mottiprebas.py` script,
+>Development status: The framework, put together in the `mottiprebas.py` Python script,
 >can be used with *single site* Motti initialization files now.
   
 ## Installation
 The following software must be present:
 + Python: Tested with Python 3.10 but any "close enough" Python 3.x should do.
 + R/RStudio: Tested with Rstudio Version 2023.09.0+463 (2023.09.0+463) but any "close enough" R distribution should do.
-+ Rtools: Compilers to build Fortran and C source files in PREBAS.
++ Rtools (Windows): Compilers to build Fortran and C source files in PREBAS.
 + [Rprebasso](https://github.com/ForModLabUHel/Rprebasso): Download from GitHub. Use the instructions in the GitHub README
   file to install the latest development version in R.
    - forClimate requires that Rprebasso package (i.e. PREBAS) is installed in R.
    - To install Rprebasso from the local download directory:
       - install.packages('path\to\Rprebasso',repos=NULL,type='source')
 + forClimate: This project. Download from GitHub.
-+ Motti workbench `mottiwb`.
++ Motti workbench `mottiwb.exe`.
 
 Python, R/RStudio and RTools for Windows are available from Luke Software Center.
 
@@ -45,7 +45,7 @@ Keep *Rprebasso* installation up to date. The project is regularly updated.
 ### mottiprebas.py
 
 First, find `mottiprebas.py` in forClimate and locate the four lines in the beginning of the file for 
-RHOME, MOTTI_INST_PATH, MOTTIWB and DECIMALMARKER:
+RHOME (Windows), MOTTI_INST_PATH, MOTTIWB and DECIMALMARKER:
 
 ```python
 #R_HOME for R under Windows (comment out for Mac and Linux)
