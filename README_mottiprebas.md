@@ -12,7 +12,7 @@ The following software must be present:
   file to install the latest development version in R.
    - forClimate requires that Rprebasso package (i.e. PREBAS) is installed in R.
    - To install Rprebasso from the local download directory:
-      - install.packages('path\to\Rprebasso',repos=NULL,type='source')
+      - install.packages('path/to/Rprebasso',repos=NULL,type='source')
 + forClimate: This project. Download from GitHub.
 + Motti workbench `mottiwb.exe`.
 
