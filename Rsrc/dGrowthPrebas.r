@@ -195,3 +195,21 @@ dGrowthVars <- function(modOut){
   }
   return(list(dGrowthH=dGrowthH,dGrowthD=dGrowthD,dGrowthB=dGrowthB,dGrowthN=dGrowthN))
 }
+
+
+
+
+averageWeather <- function(inputX,nYearsRun){
+  require(data.table)
+  nYearsX <- ncol(inputX)/365
+  xx <- data.table(t(inputX))
+  xx$doy <- rep(1:365,nYearsX)
+  ciao <- data.table(reshape2::melt(xx,id.vars = "doy"))
+  averageX <- ciao[,mean(value),by=c("doy","variable")]
+  yy <- data.matrix(reshape(averageX, idvar = "variable", timevar = "doy", direction = "wide"))[,2:366]
+  # yy <- as.numeric(yy)
+  yy2 = yy[, rep(1:365, nYearsRun)]
+  
+  return(yy2)
+}
+

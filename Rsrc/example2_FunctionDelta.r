@@ -32,6 +32,12 @@ Precip_sample <- Preciptran[,day_sample]
 TAir_sample <- TAirtran[,day_sample]
 VPD_sample <- VPDtran[,day_sample]
 CO2_sample <- CO2tran[,day_sample]
+### calculate mean climate inputs
+PAR_average <- averageWeather(PARtran,nYears_sim)
+Precip_average <- averageWeather(Preciptran,nYears_sim)
+TAir_average <- averageWeather(TAirtran,nYears_sim)
+VPD_average <- averageWeather(VPDtran,nYears_sim)
+CO2_average <- averageWeather(CO2tran,nYears_sim)
 
 ####extract climate from climate change database
 startYearSim <- startYear - startYearDataBase
