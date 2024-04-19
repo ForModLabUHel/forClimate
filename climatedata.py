@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import climateconfig
-
+import sampling as samp
 #R_HOME for R, uncomment for Mac and Linux
 RHOME='/Program Files/R/R-4.3.2/'
 os.environ['R_HOME'] = RHOME
@@ -22,17 +22,17 @@ from rpy2.robjects import r
 from rpy2.robjects import numpy2ri
 numpy2ri.activate()
 
-# Load and source necessary files. dGrowthPrebas.r contains
-# the PREBAS function dGrowthPrebas that will compute the deltas
-# of interesting forest characteristics (biomass, dominant height etc).
+# Load and source necessary files.
+###
 # inputDataDeltaexample.rda contains sample input data for PREBAS.
-# Most notably weather data for climatic regions in Finland
+# Most notably it has current weather data for climatic regions in Finland
 r.load("data/inputDataDeltaexample.rda")
 ### future weather - load the data for the selected climate scenario
 # Available values: "data/tranCanESM2.rcp45.rda", "data/tranCanESM2.rcp85.rda",
 #"data/tranCNRM.rcp45.rda" and "data/tranCNRM.rcp85.rda"
 r.load(climateconfig.climate_scenarios[climateconfig.scenarioid-1]) 
-# The PREBAS package must be installed in R.
+
+# The PREBAS package must be installed in R to run dGrowthPrebas
 r.library("Rprebasso")
 # Function to run PREBAS twice to produce deltas of certain forest characteristics of interest
 # dGrowthPrebas is in forClimate project
@@ -42,24 +42,17 @@ r.source("Rsrc/dGrowthPrebas.r")
 initVar = r['initVar']
 siteInfo = r['siteInfo']
 #Current climate weather
-#Current PAR
 PARtran = r['PARtran']
-#Demo for climate change
-#PAR change
-PARx = r['PARtran'] + 20
 CO2tran = r['CO2tran']
-#Note the R and Pythonic addition with matrices
-#CO2 change
-CO2x = r['CO2tran'].ro + 50
 TAirtran = r['TAirtran']
-#TAir change
-TAirx = r['TAirtran'] + 7
 VPDtran = r['VPDtran']
-#VPD change
-VPDx = r['VPDtran']
 Preciptran = r['Preciptran']
-#Precipitation change
-Precipx = r['Preciptran']
+#Climate change
+PARx = r['PARx']
+CO2x = r['CO2x']
+TAirx = r['TAirx']
+VPDx = r['VPDx']
+Precipx = r['Precipx']
 
 def convert_to_floatmatrix(obj):
     (rows,cols)=np.shape(obj) 
@@ -68,7 +61,8 @@ def convert_to_floatmatrix(obj):
 def convert_to_floatvector(obj):
     return  rpy2.robjects.vectors.FloatVector(obj)
 
-#Single site selection for Prebas example data. Motti will provide its own site data.
+#Single site selection for Prebas example data.
+#Motti will provide its own site data.
 siteX=3
 #Select climatic region in Finland
 climID=climateconfig.climateid
@@ -103,5 +97,6 @@ VPD_siteX_r = convert_to_floatvector(VPD_siteX)
 newVPD_siteX = VPDx[climID-1,:]
 newVPD_siteX_r = convert_to_floatvector(newVPD_siteX)
 #Slicing via rx -> R indexing
-CO2_siteX = CO2tran.rx(climID,True)
-newCO2_siteX = CO2x.rx(climID,True)
+CO2_siteX_r = CO2tran.rx(climID,True)
+newCO2_siteX = CO2x[climID-1,:]
+newCO2_siteX_r = convert_to_floatvector(newCO2_siteX)
