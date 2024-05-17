@@ -213,3 +213,72 @@ averageWeather <- function(inputX,nYearsRun){
   return(yy2)
 }
 
+
+extractIDs <- function(coords,dataBase){
+  x <- coords[1] - dataBase$x
+  y <- coords[2] - dataBase$y
+  hip = sqrt(x^2 + y^2)
+  IDx <- which.min(hip)
+  return(IDx)
+}
+  
+extractWeatherPrebas <- function(coords,startYear,outDataBase){
+  IDs <- apply(exampleCoords,1,extractIDs,currClimIDs)
+  climateX <- dat[id %in% unique(IDs)]
+  newIDs <- 1:length(unique(IDs))
+  newIDsSites <- newIDs[match(IDs,unique(IDs))]
+  climateX$idNew <- newIDs[match(climateX$id,unique(IDs))]
+  
+  
+  nYears <- max(climateX$rday)/365
+  climateX[,year:=rep(1:nYears,each=365),by="id"]
+  climateX[,doy:=1:365,by=c("id","year")]
+  climateX$actualYear <- climateX$year + 1980 
+  climateX <- climateX[actualYear >= startYear]
+  if(outDataBase==TRUE){
+    return(list(dataBase=climateX,climIDs = newIDsSites))
+  }else{
+    nIDs <- length(unique(climateX$idNew))
+    nDays <- nrow(climateX[idNew==1])
+    PAR <- VPD <- CO2 <- Precip <- TAir <- matrix(NA,nIDs,nDays)
+    for(i in 1:nIDs){
+      PAR[i,] = climateX[idNew==i]$PAR
+      VPD[i,] = climateX[idNew==i]$VPD
+      TAir[i,] = climateX[idNew==i]$TAir
+      Precip[i,] = climateX[idNew==i]$Precip
+      CO2[i,] = climateX[idNew==i]$CO2
+    }
+    return(list(PAR=PAR,VPD=VPD,TAir=TAir,Precip=Precip,CO2=CO2,climIDs = newIDsSites))
+  }
+}
+
+sampleTypicalYears <- function(climateIn,nYears=5){
+  Tseason <- climateIn[doy %in% 150:250,mean(TAir),by=c("year","id")]
+  setnames(Tseason,"V1","Tair")
+  Tseason[,quant40:= quantile(Tair,0.25),by="id"]
+  Tseason[,quant60:= quantile(Tair,0.75),by="id"]
+  Tseason[,typical_T:=ifelse(Tair > quant40 & Tair<quant60,1,0)]
+  
+  RainSeason <- climateIn[doy < 200,sum(Precip),by=c("year","id")]
+  setnames(RainSeason,"V1","Rain")
+  RainSeason[,quant40:= quantile(Rain,0.25),by="id"]
+  RainSeason[,quant60:= quantile(Rain,0.75),by="id"]
+  RainSeason[,typical_R:=ifelse(Rain > quant40 & Rain<quant60,1,0)]
+  
+  seasonX <- merge(Tseason,RainSeason,by=c("year","id"))
+  seasonX[,typical_year:= ifelse(typical_R==1 & typical_T==1,1,0)]
+  climateIn <- merge(seasonX[,.(typical_year,id,year)],climateIn,by = c("id","year"))
+  
+  nIDs <- length(unique(climateIn$idNew))
+  PAR <- VPD <- CO2 <- Precip <- TAir <- matrix(NA,nIDs,nYears*365)
+  for(i in 1:nIDs){
+    sampleYears <- sample(unique(ciao[idNew==i&typical_year==1]$year),5)
+    oo <- ciao[idNew==i & year %in% sampleYears]
+    PAR[i,] = oo$PAR
+    VPD[i,] = oo$VPD
+    TAir[i,] = oo$TAir
+    Precip[i,] = oo$Precip
+    CO2[i,] = oo$CO2
+  }
+  return(list(PAR=PAR,VPD=VPD,TAir=TAir,Precip=Precip,CO2=CO2))
+}
