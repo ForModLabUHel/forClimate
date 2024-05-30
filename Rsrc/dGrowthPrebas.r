@@ -272,8 +272,8 @@ sampleTypicalYears <- function(climateIn,nYears=5){
   nIDs <- length(unique(climateIn$idNew))
   PAR <- VPD <- CO2 <- Precip <- TAir <- matrix(NA,nIDs,nYears*365)
   for(i in 1:nIDs){
-    sampleYears <- sample(unique(ciao[idNew==i&typical_year==1]$year),5)
-    oo <- ciao[idNew==i & year %in% sampleYears]
+    sampleYears <- sample(unique(climateIn[idNew==i&typical_year==1]$year),5)
+    oo <- climateIn[idNew==i & year %in% sampleYears]
     PAR[i,] = oo$PAR
     VPD[i,] = oo$VPD
     TAir[i,] = oo$TAir
