@@ -1,7 +1,7 @@
 library(data.table)
 library(prodlim)
 source("Rsrc/dGrowthPrebas.r")
-coordFin <- fread("C:/Users/checc/Downloads/coordinates.dat") 
+coordFin <- fread("data/coordinates.dat") 
 
 currclimIDs_tran <- c(200,500,700, 1385,2305,2805,3422)
 siteCoords <- as.matrix(coordFin[currclimIDs_tran,.(x,y)])
