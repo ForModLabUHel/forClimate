@@ -1,27 +1,29 @@
 library(data.table)
-currClimIDs <- fread("C:/Users/checc/Documents/research/weather/grid_coords")
-setnames(currClimIDs,c("long_deg","lat_deg"),c("x","y"))
+library(prodlim)
+source("Rsrc/dGrowthPrebas.r")
+coordFin <- fread("C:/Users/checc/Downloads/coordinates.dat") 
+
 currclimIDs_tran <- c(200,500,700, 1385,2305,2805,3422)
-exampleCoords <- as.matrix(currClimIDs[currclimIDs_tran,.(x,y)])
-exampleCoords[3,] <- c(27.1,64.44)
+siteCoords <- as.matrix(coordFin[currclimIDs_tran,.(x,y)])
+# siteCoords[3,] <- c(27.1,64.44)
 
 load("C:/Users/checc/Documents/research/weather/CurrClim.rdata")
+currClim_dataBase = dat
 
-coords <- exampleCoords
-startYear <- 1981
+startYear <- 1980
 DataBaseFormat <- TRUE
 
-currClimData <- extractWeatherPrebas(exampleCoords,startYear,
-                                     DataBaseFormat,currClim_dataBase)$dataBase
+currClimData <- extractWeatherPrebas(siteCoords,startYear,coordFin,
+                    DataBaseFormat,currClim_dataBase,sourceData="currClim")$dataBase
 
+load("C:/Users/checc/Downloads/CanESM2.rcp85.rdata")
+climateChange_dataBase = dat
 startYear2 <- 2022
 DataBaseFormat <- FALSE
-climateChangeData <- extractWeatherPrebas(exampleCoords,startYear2,
-                                          DataBaseFormat,climateChange_dataBase)
+climateChangeData <- extractWeatherPrebas(siteCoords,startYear2,coordFin,
+                      DataBaseFormat,climateChange_dataBase,sourceData="climChange")
 
 typicalSample <- sampleTypicalYears(currClimData)
-
-dim(oo$PAR)
 
 
 

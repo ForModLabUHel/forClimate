@@ -221,21 +221,35 @@ extractIDs <- function(coords,dataBase){
   IDx <- which.min(hip)
   return(IDx)
 }
+
+extractWeatherPrebas <- function(coords,startYear,coordFin,DataBaseFormat,dat,sourceData){
+  IDs <- apply(coords,1,extractIDs,coordFin)
+  IDs2 <- unique(coordFin[IDs,3:4])
+  newIDs <- 1:nrow(IDs2)
+  climateX <- data.table()
+  if(sourceData=="currClim"){
+    for(i in 1:nrow(IDs2)){
+      climateXx <- dat[id %in% IDs2$currClimID[i]]
+      climateXx$idNew <- i
+      climateX <- rbind(climateX,climateXx)
+    }
+  }
+  if(sourceData=="climChange"){
+    for(i in 1:nrow(IDs2)){
+      climateXx <- dat[id %in% IDs2$climChangeID[i]]
+      climateXx$idNew <- i
+      climateX <- rbind(climateX,climateXx)
+    }
+  } 
   
-extractWeatherPrebas <- function(coords,startYear,outDataBase){
-  IDs <- apply(exampleCoords,1,extractIDs,currClimIDs)
-  climateX <- dat[id %in% unique(IDs)]
-  newIDs <- 1:length(unique(IDs))
-  newIDsSites <- newIDs[match(IDs,unique(IDs))]
-  climateX$idNew <- newIDs[match(climateX$id,unique(IDs))]
-  
-  
+  newIDsSites <- newIDs[row.match(as.data.frame(coordFin[IDs,3:4]),as.data.frame(IDs2))]
+
   nYears <- max(climateX$rday)/365
-  climateX[,year:=rep(1:nYears,each=365),by="id"]
-  climateX[,doy:=1:365,by=c("id","year")]
-  climateX$actualYear <- climateX$year + 1980 
+  climateX[,year:=rep(1:nYears,each=365),by="idNew"]
+  climateX[,doy:=1:365,by=c("idNew","year")]
+  climateX$actualYear <- climateX$year + 1979 
   climateX <- climateX[actualYear >= startYear]
-  if(outDataBase==TRUE){
+  if(DataBaseFormat==TRUE){
     return(list(dataBase=climateX,climIDs = newIDsSites))
   }else{
     nIDs <- length(unique(climateX$idNew))
