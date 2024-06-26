@@ -21,7 +21,7 @@ Python, R/RStudio and RTools for Windows are available from Luke Software Center
 >[!NOTE]
 >Although RTools can be installed from Luke Software Center the content software, most notably Fortran and C compilers,
 >cannot be run from the installation location (for security reasons). Until this problem has been solved the workaround
->is to download R and RTools from their original distribution site and install the two software packages under *C:\dev* directory.
+>is to download R and RTools from their original distribution site and install the two software packages under *C:\dev* directory
 >and use this R installation with *mottiprebas*. RStudio is the GUI on top of R and not necessary to install *Rprebasso* in R.
   
 ### Python virtual environment
