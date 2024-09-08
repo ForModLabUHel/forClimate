@@ -14,7 +14,7 @@ The link function between *MottiWB* and *dGrowthPrebas*:
 ///\param climID Climate reagion to be chosen
 ///\param[out] dH_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
 ///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
-///\param[out] dD_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
+///\param[out] dV_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
 ///\pre The result vectors must have memory space for tne results. 
 ///\todo climate_model: For the real climate data decide how to express Climate scenario wanted
 ///\todo climID: For the real climate data decide how to express the geographic location wanted 
