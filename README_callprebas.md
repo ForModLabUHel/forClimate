@@ -52,13 +52,14 @@ prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID){
 ```
 
 Currently uses the demonstration climate data that needs to be changed to real climate scenarios.
+See *prebascoefficients.r* for details.
 
 ## TASKS
-Present-day status: Compiles and runs on Linux. 
+Present-day status: Compiles and runs on Linux. To complete the link between MottiWB and dGrowthPrebas:
 
 - [] Compile and run on Windows (Mika, Hannu)
 - [] Create shared library on Windows (Mika, Hannu)
-- [] Implement real climate scenario selection for *dGrowthPrebas* (Daesung)
+- [] Implement real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
 - [] Put together the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
 
 ## Compilation
