@@ -1,7 +1,7 @@
 # C function interface between Motti and dGrowthPrebas
 
 ## callprebas
-The link function between *MottiWB* and *dGrowthPrebas*:
+The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
 
 ```C
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
