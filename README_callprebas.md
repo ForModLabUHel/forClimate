@@ -60,7 +60,9 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 - [] Compile and run on Windows (Mika, Hannu)
 - [] Create shared library on Windows (Mika, Hannu)
 - [] Implement real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
+	- See Francesco's example *Rsrc/extractWeather_example.r* 
 - [] Put together the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
+  	- Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
 
 ## Compilation
 
