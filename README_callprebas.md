@@ -31,7 +31,7 @@ slice of it to *dGrowthPrebas*. Both the number of rows (7) and the number of co
 The size of the result matrices for *dH*, *dD* and *dV* are implicitely known but the memory space must be reserved
 before the call to *callprebas*.
 
-Note that the model trees are the *columns* both in *init_var* and in the result matrices.
+Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices.
 
 The function signature needs to include the choice of Climate scenario and the selected geographic region.
 
