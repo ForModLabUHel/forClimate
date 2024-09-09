@@ -51,7 +51,7 @@ the geographic region and calls dGrowthPrebas. Returns the coefficients for *dH*
 prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID){
 ```
 
-Currently uses the demonstration climate data that needs to be changed to real climate scenarios.
+Currently *prebascoefficients* uses the demonstration climate data that needs to be changed to real climate scenarios.
 See *prebascoefficients.r* for details.
 
 ## TASKS
