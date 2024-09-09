@@ -48,7 +48,7 @@ the geographic region and calls *dGrowthPrebas*. Returns the coefficients for *d
 ###real climate scenario data.
 ###TODO: decide how to express climate scenario and geographic location. Implement
 ###the climate data set-up.
-prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID){
+prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID)
 ```
 
 Currently *prebascoefficients* uses the demonstration climate data that needs to be changed to real climate scenarios.
