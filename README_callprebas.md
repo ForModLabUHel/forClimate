@@ -64,6 +64,8 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
  	- The implementation can be started on Linux and test with demonstration weather data
 - [] Put together the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
   	- Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
+  	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
+  	  for *prebascoefficients*. 
 
 ## Compilation
 
