@@ -70,7 +70,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 ## Compilation
 
-To compile and run on Linux:
+To compile and run on Linux (Rprebasso must be installed in R):
 
 	export R_HOME=/usr/lib64/R/
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
