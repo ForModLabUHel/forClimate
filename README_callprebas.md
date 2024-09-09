@@ -40,7 +40,7 @@ See the files *callprebas.h* and *callprebas.c*.
 ## prebascoefficients
 
 The R function called by *callprebas* that with given input selects the climate scenario as well as  
-the geographic region and calls dGrowthPrebas. Returns the coefficients for *dH*, *dD* and *dV*:
+the geographic region and calls *dGrowthPrebas*. Returns the coefficients for *dH*, *dD* and *dV*:
 
 ```R
 ###Call dGrowthPrebas with site and model tree information, given climate scenario
