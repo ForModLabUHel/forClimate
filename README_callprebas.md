@@ -85,7 +85,7 @@ To create shared library on Linux:
 	gcc -shared callprebas.o -o callprebas.so
 
 ### Windows 10
-For Windows install Cygwin and the x86_64-w64-mingw32-gcc compiler. The build process *in Cygwin terminal* is similar to Linux.
+For Windows install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process *in Cygwin terminal* is similar to Linux.
 To build the simple test program (Rprebasso must be installed in R):
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o /cygdrive/c/dev/Cygwin64/home/03081263/callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c
