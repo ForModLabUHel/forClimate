@@ -1,7 +1,7 @@
 # C function interface between Motti and dGrowthPrebas
 
 ## callprebas
-The link function between *MottiWB* and *dGrowthPrebas*:
+The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
 
 ```C
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
@@ -48,7 +48,7 @@ the geographic region and calls *dGrowthPrebas*. Returns the coefficients for *d
 ###real climate scenario data.
 ###TODO: decide how to express climate scenario and geographic location. Implement
 ###the climate data set-up.
-prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID){
+prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID)
 ```
 
 Currently *prebascoefficients* uses the demonstration climate data that needs to be changed to real climate scenarios.
@@ -68,6 +68,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
   	- Check if a particular version of R is needed for Rprebasso (Francesco).
+- [] Sensitivity tests for *dGrowthPrebas*.
 
 ## Compilation
 
