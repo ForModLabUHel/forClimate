@@ -71,7 +71,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 - [] Sensitivity tests for *dGrowthPrebas*.
 
 ## Compilation
-
+### Linux
 To compile and run on Linux (Rprebasso must be installed in R):
 
 	export R_HOME=/usr/lib64/R/
@@ -84,5 +84,24 @@ To create shared library on Linux:
 	gcc -fPIC -c -I/usr/include/R  callprebas.c -o callprebas.o
 	gcc -shared callprebas.o -o callprebas.so
 
-For Windows the build process should be similar. See for example [Cygwin manual](https://cygwin.com/cygwin-ug-net/dll.html) for details.
+### Windows 10
+For Windows install Cygwin and the x86_64-w64-mingw32-gcc compiler. The build process *in Cygwin terminal* is similar to Linux.
+To build the simple test program (Rprebasso must be installed in R):
+
+	x86_64-w64-mingw32-gcc.exe -DMAIN -o /cygdrive/c/dev/Cygwin64/home/03081263/callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c
+
+To build the shared library in Cygwin:
+
+	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c	
+ 	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
+
+To run the `callprebas` test program set-up first R_HOME and other required environment variables. 
+Open *Windows terminal*, go to forClimate installation directory and run the test program.  
+
+### Linking Delphi and C
+The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initilizes the embedded R environment
+and must be called before *callprebas* in the main program.
+
+## Reading
+[Cygwin manual](https://cygwin.com/cygwin-ug-net/dll.html).
 
