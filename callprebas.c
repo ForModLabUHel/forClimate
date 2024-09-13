@@ -38,12 +38,25 @@ SEXP prebasinitvar()
   return retval_treeinfo;
 }
 
+void initialize_R()
+{
+  static int init=0;
+  if (!init){
+    //Initialize R
+    //Initialize the embedded R environment. The initialization must be relocated
+    //to the context of 'callprebas' when linking together MottiWB and and dGrowthPrebas 
+    int r_argc = 2;
+    char* r_argv[] = { "R", "--silent" };
+    Rf_initEmbeddedR(r_argc, r_argv);
+    init=1;
+  }
+}
 
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
 		char* climate_model,int climID,double* dH_result,double* dD_result,
 		double* dV_result)
-{
-   SEXP site_info_v = PROTECT(allocVector(REALSXP,length));
+{ 
+  SEXP site_info_v = PROTECT(allocVector(REALSXP,length));
   //Note SEXP internals are hidden but the function REAL
   //provides access to the vector data
   memcpy(REAL(site_info_v),site_info,10 * sizeof(double));
@@ -96,11 +109,8 @@ void callprebas(double site_info[],int length, double* init_var,long rows,long c
 #ifdef MAIN
 int main()
 {
-  //Initialize the embedded R environment. The initialization must be relocated
-  //to the context of 'callprebas' when linking together MottiWB and and dGrowthPrebas 
-  int r_argc = 2;
-  char* r_argv[] = { "R", "--silent" };
-  Rf_initEmbeddedR(r_argc, r_argv);
+  //Initialize the embedded R environment. 
+  initialize_R();
 
   //These two calls sourcing R files needed may need to be relocated
   //to the context of 'callprebas'  when linking together MottiWB and and dGrowthPrebas 
@@ -135,6 +145,7 @@ int main()
   double dH[5][c];
   double dD[5][c];
   double dV[5][c];
+  printf("First call to callprebas\n");
   callprebas(site_info_val,length_v,&tree_info_m[0][0],r,c,"CanESM2",2,&dH[0][0],&dD[0][0],&dV[0][0]);
   printf("dH from Prebas coeffients\n");
   for (int i = 0; i < 5; i++){
@@ -157,7 +168,32 @@ int main()
     }
     printf("\n");
   }
-  printf("Done\n");
+  printf("First time done\n\n");
+
+  printf("Second call to callprebas\n");
+  callprebas(site_info_val,length_v,&tree_info_m[0][0],r,c,"CanESM2",2,&dH[0][0],&dD[0][0],&dV[0][0]);
+  printf("dH from Prebas coeffients\n");
+  for (int i = 0; i < 5; i++){
+    for (int j = 0; j < c; j++){
+      printf("%0.7f ",dH[i][j]);
+    }
+    printf("\n");
+  }
+  printf("dD from Prebas coeffients\n");
+  for (int i = 0; i < 5; i++){
+    for (int j = 0; j < c; j++){
+      printf("%0.7f ",dD[i][j]);
+    }
+    printf("\n");
+  }
+  printf("dV from Prebas coefficients\n");
+  for (int i = 0; i < 5; i++){
+    for (int j = 0; j < c; j++){
+      printf("%0.7f ",dV[i][j]);
+    }
+    printf("\n");
+  }
+  printf("Second time done\n");
   return 0;
 }
 #endif
