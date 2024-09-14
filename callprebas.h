@@ -24,5 +24,5 @@ extern void library(const char *name);
 ///\todo climID: For the real climate data decide how to express the geographic location wanted  
 extern void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
 		       char* climate_model,int climID,double* dH_result,double* dD_result,
-		       double* dV_result);
+		       double* dV_result,int verbose);
 #endif
