@@ -101,7 +101,7 @@ To run the `callprebas` test program set-up first R_HOME and other required envi
 Open *Windows terminal*, go to forClimate installation directory and run the test program.  
 
 ### Linking Delphi and C
-The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initilizes the embedded R environment
+The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initializes the embedded R environment
 and must be called before *callprebas* in the main program. See the *main* function in *callprebas.c* as an example.
 
 ## Reading
