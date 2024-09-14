@@ -3,7 +3,7 @@ library(data.table)
 source('Rsrc/dGrowthPrebas.r')
 siteinfo<-function(fname){
     siteInfo <- as.numeric(read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)])
-    print(siteInfo)
+    #print(siteInfo)
     return (siteInfo)
 }
 
