@@ -55,7 +55,11 @@ void initialize_R()
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
 		char* climate_model,int climID,double* dH_result,double* dD_result,
 		double* dV_result)
-{ 
+{
+  if (length != 10){
+    printf("Site Info vector must be 10 long instead of %d \n",length);
+    exit(0);
+  }
   SEXP site_info_v = PROTECT(allocVector(REALSXP,length));
   //Note SEXP internals are hidden but the function REAL
   //provides access to the vector data
