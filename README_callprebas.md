@@ -15,12 +15,13 @@ The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
 ///\param[out] dH_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
 ///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
 ///\param[out] dV_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
+///\param verbose If verbose > 0 print site_info and init_var contents 
 ///\pre The result vectors must have memory space for tne results. 
 ///\todo climate_model: For the real climate data decide how to express Climate scenario wanted
 ///\todo climID: For the real climate data decide how to express the geographic location wanted 
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
 		char* climate_model,int climID,double* dH_result,double* dD_result,
-		double* dV_result)
+		double* dV_result,int verbose)
 		
 ```
 The *site_info* vector length is known to be 10 but for consistency its length is explicitely given. 
