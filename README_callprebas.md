@@ -1,4 +1,4 @@
-# C function interface between Motti and dGrowthPrebas
+# Embedded R interface between Motti and dGrowthPrebas
 
 ## callprebas
 The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
