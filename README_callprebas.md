@@ -16,7 +16,7 @@ The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
 ///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
 ///\param[out] dV_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
 ///\param verbose If verbose > 0 print site_info and init_var contents 
-///\pre The result vectors must have memory space for tne results. 
+///\pre The result matrices must have memory space for tne results. 
 ///\todo climate_model: For the real climate data decide how to express Climate scenario wanted
 ///\todo climID: For the real climate data decide how to express the geographic location wanted 
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
@@ -30,7 +30,8 @@ The *init_var* matrix is designed to have statically in the order of 1000 model 
 slice of it to *dGrowthPrebas*. Both the number of rows (7) and the number of colums (i.e. the number of model trees) is needed. 
 
 The size of the result matrices for *dH*, *dD* and *dV* are implicitely known but the memory space must be reserved
-before the call to *callprebas*.
+before the call to *callprebas*. The *verbose* parameter allows to print the contents of *site_info* and *init_var* for
+debugging purposes.
 
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices.
 
