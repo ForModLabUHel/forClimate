@@ -80,7 +80,7 @@ To compile and run `callprebas` on Linux (Rprebasso and reshape2 packages must b
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
 	./callprebas
 
-Note that the call `callprebas` must executed in the  *forClimate* directory. 
+Note that `callprebas` must executed in the  *forClimate* directory. 
 To create shared library on Linux:
 	
 	gcc -fPIC -c -I/usr/include/R  callprebas.c -o callprebas.o
