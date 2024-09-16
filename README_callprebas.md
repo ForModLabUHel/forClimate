@@ -82,7 +82,7 @@ Rprebasso and reshape2 packages must be installed in R. To compile and run `call
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
 	./callprebas
 
-The *-DMAIN* includes the C *main* function that implements the `callprebas` test program. To create shared library on Linux:
+The *-DMAIN* includes the C *main* function that implements the `callprebas` test program. To create the *callprebas.so* shared library:
 	
 	gcc -fPIC -c -I/usr/include/R  callprebas.c -o callprebas.o
 	gcc -shared callprebas.o -o callprebas.so
