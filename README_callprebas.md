@@ -92,7 +92,7 @@ First, set-up *R_HOME* and *Path* environmental variables with Control Panel:
 	R_HOME C:<path to R installation directory>
  	Path C:<path to R installation directory>\bin\x86
 
-The *Path* variable is also search path for shared libraries.
+The *Path* variable is also a search path for shared libraries.
 
 Install Cygwin and from Cygwin the `x86_64-w64-mingw32-gcc` compiler. The build process for `callprebas.exe` 
 is an interplay with Cygwin and Windows. In *Cygwin terminal* go to forClimate directory and build the program 
