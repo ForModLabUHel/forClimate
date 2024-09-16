@@ -74,7 +74,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 ## Compilation
 ### Linux
-To compile and run on Linux (Rprebasso must be installed in R):
+To compile and run on Linux (Rprebasso and reshape2 packages must be installed in R):
 
 	export R_HOME=/usr/lib64/R/
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
@@ -87,18 +87,24 @@ To create shared library on Linux:
 	gcc -shared callprebas.o -o callprebas.so
 
 ### Windows 10
-For Windows install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process *in Cygwin terminal* is similar to Linux.
-To build the simple test program (Rprebasso must be installed in R):
+First, set-up *R_HOME* and *Path* environmental variables with Control Panel:
+
+	R_HOME C:<path to R installation directory>
+ 	Path C:<path to R installation directory>\bin\x86
+
+The *Path* variable is also search path for shared libraries.
+
+For Windows install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process is an interplay with Cygwin and Windows.
+In *Cygwin terminal* build the simple test program (Rprebasso and reshape2 packages must be installed in R):
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o /cygdrive/c/dev/Cygwin64/home/03081263/callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c
 
-To build the shared library in Cygwin:
+To build the shared library in *Cygwin terminal*:
 
 	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
 
-To run the `callprebas` test program set-up first R_HOME and other required environment variables. 
-Open *Windows terminal*, go to forClimate installation directory and run the test program.  
+To run the `callprebas` test program open *Windows terminal*, go to forClimate installation directory and run the test program.  
 
 ### Linking Delphi and C
 The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initializes the embedded R environment
