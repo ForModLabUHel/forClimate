@@ -87,7 +87,8 @@ must executed in the  *forClimate* directory. To create shared library on Linux:
 	gcc -shared callprebas.o -o callprebas.so
 
 ### Windows 10
-First, set-up *R_HOME* and *Path* environmental variables with Control Panel:
+First, set-up *R_HOME* and *Path* [environmental variables](https://learn.microsoft.com/en-us/windows/win32/procthread/environment-variables) 
+with Control Panel:
 
 	R_HOME C:<path to R installation directory>
  	Path C:<path to R installation directory>\bin\x86
