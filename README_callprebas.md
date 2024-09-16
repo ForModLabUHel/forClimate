@@ -88,7 +88,7 @@ The *-DMAIN* includes the C *main* function that implements the `callprebas` tes
 	gcc -shared callprebas.o -o callprebas.so
 
 ### Windows 10
-Rprebasso and reshape2 packages must be installed in R. Then, set-up *R_HOME* and *Path* environment variables with [Control Panel](https://learn.microsoft.com/en-us/windows/win32/shell/user-environment-variables):
+Rprebasso and reshape2 packages must be installed in R. Set-up *R_HOME* and *Path* environment variables with [Control Panel](https://learn.microsoft.com/en-us/windows/win32/shell/user-environment-variables):
 
 + Set *R_HOME*: C:\<path to R installation directory\>
 + Add to *Path*: C:\<path to R installation directory\>\bin\x86
