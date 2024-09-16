@@ -88,8 +88,8 @@ The *-DMAIN* includes the C *main* function that implements a small test program
 ### Windows 10
 Rprebasso and reshape2 packages must be installed in R. Then, set-up *R_HOME* and *Path* [environmental variables](https://learn.microsoft.com/en-us/windows/win32/procthread/environment-variables) with Control Panel:
 
-	Set R_HOME: C:<path to R installation directory>
- 	Add to Path: C:<path to R installation directory>\bin\x86
++ Set R_HOME: C:\<path to R installation directory\>
++ Add to Path: C:\<path to R installation directory\>\bin\x86
 
 The *Path* variable is also a search path for shared libraries. 
 
