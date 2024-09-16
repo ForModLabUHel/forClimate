@@ -1,4 +1,4 @@
-# C function interface between Motti and dGrowthPrebas
+# Embedded R interface between Motti and dGrowthPrebas
 
 ## callprebas
 The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
@@ -15,12 +15,13 @@ The link function between *MottiWB* and *dGrowthPrebas* implemented in C:
 ///\param[out] dH_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
 ///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
 ///\param[out] dV_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
-///\pre The result vectors must have memory space for tne results. 
+///\param verbose If verbose > 0 print site_info and init_var contents 
+///\pre The result matrices must have memory space for tne results. 
 ///\todo climate_model: For the real climate data decide how to express Climate scenario wanted
 ///\todo climID: For the real climate data decide how to express the geographic location wanted 
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
 		char* climate_model,int climID,double* dH_result,double* dD_result,
-		double* dV_result)
+		double* dV_result,int verbose)
 		
 ```
 The *site_info* vector length is known to be 10 but for consistency its length is explicitely given. 
@@ -29,7 +30,8 @@ The *init_var* matrix is designed to have statically in the order of 1000 model 
 slice of it to *dGrowthPrebas*. Both the number of rows (7) and the number of colums (i.e. the number of model trees) is needed. 
 
 The size of the result matrices for *dH*, *dD* and *dV* are implicitely known but the memory space must be reserved
-before the call to *callprebas*.
+before the call to *callprebas*. The *verbose* parameter allows to print the contents of *site_info* and *init_var* for
+debugging purposes.
 
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices.
 
@@ -59,11 +61,11 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 - [] Compile and run on Windows (Mika, Hannu)
 - [] Create shared library on Windows (Mika, Hannu)
-- [] Implement real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
+- [] Implement current climate and real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
  	- The implementation can be started on Linux and tested with demonstration site and model tree (Prebas layers) data.
   	- The part needed to be replaced is marked in *prebascoefficients* 	
-- [] Put together the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
+- [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
   	- Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
@@ -72,7 +74,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 ## Compilation
 ### Linux
-To compile and run on Linux (Rprebasso must be installed in R):
+To compile and run `callprebas` on Linux (Rprebasso and reshape2 packages must be installed in R):
 
 	export R_HOME=/usr/lib64/R/
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
@@ -85,22 +87,28 @@ To create shared library on Linux:
 	gcc -shared callprebas.o -o callprebas.so
 
 ### Windows 10
-For Windows install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process *in Cygwin terminal* is similar to Linux.
-To build the simple test program (Rprebasso must be installed in R):
+First, set-up *R_HOME* and *Path* environmental variables with Control Panel:
 
-	x86_64-w64-mingw32-gcc.exe -DMAIN -o /cygdrive/c/dev/Cygwin64/home/03081263/callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c
+	R_HOME C:<path to R installation directory>
+ 	Path C:<path to R installation directory>\bin\x86
 
-To build the shared library in Cygwin:
+The *Path* variable is also search path for shared libraries.
 
-	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas /cygdrive/c/dev/MyGit/forClimate/callprebas.c	
+Install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process for `callprebas.exe` is an interplay with Cygwin and Windows.
+In *Cygwin terminal* go to forClimate directory and build the program (Rprebasso and reshape2 packages must be installed in R):
+
+	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
+
+To build the shared library in *Cygwin terminal*:
+
+	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
 
-To run the `callprebas` test program set-up first R_HOME and other required environment variables. 
-Open *Windows terminal*, go to forClimate installation directory and run the test program.  
+To run the `callprebas.exe` test program open *Windows terminal*, go to forClimate installation directory and run the test program.  
 
 ### Linking Delphi and C
-The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initilizes the embedded R environment
-and must be called before *callprebas* in the main program.
+The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initializes the embedded R environment
+and must be called before *callprebas* in the main program. See the *main* function in *callprebas.c* as an example.
 
 ## Reading
 [Cygwin manual](https://cygwin.com/cygwin-ug-net/dll.html).
