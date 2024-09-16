@@ -105,7 +105,7 @@ To build the shared library in *Cygwin terminal*:
 	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
 
-To run the `callprebas.exe` test program open *Windows terminal*, go to forClimate installation directory and run the test program.  
+To run the `callprebas.exe` test program open *Windows terminal*, go to forClimate directory and run the test program.  
 
 ### Linking Delphi and C
 The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The former initializes the embedded R environment
