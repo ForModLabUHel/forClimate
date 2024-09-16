@@ -93,11 +93,10 @@ with Control Panel:
 	R_HOME C:<path to R installation directory>
  	Path C:<path to R installation directory>\bin\x86
 
-The *Path* variable is also a search path for shared libraries.
+The *Path* variable is also a search path for shared libraries. Rprebasso and reshape2 packages must be installed in R.
 
 Install Cygwin and from Cygwin the `x86_64-w64-mingw32-gcc` compiler. The build process for `callprebas.exe` 
-is an interplay with Cygwin and Windows. In *Cygwin terminal* go to forClimate directory and build the program 
-(Rprebasso and reshape2 packages must be installed in R):
+is an interplay with Cygwin and Windows. In *Cygwin terminal* go to forClimate directory and build `callprebas.exe`:
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
 
