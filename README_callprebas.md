@@ -94,7 +94,7 @@ First, set-up *R_HOME* and *Path* environmental variables with Control Panel:
 
 The *Path* variable is also search path for shared libraries.
 
-For Windows install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process is an interplay with Cygwin and Windows.
+Install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process is an interplay with Cygwin and Windows.
 In *Cygwin terminal* go to forClimate directory and build the simple test program (Rprebasso and reshape2 packages must be installed in R):
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
