@@ -100,7 +100,7 @@ is an interplay with Cygwin and Windows. Open *Cygwin terminal*, go to forClimat
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
 
-To build the shared library in *Cygwin terminal*:
+To build the *callprebas.dll* shared library in *Cygwin terminal*:
 
 	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
