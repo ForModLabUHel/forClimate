@@ -27,9 +27,11 @@ void callprebas(double site_info[],int length, double* init_var,long rows,long c
 The *site_info* vector length is known to be 10 but for consistency its length is explicitely given. 
 The *init_var* matrix is designed to have statically in the order of 1000 model trees, but for the 
 *dGrowthPrebas* we need to know the number of model trees (Prebas layers) so that we can pass the proper 
-slice of it to *dGrowthPrebas*. Both the number of rows (7) and the number of colums (i.e. the number of model trees) is needed. 
+slice of it to *dGrowthPrebas*. Both the number of rows (7, variables describing the model trees) 
+and the number of colums (i.e. the number of model trees) is needed. 
 
-The size of the result matrices for *dH*, *dD* and *dV* are implicitely known but the memory space must be reserved
+The size of the result matrices for *dH*, *dD* and *dV* are implicitely known (5 rows for 5 year simulation period 
+and the number of columns is the number of model trees) but the memory space must be reserved
 before the call to *callprebas*. The *verbose* parameter allows to print the contents of *site_info* and *init_var* for
 debugging purposes.
 
