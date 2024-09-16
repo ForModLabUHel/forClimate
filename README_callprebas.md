@@ -86,13 +86,12 @@ The *-DMAIN* includes the C *main* function that implements a small test program
 	gcc -shared callprebas.o -o callprebas.so
 
 ### Windows 10
-First, set-up *R_HOME* and *Path* [environmental variables](https://learn.microsoft.com/en-us/windows/win32/procthread/environment-variables) 
-with Control Panel:
+Rprebasso and reshape2 packages must be installed in R. Then, set-up *R_HOME* and *Path* [environmental variables](https://learn.microsoft.com/en-us/windows/win32/procthread/environment-variables) with Control Panel:
 
 	R_HOME C:<path to R installation directory>
  	Path C:<path to R installation directory>\bin\x86
 
-The *Path* variable is also a search path for shared libraries. Rprebasso and reshape2 packages must be installed in R.
+The *Path* variable is also a search path for shared libraries. 
 
 Install Cygwin and from Cygwin the `x86_64-w64-mingw32-gcc` compiler. To build and run `callprebas.exe` 
 is an interplay with Cygwin and Windows. In *Cygwin terminal* go to forClimate directory and build `callprebas.exe`:
