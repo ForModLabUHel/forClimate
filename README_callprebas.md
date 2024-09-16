@@ -74,14 +74,13 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 ## Compilation
 ### Linux
-To compile and run `callprebas` on Linux (Rprebasso and reshape2 packages must be installed in R):
+Rprebasso and reshape2 packages must be installed in R. To compile and run `callprebas` on Linux in forClimate directory:
 
 	export R_HOME=/usr/lib64/R/
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
 	./callprebas
 
-The *-DMAIN* includes the C *main* function that implements a small test program. Note that `callprebas` 
-must executed in the  *forClimate* directory. To create shared library on Linux:
+The *-DMAIN* includes the C *main* function that implements a small test program. To create shared library on Linux:
 	
 	gcc -fPIC -c -I/usr/include/R  callprebas.c -o callprebas.o
 	gcc -shared callprebas.o -o callprebas.so
