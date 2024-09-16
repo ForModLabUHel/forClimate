@@ -80,8 +80,8 @@ To compile and run `callprebas` on Linux (Rprebasso and reshape2 packages must b
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
 	./callprebas
 
-Note that `callprebas` must executed in the  *forClimate* directory. 
-To create shared library on Linux:
+The *-DMAIN* includes the C *main* function that implements a small test program. Note that `callprebas` 
+must executed in the  *forClimate* directory. To create shared library on Linux:
 	
 	gcc -fPIC -c -I/usr/include/R  callprebas.c -o callprebas.o
 	gcc -shared callprebas.o -o callprebas.so
@@ -94,8 +94,9 @@ First, set-up *R_HOME* and *Path* environmental variables with Control Panel:
 
 The *Path* variable is also search path for shared libraries.
 
-Install Cygwin and the `x86_64-w64-mingw32-gcc` compiler. The build process for `callprebas.exe` is an interplay with Cygwin and Windows.
-In *Cygwin terminal* go to forClimate directory and build the program (Rprebasso and reshape2 packages must be installed in R):
+Install Cygwin and from Cygwin the `x86_64-w64-mingw32-gcc` compiler. The build process for `callprebas.exe` 
+is an interplay with Cygwin and Windows. In *Cygwin terminal* go to forClimate directory and build the program 
+(Rprebasso and reshape2 packages must be installed in R):
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebass.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
 
