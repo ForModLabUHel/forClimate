@@ -63,11 +63,12 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 - [] Compile and run on Windows (Mika, Hannu)
 - [] Create shared library on Windows (Mika, Hannu)
-- [] Implement current climate and real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
+- [] Implement, instead of demo ones, the real current climate and the real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
  	- The implementation can be started on Linux and tested with demonstration site and model tree (Prebas layers) data.
   	- The part needed to be replaced is marked in *prebascoefficients* 	
 - [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
+        - Determine parameters required for *prebascoefficients* to run simulations from Motti 
   	- Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
