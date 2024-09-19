@@ -63,7 +63,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 
 - [] Compile and run on Windows (Mika, Hannu)
 - [] Create shared library on Windows (Mika, Hannu)
-- [] Implement, instead of demo ones, the real current climate and the real climate scenario selection in *prebascoefficients* for *dGrowthPrebas* (Daesung)
+- [] Replace demo climate data with the real current climate and the real climate scenario in *prebascoefficients* for *dGrowthPrebas (Daesung)
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
  	- The implementation can be started on Linux and tested with demonstration site and model tree (Prebas layers) data.
   	- The part needed to be replaced is marked in *prebascoefficients* 	
