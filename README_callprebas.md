@@ -65,7 +65,6 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 - [] Create shared library on Windows (Mika, Hannu)
 - [] Replace demo climate data with the real current climate and the real climate scenario in *prebascoefficients* for *dGrowthPrebas* (Daesung)
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
- 	- The implementation can be started on Linux and tested with demonstration site and model tree (Prebas layers) data.
   	- The part needed to be replaced is marked in *prebascoefficients* 	
 - [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
         - Determine parameters required for *prebascoefficients* to run simulations from Motti 
