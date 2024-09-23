@@ -61,8 +61,8 @@ See *prebascoefficients.r* for details.
 ## TASKS
 Present-day status: Compiles and runs on Linux. To complete the link between MottiWB and dGrowthPrebas:
 
-- [] Compile and run on Windows (Mika, Hannu)
-- [] Create shared library on Windows (Mika, Hannu)
+- [X] Compile and run on Windows (Mika, Hannu)
+- [X] Create shared library on Windows (Mika, Hannu)
 - [] Replace demo climate data with the real current climate and the real climate scenario in *prebascoefficients* for *dGrowthPrebas* (Daesung)
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
   	- The part needed to be replaced is marked in *prebascoefficients* 	
