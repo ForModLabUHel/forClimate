@@ -66,13 +66,14 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 - [] Replace demo climate data with the real current climate and the real climate scenario in *prebascoefficients* for *dGrowthPrebas* (Daesung)
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
   	- The part needed to be replaced is marked in *prebascoefficients* 	
-- [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
-        - Determine additional parameters (e.g. start calendar year for 5 year period, (x,y) coordinates for geograpich location) required for
-          *prebascoefficients* to run simulations from Motti 
-  	- Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
+- [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)   
+	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
+ 		- For example start calendar year for 5 year simulation period, (x,y) coordinates for geograpich location?
+  	
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
-  	- Check if a particular version of R is needed for Rprebasso (Francesco).
+- [X] Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
+- [ ] Check if a particular version of R is needed for Rprebasso (Francesco).
 - [] Sensitivity tests for *dGrowthPrebas*.
 
 ## Compilation
