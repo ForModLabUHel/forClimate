@@ -67,7 +67,8 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 	- See Francesco's instructions in *Rsrc/extractWeather_example.r*
   	- The part needed to be replaced is marked in *prebascoefficients* 	
 - [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)
-        - Determine parameters required for *prebascoefficients* to run simulations from Motti 
+        - Determine additional parameters (e.g. start calendar year for 5 year period, (x,y) coordinates for geograpich location) required for
+          *prebascoefficients* to run simulations from Motti 
   	- Check if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (Francesco)
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
