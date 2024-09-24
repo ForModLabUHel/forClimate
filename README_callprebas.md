@@ -73,7 +73,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
 - [X] Check Francesco if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth
-- [ ] Check Francesco if a particular version of R is needed for Rprebasso.
+- [] Check Francesco if a particular version of R is needed for Rprebasso.
 - [] Sensitivity tests for *dGrowthPrebas*.
 
 ## Compilation
