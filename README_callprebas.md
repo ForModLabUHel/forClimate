@@ -68,7 +68,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
   	- The part needed to be replaced is marked in *prebascoefficients* 	
 - [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)   
 	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
- 		- For example start calendar year for 5 year simulation period, (x,y) coordinates for geograpich location?
+ 		- For example: start calendar year for 5 year simulation period, (x,y) coordinates for geograpich location?
   	
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
   	  for *prebascoefficients*.
