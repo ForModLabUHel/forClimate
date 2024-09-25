@@ -37,7 +37,9 @@ debugging purposes.
 
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices.
 
-The function signature needs to include the choice of Climate scenario and the selected geographic region.
+The function signature needs to be finalized with information required for *dGrowthPrebas*. 
+For example the selected geographic region, start calendar year for the 5 year perios
+and the choice of Climate scenario.
 
 See the files *callprebas.h* and *callprebas.c*.
 
