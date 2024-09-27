@@ -38,8 +38,7 @@ debugging purposes.
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices.
 
 The function signature needs to be finalized with information required for *dGrowthPrebas*. 
-For example: the selected geographic region, calendar year for the beginning of the 5 year period
-and the choice of Climate scenario.
+For example: the selected geographic region and calendar year for the beginning of the 5 year period.
 
 See the files *callprebas.h* and *callprebas.c*.
 
@@ -58,7 +57,8 @@ prebascoefficients<-function(siteInfo_siteX,initVar_siteX,climateModel,climID)
 ```
 
 Currently *prebascoefficients* uses the demonstration climate data that needs to be changed to real climate scenarios.
-See *prebascoefficients.r* for details.
+See *prebascoefficients.r* for details. Climate data and climate scenario files are big (in the order of gigabytes).
+Consider loading climate data once, not each time in *prebascoefficients* calls.
 
 ## TASKS
 Present-day status: Compiles and runs on Linux. To complete the link between MottiWB and dGrowthPrebas:
