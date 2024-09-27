@@ -70,7 +70,8 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 	- See Francesco's instructions to use climate data in *Rsrc/extractWeather_example.r*
   	- The part needed to be replaced is marked in *prebascoefficients* with BEGIN and END
   	- Use parameters for *dGrowthPrebas* from the real climate and climate scenario (PAR, CO2, VPD etc.)
-  	- The function *prebascoefficients* can be tested independently in R for example using demo Site and Layers data available	
+  	- The function *prebascoefficients* can be tested independently in R for example using demo Site and Layers data available in
+  	  forClimate.	
 - [] Implement the two-way link MottiWB &harr; callprebas &harr; prebascoefficients &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari)   
 	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
  		- For example: calendar year for the beginning of the 5 year simulation period, (x,y) coordinates for geograpich location.
