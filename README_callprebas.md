@@ -38,7 +38,7 @@ debugging purposes.
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices.
 
 The function signature needs to be finalized with information required for *dGrowthPrebas*. 
-For example the selected geographic region, start calendar year for the 5 year period
+For example: the selected geographic region, calendar year for the beginning of the 5 year period
 and the choice of Climate scenario.
 
 See the files *callprebas.h* and *callprebas.c*.
@@ -73,12 +73,11 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
   	- Can be tested independently in R for example using demo Site and Layers data available	
 - [] Implement the two-way link MottiWB &harr; callprebas &harr; prebascoefficients &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari)   
 	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
- 		- For example: start calendar year for 5 year simulation period, (x,y) coordinates for geograpich location?
-  	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
-  	  for *prebascoefficients*.
+ 		- For example: calendar year for the beginning of the 5 year simulation period, (x,y) coordinates for geograpich location.
+  	- Note the *R Extensions* package allows up to five parameters in R function calls from C.
 - [X] Check Francesco if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth
 - [X] Check Francesco if a particular version of R is needed for Rprebasso.
-- [] Sensitivity tests for *dGrowthPrebas*.
+- [X] Sensitivity tests for *dGrowthPrebas*.
 
 ## Compilation
 ### Linux
