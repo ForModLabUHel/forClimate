@@ -71,7 +71,7 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
   	- The part needed to be replaced is marked in *prebascoefficients* with BEGIN and END
   	- Use parameters for *dGrowthPrebas* from the real climate and climate scenario (PAR, CO2, VPD etc.)
   	- Can be tested independently in R for example using demo Site and Layers data available	
-- [] Implement the two-way link MottiWB &harr; callprebas &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari if needed)   
+- [] Implement the two-way link MottiWB &harr; callprebas &harr; prebascoefficients &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari)   
 	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
  		- For example: start calendar year for 5 year simulation period, (x,y) coordinates for geograpich location?
   	- The *R Extensions* package allows up to five parameters in R function calls from C. That is the constraint
