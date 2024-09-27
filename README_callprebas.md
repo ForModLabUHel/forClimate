@@ -76,8 +76,8 @@ Present-day status: Compiles and runs on Linux. To complete the link between Mot
 	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
  		- For example: calendar year for the beginning of the 5 year simulation period, (x,y) coordinates for geograpich location.
   	- Note the *R Extensions* package allows up to five parameters in R function calls from C.
-- [X] Check Francesco if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth
-- [X] Check Francesco if a particular version of R is needed for Rprebasso.
+- [X] Check Francesco if *dGrowthPrebas* coefficients for *dV* indeed are for volume growth (*dV* is gross growth). 
+- [X] Check Francesco if a particular version of R is needed for Rprebasso (No need).
 - [X] Sensitivity tests for *dGrowthPrebas*.
 
 ## Compilation
