@@ -12,8 +12,8 @@ library(prodlim)
 # library(tidyverse)
 library(sf)
 
-base::setwd("C:/Daesung_R/ForClimate/prebas") # Set your working directory
-base::getwd()
+# base::setwd("C:/Daesung_R/ForClimate/prebas") # Set your working directory
+# base::getwd()
 
 # base::rm(list = ls())
 # base::rm(list = setdiff(ls(), c("currClim_dataBase", "climateChange_dataBase_rcp85")))
