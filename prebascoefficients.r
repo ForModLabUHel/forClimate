@@ -1,58 +1,70 @@
+# install.packages("devtools")
+# devtools::install_github("ForModLabUHel/Rprebasso")  # install the package if it's not ready in your R
+
+# install.packages("data.table")  # install the package if it's not ready in your R
+# install.packages("prodlim")     # install the package if it's not ready in your R
+# install.packages("tidyverse")   # install the package if it's not ready in your R
+# install.packages("sf")          # install the package if it's not ready in your R
+
 library(Rprebasso)
 library(data.table)
 library(prodlim)
-library(tidyverse)
+# library(tidyverse)
 library(sf)
 
-# setwd("C:/Daesung_R/ForClimate/prebas") # Set your working directory
-# getwd()
+base::setwd("C:/Daesung_R/ForClimate/prebas") # Set your working directory
+base::getwd()
 
-# rm(list = ls())
-# rm(list = setdiff(ls(), c("currClim_dataBase", "climateChange_dataBase_rcp85")))
+# base::rm(list = ls())
+# base::rm(list = setdiff(ls(), c("currClim_dataBase", "climateChange_dataBase_rcp85")))
 
 
 # load dGrowthPrebas function ---------------------------------------------
+# source("C:/Daesung_R/ForClimate/prebas/Rsrc/dGrowthPrebas.r")
 devtools::source_url("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/Rsrc/dGrowthPrebas.r")
 
 # load coordinate ID table --------------------------------------------------------
-coordFin <- fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/coordinates.dat")
+# coordFin <- fread("C:/Daesung_R/ForClimate/Motti_C/coordinates.dat") 
+coordFin <- data.table::fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/coordinates.dat")
 
 # load current climate Rdata -----------------------------------------------
-load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CurrClim.rdata") # load the current climate database (0.98 GB)
+base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CurrClim.rdata") # load the current climate database (0.98 GB) from your local drive
 currClim_dataBase <- dat
 
 # load future climate rcp85 Rdata -----------------------------------------------
-load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp85.rdata") # load the future climate rcp85 database (3.66 GB)
+base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp85.rdata") # load the future climate rcp85 database (3.66 GB) from your local drive
 climateChange_dataBase_rcp85 <- dat
 
 # sample site coordinate ---------------------------------------------------------
-coord_datapuu <- fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/arp_14586_1_34.txt") # load your inital input motti file in txt
+coord_datapuu <- data.table::fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/arp_14586_1_34.txt") # load your inital input motti file in txt
 # coord_datapuu <- fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/har_14081_1_41.txt")
 
-site_coord_txt <- as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
-site_coord_3067 <- data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
+site_coord_txt <- base::as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
+site_coord_3067 <- base::data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
 
 # transformed coordinates
-siteCoords_4326 <- st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
 
-coordFin_x <- unique(as.numeric(coordFin[, x]))
-coordFin_y <- unique(as.numeric(coordFin[, y]))
+coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
+coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
 
 siteCoords <- siteCoords_4326
-siteCoords[1] <- coordFin_x[which.min(abs(coordFin_x - siteCoords_4326[1]))]
-siteCoords[2] <- coordFin_y[which.min(abs(coordFin_y - siteCoords_4326[2]))]
+siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
+siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
 
 # sample siteInfo_siteX -------------------------------------------------------------
-TestSiteInfo <- read.csv("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
-siteInfo_siteX <- setNames(as.numeric(TestSiteInfo), colnames(TestSiteInfo))
+# TestSiteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
+TestSiteInfo <- utils::read.csv("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
+siteInfo_siteX <- stats::setNames(base::as.numeric(TestSiteInfo), base::colnames(TestSiteInfo))
 
 # sample initVar_siteX ------------------------------------------------------------------
-treedata <- read.csv("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/TestTreeInfo.csv", sep=" ")
-treedata_t <- t(treedata[, -1])  
-colnames(treedata_t) <- treedata$variable 
-rownames(treedata_t) <- paste("layer", 1:nrow(treedata_t), sep=" ")
-initVar_siteX <- t(as.matrix(treedata_t))
-dimnames(initVar_siteX) <- list(variable = treedata$variable, layer = paste("layer", 1:nrow(treedata_t), sep=" "))
+# treedata <- read.csv("data/TestTreeInfo.csv", sep=" ")
+treedata <- utils::read.csv("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/TestTreeInfo.csv", sep=" ")
+treedata_t <- base::t(treedata[, -1])  
+base::colnames(treedata_t) <- treedata$variable 
+base::rownames(treedata_t) <- base::paste("layer", 1:nrow(treedata_t), sep=" ")
+initVar_siteX <- base::t(base::as.matrix(treedata_t))
+base::dimnames(initVar_siteX) <- base::list(variable = treedata$variable, layer = paste("layer", 1:nrow(treedata_t), sep=" "))
 
 # prebascoefficients function ------------------------------------------------------
 prebascoefficients <- function(siteInfo_siteX,initVar_siteX,siteCoords){
