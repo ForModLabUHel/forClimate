@@ -26,8 +26,8 @@ load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp85.rdata")
 climateChange_dataBase_rcp85 <- dat
 
 # sample site coordinate ---------------------------------------------------------
-coord_datapuu <- fread("C:/Daesung_R/ForClimate/prebas/data/arp_14586_1_34.txt") # load your inital input motti file in txt
-# coord_datapuu <- fread("C:/Daesung_R/ForClimate/prebas/data/har_14081_1_41.txt")
+coord_datapuu <- fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/arp_14586_1_34.txt") # load your inital input motti file in txt
+# coord_datapuu <- fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/har_14081_1_41.txt")
 
 site_coord_txt <- as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
 site_coord_3067 <- data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
