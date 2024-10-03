@@ -29,7 +29,7 @@ coordFin <- data.table::fread("https://raw.githubusercontent.com/ForModLabUHel/f
 
 # load current climate Rdata -----------------------------------------------
 base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CurrClim.rdata") # load the current climate database (0.98 GB) from your local drive
-currClim_dataBase <- dat
+currClim_dataBase_1 <- dat
 
 # load future climate rcp85 Rdata -----------------------------------------------
 base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp85.rdata") # load the future climate rcp85 database (3.66 GB) from your local drive
@@ -211,7 +211,7 @@ prebascoefficients <- function(siteInfo_siteX = siteInfo_siteX,
 }
 
 # prebascoefficients output -----------------------------------------------------------
-prebascoefficients.output <- prebascoefficients(siteInfo_siteX = siteInfo_siteX,
+prebascoefficients_output <- prebascoefficients(siteInfo_siteX = siteInfo_siteX,
                                                 initVar_siteX = initVar_siteX,
                                                 siteCoords = siteCoords,
                                                 startYear_currClim = 1980,
@@ -222,9 +222,9 @@ prebascoefficients.output <- prebascoefficients(siteInfo_siteX = siteInfo_siteX,
                                                 nYears_sim = 5
 )
 
-prebascoefficients.output$dD[1:5,1:10]
-prebascoefficients.output$dH[1:5,1:10]
-prebascoefficients.output$dV[1:5,1:10]
+prebascoefficients_output$dD[1:5,1:10]
+prebascoefficients_output$dH[1:5,1:10]
+prebascoefficients_output$dV[1:5,1:10]
 
 # prebascoefficients running example ------------------------------------------------------
 prebascoefficients.rcp85 <- prebascoefficients(siteInfo_siteX,
