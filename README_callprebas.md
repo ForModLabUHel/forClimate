@@ -102,7 +102,7 @@ Rprebasso and reshape2 packages must be installed in R. Set-up *R_HOME* and *Pat
 + Set *R_HOME*: C:\<path to R installation directory\>
 	+ For example: C:\dev\MyPrograms\R\R-4.3.3 
 + Add to *Path*: C:\<path to R installation directory\>\bin\x64
-	+ For exampe:  C:\dev\MyPrograms\R\R-4.3.3\bin\x64
+	+ For example:  C:\dev\MyPrograms\R\R-4.3.3\bin\x64
    
 The *Path* variable is also a search path for shared libraries. 
 
