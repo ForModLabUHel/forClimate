@@ -122,7 +122,8 @@ The *initialize_R* function initializes the embedded R environment. The *source*
 to source the necessary R files. These must be called before any calls to *callprebas* in the main program. 
 See the beginning of the *main* function in *callprebas.c* as an example.
 
-Note the *callprebas* function signature for Delphi/MottiWB , i.e. the parameters and the return value:
+Note the *callprebas* function signature for Delphi/MottiWB , i.e. the parameters and the return values for the 
+three growth coefficients:
 ```C
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
 		char* climate_model,int climID,double* dH_result,double* dD_result,
