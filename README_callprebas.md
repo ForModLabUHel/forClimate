@@ -42,6 +42,9 @@ For example: the selected geographic region and calendar year for the beginning 
 
 See the files *callprebas.h* and *callprebas.c*.
 
+> [!IMPORTANT]
+> The function signature (number of parameters, their types and the return value) is due to change.
+>   
 ## prebascoefficients
 
 The R function called by *callprebas* that with given input selects the climate scenario as well as  
@@ -114,9 +117,19 @@ To build the *callprebas.dll* shared library in *Cygwin terminal*:
 To run the `callprebas.exe` test program open *Windows Command Prompt[^cmd]*, go to forClimate directory and run the test program.  
 
 ### Linking Delphi and C
-The shared library *callprebas.dll* has the functions *initialize_R* and *callprebas*. The *initialize_R* function initializes 
-the embedded R environment and must be called before *callprebas* in the main program. 
-See the *main* function in *callprebas.c* as an example.
+The shared library *callprebas.dll* has the functions *initialize_R*, *source* and *callprebas*. 
+The *initialize_R* function initializes the embedded R environment. The *source* function can be used 
+to source the necessary R files. These must be called before any calls to *callprebas* in the main program. 
+See the beginning of the *main* function in *callprebas.c* as an example.
+
+Note the *callprebas* function signature for Delphi/MottiWB , i.e. the parameters and the return value:
+```C
+void callprebas(double site_info[],int length, double* init_var,long rows,long cols,
+		char* climate_model,int climID,double* dH_result,double* dD_result,
+		double* dV_result,int verbose)
+```
+The growth coefficients are returned in *dH_result*, *dD_result* and *dV_result*. There sizes are implicitly known and
+proper memory must have been allocated for them.
 
 ## Reading
 [Cygwin manual](https://cygwin.com/cygwin-ug-net/dll.html).
