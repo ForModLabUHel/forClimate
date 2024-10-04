@@ -1,10 +1,17 @@
 # install.packages("devtools")
+# library(devtools)
 # devtools::install_github("ForModLabUHel/Rprebasso")  # install the package if it's not ready in your R
 
 # install.packages("data.table")  # install the package if it's not ready in your R
 # install.packages("prodlim")     # install the package if it's not ready in your R
 # install.packages("tidyverse")   # install the package if it's not ready in your R
 # install.packages("sf")          # install the package if it's not ready in your R
+
+library <- function (...) {
+  packages <- as.character(match.call(expand.dots = FALSE)[[2]])
+  suppressWarnings(suppressMessages(lapply(packages, base::library, character.only = TRUE)))
+  return(invisible())
+}
 
 library(Rprebasso)
 library(data.table)
@@ -16,8 +23,6 @@ library(sf)
 # base::getwd()
 
 # base::rm(list = ls())
-# base::rm(list = setdiff(ls(), c("currClim_dataBase", "climateChange_dataBase_rcp85")))
-
 
 # load dGrowthPrebas function ---------------------------------------------
 # source("C:/Daesung_R/ForClimate/prebas/Rsrc/dGrowthPrebas.r")
@@ -29,19 +34,19 @@ coordFin <- data.table::fread("https://raw.githubusercontent.com/ForModLabUHel/f
 
 # load current climate Rdata -----------------------------------------------
 base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CurrClim.rdata") # load the current climate database (0.98 GB) from your local drive
-currClim_dataBase_1 <- dat
+currClim_dataBase <- dat
 
 # load future climate rcp85 Rdata -----------------------------------------------
-base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp85.rdata") # load the future climate rcp85 database (3.66 GB) from your local drive
-climateChange_dataBase_rcp85 <- dat
+# base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp85.rdata") # load the future climate rcp85 database (3.66 GB) from your local drive
+# climateChange_dataBase <- dat
 
 # load future climate rcp45 Rdata -----------------------------------------------
 base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp45.rdata") # load the future climate rcp45 database (3.66 GB) from your local drive
-climateChange_dataBase_rcp45 <- dat
+climateChange_dataBase <- dat
 
 # load future climate rcp26 Rdata -----------------------------------------------
-base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp26.rdata") # load the future climate rcp26 database (2.93 GB) from your local drive
-climateChange_dataBase_rcp26 <- dat
+# base::load("C:/Daesung_R/ForClimate/Motti_C/climate rcp database/CanESM2.rcp26.rdata") # load the future climate rcp26 database (2.93 GB) from your local drive
+# climateChange_dataBase <- dat
 
 # sample site coordinate ---------------------------------------------------------
 coord_datapuu <- data.table::fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/arp_14586_1_34.txt") # load your inital input motti file in txt
@@ -74,92 +79,39 @@ base::rownames(treedata_t) <- base::paste("layer", 1:nrow(treedata_t), sep=" ")
 initVar_siteX <- base::t(base::as.matrix(treedata_t))
 base::dimnames(initVar_siteX) <- base::list(variable = treedata$variable, layer = paste("layer", 1:nrow(treedata_t), sep=" "))
 
+# sample startYear_of_simulation_input ------------------------------------
+startYear_of_simulation_input <- 2025 # This must be updated each time during the motti simulation.
+
 # prebascoefficients function ------------------------------------------------------
-prebascoefficients <- function(siteInfo_siteX = siteInfo_siteX,
-                               initVar_siteX = initVar_siteX,
-                               siteCoords = siteCoords,
-                               startYear_currClim = 1980,
-                               currClim_dataBase_Mapping = 1,
-                               startYear_climateChange = 2022,
-                               climateChange_dataBase_Mapping = 1,
-                               startYear_of_simulation = 2025,
-                               nYears_sim = 5){
+prebascoefficients <- function(siteInfo_siteX,
+                               initVar_siteX,
+                               siteCoords,
+                               startYear_of_simulation,
+                               verbose){
   
-  if(startYear_climateChange > startYear_of_simulation){
-    print("Error: startYear_of_simulation MUST be equal to or greater than startYear_climateChange")
+  if(startYear_of_simulation < 2022){
+    print("Error: startYear_of_simulation MUST be equal to or greater than 2022, which is currently the start year of the equipped future climate change database")
     return(NULL)
   }
   
-  # Select the current climate database based on the input
-  selected_currClim_dataBase <- if(currClim_dataBase_Mapping == 1) {
-    currClim_dataBase_1 # currently, we have only currClim_dataBase_1.
-  } else if (currClim_dataBase_Mapping == 2) {
-    currClim_dataBase_2
-  } else if (currClim_dataBase_Mapping == 3) {
-    currClim_dataBase_3
-  }
-  
-  # To print the selected current climate database based on the input
-  selected_currClim_dataBase_message <- if(currClim_dataBase_Mapping == 1) {
-    "currClim_dataBase_1" # currently, we have only currClim_dataBase_1.
-  } else if (currClim_dataBase_Mapping == 2) {
-    "currClim_dataBase_2"
-  } else if (currClim_dataBase_Mapping == 3) {
-    "currClim_dataBase_3"
-  }
-  
-  # Check if the provided currClim_dataBase is valid
-  if(!currClim_dataBase_Mapping %in% 1:3) {
-    stop("Invalid currClim_dataBase: Please provide a number between 1 and 3.")
-  }
-  
-  # Print the selected database for verification
-  print(paste("Selected current climate database:", selected_currClim_dataBase_message))
-  
-  
-  
-  # Select the future change climate database based on the input
-  selected_climateChange_dataBase <- if(climateChange_dataBase_Mapping == 1) {
-    climateChange_dataBase_rcp85
-  } else if (climateChange_dataBase_Mapping == 2) {
-    climateChange_dataBase_rcp45
-  } else if (climateChange_dataBase_Mapping == 3) {
-    climateChange_dataBase_rcp26
-  }
-  
-  # To print the future change climate database based on the input
-  selected_climateChange_dataBase_message <- if(climateChange_dataBase_Mapping == 1) {
-    "climateChange_dataBase_rcp85"
-  } else if (climateChange_dataBase_Mapping == 2) {
-    "climateChange_dataBase_rcp45"
-  } else if (climateChange_dataBase_Mapping == 3) {
-    "climateChange_dataBase_rcp26"
-  }
-  
-  # Check if the provided currClim_dataBase is valid
-  if (!climateChange_dataBase_Mapping %in% 1:3) {
-    stop("Invalid climateChange_dataBase: Please provide a number between 1 and 3.")
-  }
-  
-  # Print the selected database for verification
-  print(paste("Selected future climate change database:", selected_climateChange_dataBase_message))
-  
-  # extract currClimData from selected_currClim_dataBase
+  # extract currClimData from currClim_dataBase
+  startYear_currClim <- 1980 # the start year of currClim_dataBase is 1980. If the database is changed, this argument must be updated accordingly.
   DataBaseFormat_currClim <- TRUE
   currClimData <- extractWeatherPrebas(coords = siteCoords,
                                        startYear = startYear_currClim,
                                        coordFin = coordFin,
                                        DataBaseFormat = DataBaseFormat_currClim,
-                                       dat = selected_currClim_dataBase,
+                                       dat = currClim_dataBase,
                                        sourceData = "currClim")$dataBase
   
-  # extract climateChangeData from selected_climateChange_dataBase
+  # extract climateChangeData from climateChange_dataBase
+  startYear_climateChange <- 2022 # the start year of climateChange_dataBase_rcp45 is 2022. If the database is changed, this argument must be updated accordingly.
   DataBaseFormat_climateChange <- FALSE
   climateChangeData <- extractWeatherPrebas(coords = siteCoords,
                                             startYear = startYear_climateChange,
                                             coordFin = coordFin,
                                             DataBaseFormat = DataBaseFormat_climateChange,
-                                            dat = selected_climateChange_dataBase,
+                                            dat = climateChange_dataBase,
                                             sourceData="climChange")
   
   
@@ -174,8 +126,11 @@ prebascoefficients <- function(siteInfo_siteX = siteInfo_siteX,
   
   
   # extract climate from climate change database
-  # startYear_of_simulation MUST be equal to or greater than startYear_climateChange. Thus, startYearSim is always a positive number.
-  startYearSim <- startYear_of_simulation - startYear_climateChange 
+  # startYear_of_simulation MUST be equal to or greater than the start year of the future climate change database (it is currently 2022)
+  # StartYearSim must be always a positive number.
+  
+  nYears_sim <- 5 # nYears_sim can be always 5 for dGrowthPrebas(). MottiWB can select the required number of years between 1 and 5 to simulate in Motti.
+  startYearSim <- startYear_of_simulation_input - startYear_climateChange 
   yearsSim <- startYearSim+1:nYears_sim  
   day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
   
@@ -209,106 +164,4 @@ prebascoefficients <- function(siteInfo_siteX = siteInfo_siteX,
   
   return(dGrowthExample_siteX)
 }
-
-# prebascoefficients output -----------------------------------------------------------
-prebascoefficients_output <- prebascoefficients(siteInfo_siteX = siteInfo_siteX,
-                                                initVar_siteX = initVar_siteX,
-                                                siteCoords = siteCoords,
-                                                startYear_currClim = 1980,
-                                                currClim_dataBase_Mapping = 1,
-                                                startYear_climateChange = 2022,
-                                                climateChange_dataBase_Mapping = 1,
-                                                startYear_of_simulation = 2030,
-                                                nYears_sim = 5
-)
-
-prebascoefficients_output$dD[1:5,1:10]
-prebascoefficients_output$dH[1:5,1:10]
-prebascoefficients_output$dV[1:5,1:10]
-
-# prebascoefficients running example ------------------------------------------------------
-prebascoefficients.rcp85 <- prebascoefficients(siteInfo_siteX,
-                                               initVar_siteX,
-                                               siteCoords,
-                                               startYear_currClim = 1980,
-                                               currClim_dataBase_Mapping = 1,
-                                               startYear_climateChange = 2022,
-                                               climateChange_dataBase_Mapping = 1,
-                                               startYear_of_simulation = 2030
-)
-
-prebascoefficients.rcp45 <- prebascoefficients(siteInfo_siteX,
-                                               initVar_siteX,
-                                               siteCoords,
-                                               startYear_currClim = 1980,
-                                               currClim_dataBase_Mapping = 1,
-                                               startYear_climateChange = 2022,
-                                               climateChange_dataBase_Mapping = 2,
-                                               startYear_of_simulation = 2030
-)
-
-
-prebascoefficients.rcp26 <- prebascoefficients(siteInfo_siteX,
-                                               initVar_siteX,
-                                               siteCoords,
-                                               startYear_currClim = 1980,
-                                               currClim_dataBase_Mapping = 1,
-                                               startYear_climateChange = 2022,
-                                               climateChange_dataBase_Mapping = 3,
-                                               startYear_of_simulation = 2030
-)
-
-prebascoefficients.rcp85$dD[1:5,1:10]
-prebascoefficients.rcp45$dD[1:5,1:10]
-prebascoefficients.rcp26$dD[1:5,1:10]
-
-prebascoefficients.rcp85$dH[1:5,1:10]
-prebascoefficients.rcp45$dH[1:5,1:10]
-prebascoefficients.rcp26$dH[1:5,1:10]
-
-prebascoefficients.rcp85$dV[1:5,1:10]
-prebascoefficients.rcp45$dV[1:5,1:10]
-prebascoefficients.rcp26$dV[1:5,1:10]
-
-prebascoefficients(siteInfo_siteX = siteInfo_siteX,
-                   initVar_siteX = initVar_siteX,
-                   siteCoords = siteCoords,
-                   startYear_currClim = 1980,
-                   currClim_dataBase_Mapping = 1,
-                   startYear_climateChange = 2022,
-                   climateChange_dataBase_Mapping = 3,
-                   startYear_of_simulation = 2030
-)
-
-prebascoefficients(siteInfo_siteX = siteInfo_siteX,
-                   initVar_siteX = initVar_siteX,
-                   siteCoords = siteCoords)
-
-
-prebascoefficients(siteInfo_siteX,
-                   initVar_siteX,
-                   siteCoords)
-
-prebascoefficients(siteInfo_siteX = siteInfo_siteX,
-                   initVar_siteX = initVar_siteX,
-                   siteCoords = siteCoords,
-                   startYear_currClim = 1980,
-                   currClim_dataBase_Mapping = 1,
-                   startYear_climateChange = 2022,
-                   climateChange_dataBase_Mapping = 3,
-                   startYear_of_simulation = 2022,
-                   nYears_sim = 5
-)
-
-
-prebascoefficients(siteInfo_siteX = siteInfo_siteX,
-                   initVar_siteX = initVar_siteX,
-                   siteCoords = siteCoords,
-                   startYear_currClim = 1980,
-                   currClim_dataBase_Mapping = 1,
-                   startYear_climateChange = 2022,
-                   climateChange_dataBase_Mapping = 3,
-                   startYear_of_simulation = 2020,
-                   nYears_sim = 5
-)
 
