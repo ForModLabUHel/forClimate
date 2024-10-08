@@ -10,7 +10,7 @@ The link function between *MottiWB* and *dGrowthPrebas* implemented in C/Embedde
 ///\param init_var Matrix for values describing model trees in Motti
 ///\param rows Number of rows, i.e. variables describing model trees, in init_var (should be 7)
 ///\param cols Number of columns used, i.e. number of model trees, in init_var
-///\param site_coord Vecor of length 2 for (x,y) coordinates of the location. Check the coordinate system
+///\param site_coord Vector of length 2 for (x,y) coordinates of the location. Check the coordinate system
 ///\param start_5_year Start calendar year for the 5 year simuolation period
 ///\param[out] dH_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
 ///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
