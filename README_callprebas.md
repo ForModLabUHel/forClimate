@@ -47,13 +47,13 @@ the geographic region and calls *dGrowthPrebas*. Returns the coefficients for *d
 ###the climate data set-up.
 prebascoefficients<-function(siteInfo_siteX,initVar_siteX,siteCoords,startYear_of_simulation,verbose)
 ```
-
-Currently *prebascoefficients* uses the *data/CurrClim.rdata* and *data/CanESM2.rcp45.rdata*
-as the curent climate and climate scenario respectively. These two files are of considerable size
-and not in GitHub. See *prebascoefficients.r* for details.
+>[!NOTE]
+>Currently *prebascoefficients* uses the *data/CurrClim.rdata* and *data/CanESM2.rcp45.rdata*
+>as the current climate and climate scenario respectively. These two files are of considerable size
+>and not in GitHub. See *prebascoefficients.r* for details.
 
 ## TASKS
-Present-day status: The test program `callprebas` Compiles and runs on Windows 10.
+Present-day status: The test program `callprebas` compiles and runs on Windows 10.
 To complete the link between MottiWB and dGrowthPrebas:
 - [ ] Remove all network based file retrievals from *prebascoefficients.r*
 - [ ] Remove unnecessary calls to data retrievals from *prebascoefficients.r*
