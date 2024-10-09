@@ -33,7 +33,7 @@ before the call to *callprebas*. The *verbose* parameter allows to print the deb
 
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices..
 
-See the files *callprebas.h* and *callprebas.c*.
+See the files *callprebas.h* and *callprebas.c* for implementation details.
 
 ## prebascoefficients
 
