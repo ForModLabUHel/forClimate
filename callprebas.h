@@ -8,9 +8,9 @@
 extern void print_vector(double v[],int length);
 extern void print_matrix(double* m,int rows,int cols);
 ///Invokes the R command source(rfile), e.g. source("coefficients.r")
-extern void source(const char *name);
+extern void source(const char *name,int verbose);
 ///Invokes the R command library(rfile), e.g. source("Rprebasso")
-extern void library(const char *name);
+extern void library(const char *name,int verbose);
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
 ///\param site_info Vector of length 10 for values describing one site
 ///\param length Length of the site_info vector (10 for a single site).

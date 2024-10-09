@@ -2,6 +2,7 @@
 
 void print_vector(double v[],int length)
 {
+  printf("Vector length %d items ",length);
   for (int i=0; i < length;i++){
     printf("%0.5f ",v[i]);
   }
@@ -10,6 +11,7 @@ void print_vector(double v[],int length)
 
 void print_matrix(double* m,int rows,int cols)
 {
+  printf("Matrix rows %d columns %d\n",rows,cols);
   for (int i=0; i < rows; i++){
      for (int j=0; j < cols; j++){
        //Row first data.
@@ -18,22 +20,25 @@ void print_matrix(double* m,int rows,int cols)
      }
      printf("\n"); 
     }
-  printf("\n");
 }
 
-void source(const char *name)
+void source(const char *name,int verbose)
 {
   SEXP e;
- 
+  if (verbose==1){
+    printf("Sourcing file %s for R\n",name);
+  }
   PROTECT(e = lang2(install("source"), mkString(name)));
   R_tryEval(e, R_GlobalEnv, NULL);
   UNPROTECT(1);
 }
 
-void library(const char *name)
+void library(const char *name, int verbose)
 {
   SEXP e;
- 
+  if (verbose == 1){
+    printf("R library call for file %s\n",name);
+  }
   PROTECT(e = lang2(install("library"), mkString(name)));
   R_tryEval(e, R_GlobalEnv, NULL);
   UNPROTECT(1);
@@ -59,13 +64,16 @@ SEXP prebasinitvar()
   return retval_treeinfo;
 }
 
-void initialize_R()
+void initialize_R(int verbose)
 {
   static int init=0;
   if (!init){
+    if (verbose == 1){
+      printf("Initializing R environment\n");
+    }
     //Initialize R
     //Initialize the embedded R environment. The initialization must be relocated
-    //to the context of 'callprebas' when linking together MottiWB and and dGrowthPrebas 
+    //in the main program to the context of 'callprebas' when linking together MottiWB and and dGrowthPrebas 
     int r_argc = 2;
     char* r_argv[] = { "R", "--silent" };
     Rf_initEmbeddedR(r_argc, r_argv);
@@ -85,13 +93,18 @@ void callprebas(double site_info[], int length, double* init_var, long rows, lon
     printf("In C callprebas\n");
     printf("---------------\n");
     printf("SiteInfo\n");
+    printf("---------------\n");
     print_vector(site_info,length);
-    printf("InitVar\n");
+    printf("---------------\n");
+    printf("TreeInfo\n");
+    printf("---------------\n");
     print_matrix(init_var,rows,cols);
+    printf("---------------\n");
     printf("Cooordinates\n");
     print_vector(site_coord,2);
-    printf("Start 5 period\n");
-    printf("%d\n",start_5_year);
+    printf("---------------\n");
+    printf("Calling prebascoefficients, start 5 period from %d\n",start_5_year);
+    printf("---------------\n");
   }
   //Copy Site Info data to R vector
   SEXP site_info_r = PROTECT(allocVector(REALSXP,length));
@@ -167,18 +180,20 @@ void callprebas(double site_info[], int length, double* init_var, long rows, lon
 #ifdef MAIN
 int main()
 {
+  //Verbose argument for the test program passed on to various functions including callprebas
+  int verbose = 1;
   printf("Testing callprebas\n");
   printf("------------------\n");
   printf("Initializing Embedded R\n");
   //Initialize the embedded R environment. 
-  initialize_R();
+  initialize_R(verbose);
   printf("Sourcing R files\n");
-  source("prebascoefficients.r");
-  source("Rsrc/dGrowthPrebas.r");
+  source("prebascoefficients.r",verbose);
+  source("Rsrc/dGrowthPrebas.r",verbose);
   printf("Test loop begins\n");
   printf("---------------------\n");
   //Test the call in a loop. Create initial data each time 
-  for (int i=0; i < 5; i++){
+  for (int i=0; i < 1; i++){
     //Sample site info
     SEXP siteinfo = prebassiteinfo();
     double* site_info_v = REAL(siteinfo);
@@ -206,9 +221,8 @@ int main()
 	tree_info_m[i][j] = tree_info_v[i+r*j];
       }
     }
-    //Verbose argument for callprebas 
-    int verbose = 1;
-    printf("%d call to callprebas\n",i+1);
+    
+    printf("Call number %d to callprebas\n",i+1);
     callprebas(site_info_v,site_info_length,&tree_info_m[0][0],r,c,coord,start_5_year,&dH[0][0],&dD[0][0],&dV[0][0],verbose);
     printf("dH from Prebas coeffients\n");
     print_matrix(&dH[0][0],5,c);

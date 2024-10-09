@@ -121,18 +121,21 @@ prebascoefficients <- function(siteInfo_siteX,
   }
   if (verbose == 1){
     print("In R prebascoefficients")
-    print("-----------------------")
+    print("-----------------------------------")
     cat("SiteInfo",siteInfo_siteX,"\n")
-    print("----------------------------------")
+    print("-----------------------------------")
     print("TreeInfo")
-    print("----------------------------------------")
+    print("-----------------------------------")
     print_matrix(initVar_siteX)
-    cat("Site coordinates",is.matrix(siteCoords),dim(siteCoords),siteCoords,"\n")
-    print("-------------------")
+    print("-----------------------------------")
+    cat("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n")
+    print("-----------------------------------")
     cat("Start year",startYear_of_simulation,"\n")
+    print("-----------------------------------")
     print("Coord Fin")
-    print("---------")
+    print("-----------------------------------")
     print(coordFin)
+    print("-----------------------------------")
   }
   
   if(startYear_of_simulation < 2022){
