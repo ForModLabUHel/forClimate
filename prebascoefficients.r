@@ -115,7 +115,10 @@ prebascoefficients <- function(siteInfo_siteX,
                                startYear_of_simulation,
                                verbose){
   ###Site coordinates must be dim(1,2) matrix
-  siteCoords<-t(as.matrix(siteCoords))
+  if (is.vector(siteCoords)){
+    ### The vector comes from 'callprebas'
+    siteCoords<-t(as.matrix(siteCoords))
+  }
   if (verbose == 1){
     print("In R prebascoefficients")
     print("-----------------------")

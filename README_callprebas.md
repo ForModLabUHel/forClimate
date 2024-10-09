@@ -1,7 +1,7 @@
 # Embedded R interface between Motti and dGrowthPrebas
 
 ## callprebas
-The link function between *MottiWB* and *dGrowthPrebas* implemented in C/Embedded R:
+The link function between *MottiWB* and *dGrowthPrebas* implemented with C/Embedded R:
 
 ```C
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
@@ -37,8 +37,13 @@ See the files *callprebas.h* and *callprebas.c*.
 
 ## prebascoefficients
 
-The R function called by *callprebas* that with given input selects the climate scenario as well as  
-the geographic region and calls *dGrowthPrebas*. Returns the coefficients for *dH*, *dD* and *dV*:
+The R function *prebascoefficients* (called by *callprebas*) with the given input
+selects the climate scenario as well as  the geographic region and
+calls *dGrowthPrebas*. Returns the coefficients for *dH*, *dD* and *dV*.
+The *prebascoefficients* function is implemented in *prebascoefficients.r*.
+
+The current climate and the climate scenario are loaded once and maintained in memory for subsequent
+calls to *prebascoecffients.
 
 ```R
 ###Call dGrowthPrebas with site and model tree information, given climate scenario
@@ -51,6 +56,9 @@ prebascoefficients<-function(siteInfo_siteX,initVar_siteX,siteCoords,startYear_o
 >Currently *prebascoefficients* uses the *data/CurrClim.rdata* and *data/CanESM2.rcp45.rdata*
 >as the current climate and climate scenario respectively. These two files are of considerable size
 >and not in GitHub. See *prebascoefficients.r* for details.
+
+>[!NOTE]
+>Make sure the right coordinate system is used.
 
 ## TASKS
 Present-day status: The test program `callprebas` compiles and runs on Windows 10.
