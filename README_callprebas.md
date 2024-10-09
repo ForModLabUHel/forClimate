@@ -88,7 +88,7 @@ To complete the link between MottiWB and dGrowthPrebas:
 The working directory must be *forClimate* in order `callprebas` to find the climate data files.
 
 ### Linux
-To compile and run `callprebas` in forClimate directory. The *R_HOME* points to R installation directory:
+Compile and run `callprebas` in *forClimate* directory. The *R_HOME* points to R installation directory:
 
 	export R_HOME=/usr/lib64/R/
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
@@ -110,7 +110,7 @@ Set-up *R_HOME* and *Path* environment variables with [Control Panel](https://le
 The *Path* variable is also a search path for shared libraries. 
 
 Install Cygwin and from the Cygwin installation window the `x86_64-w64-mingw32-gcc` compiler. To build and run `callprebas.exe` 
-is an interplay with Cygwin and Windows. Open *Cygwin terminal*, go to forClimate directory and build `callprebas.exe`:
+is an interplay with Cygwin and Windows. Open *Cygwin terminal*, go to *forClimate* directory and build `callprebas.exe`:
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebas.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
 
@@ -119,7 +119,7 @@ To build the *callprebas.dll* shared library in *Cygwin terminal*:
 	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
 
-To run the `callprebas.exe` test program open *Windows Command Prompt[^cmd]*, go to forClimate directory and run the test program.  
+To run the `callprebas.exe` test program open *Windows Command Prompt[^cmd]*, go to *forClimate* directory and run the test program.  
 
 ### Linking Delphi and C
 The shared library *callprebas.dll* has the functions *initialize_R*, *source* and *callprebas*. 
