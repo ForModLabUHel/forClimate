@@ -42,9 +42,6 @@ selects the climate scenario as well as  the geographic region and
 calls *dGrowthPrebas*. Returns the coefficients for *dH*, *dD* and *dV*.
 The *prebascoefficients* function is implemented in *prebascoefficients.r*.
 
-The current climate and the climate scenario are loaded once and maintained in memory for subsequent
-calls to *prebascoecffients.
-
 ```R
 ###Call dGrowthPrebas with site and model tree information, given climate scenario
 ###and geographic location. The climate set-up must be reimplemented for the
@@ -52,6 +49,10 @@ calls to *prebascoecffients.
 ###the climate data set-up.
 prebascoefficients<-function(siteInfo_siteX,initVar_siteX,siteCoords,startYear_of_simulation,verbose)
 ```
+
+The current climate and the climate scenario are loaded once and maintained in memory for subsequent
+calls to *prebascoecffients*.
+
 >[!NOTE]
 >Currently *prebascoefficients* uses the *data/CurrClim.rdata* and *data/CanESM2.rcp45.rdata*
 >as the current climate and climate scenario respectively. These two files are of considerable size
@@ -84,6 +85,7 @@ To complete the link between MottiWB and dGrowthPrebas:
 
 ## Compilation
 *Rprebasso*, *reshape2*, *data.table*, *prodlim* and *sf* packages must be installed in R.
+The working directory must be *forClimate* in order `callprebas` to find the climate data files.
 
 ### Linux
 To compile and run `callprebas` in forClimate directory. The *R_HOME* points to R installation directory:
@@ -91,8 +93,6 @@ To compile and run `callprebas` in forClimate directory. The *R_HOME* points to 
 	export R_HOME=/usr/lib64/R/
 	gcc -DMAIN -o callprebas -g -I/usr/include/R -L$R_HOME/lib -lR -lRblas callprebas.c
 	./callprebas
-
-The working directory must be *forClimate* in order to find the climate data files.
 
 The *-DMAIN* includes the C *main* function that implements the `callprebas` test program. To create the *callprebas.so* shared library:
 	
