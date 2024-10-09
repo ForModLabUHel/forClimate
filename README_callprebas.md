@@ -125,7 +125,7 @@ To run the `callprebas.exe` test program open *Windows Command Prompt[^cmd]*, go
 The shared library *callprebas.dll* has the functions *initialize_R*, *source* and *callprebas*. 
 The *initialize_R* function initializes the embedded R environment. The *source* function can be used 
 to source the necessary R files. These must be called before any calls to *callprebas* in the main program. 
-See the beginning of the *main* function in *callprebas.c* as an example.
+See the beginning of the *main* function in *callprebas.c* as an example:
 
 ```C
 int main()
