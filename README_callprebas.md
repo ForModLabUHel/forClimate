@@ -15,7 +15,7 @@ The link function between *MottiWB* and *dGrowthPrebas* implemented with C/Embed
 ///\param[out] dH_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
 ///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
 ///\param[out] dV_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
-///\param verbose If verbose == 1 print debugging output fro paramters and result values
+///\param verbose If verbose == 1 print debugging output for parameters and result values
 ///\pre The result matrices must have memory space for the results. 
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,double site_coord[],
                 int start_5_year,double* dH_result,double* dD_result,double* dV_result,int verbose)
