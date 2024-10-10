@@ -153,7 +153,7 @@ void callprebas(double site_info[],int length, double* init_var,long rows,long c
                 int start_5_year,double* dH_result,double* dD_result,double* dV_result,int verbose)
 ```
 
-The growth coefficients are returned in *dH_result*, *dD_result* and *dV_result*. There sizes are implicitly known and
+The growth coefficients are returned in *dH_result*, *dD_result* and *dV_result*. Their sizes are implicitly known and
 proper memory must have been allocated for them.
 
 ## Reading
