@@ -157,6 +157,10 @@ The growth coefficients are returned in *dH_result*, *dD_result* and *dV_result*
 proper memory must have been allocated for them.
 
 ## Reading
-[Cygwin manual](https://cygwin.com/cygwin-ug-net/dll.html).
+1. [Cygwin manual](https://cygwin.com/cygwin-ug-net/dll.html).
+   Explains how to make dynamic link libraries with Cygwin.
+2. [C-Pascal interface](https://www.dcs.ed.ac.uk/home/SUNWspro/3.0/pascal/user_guide/pascalug_C.doc.html).
+   Quick Google result, may or may not be useful. Explains Pascal and C datatype compatibilites (and incompatibilities).
+   Gives examples of C-Pascal and Pascal-C calls.  
 
 [^cmd]: Also known as `cmd.exe` or `cmd`.
