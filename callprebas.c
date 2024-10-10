@@ -44,6 +44,7 @@ void library(const char *name, int verbose)
   UNPROTECT(1);
 }
 
+///\brief Read the Site info file for testing purposes
 SEXP prebassiteinfo()
 {
   SEXP siteinfo_call;
@@ -54,6 +55,7 @@ SEXP prebassiteinfo()
   return retval_siteinfo;
 }
 
+///\brief Read the model tree (Prebas layers) file for testing purposes
 SEXP prebasinitvar()
 {
   SEXP initvar_call;
@@ -69,7 +71,7 @@ void initialize_R(int verbose)
   static int init=0;
   if (!init){
     if (verbose == 1){
-      printf("Initializing R environment\n");
+      printf("The Embedded R not initialized, initializing R environment\n");
     }
     //Initialize R
     //Initialize the embedded R environment. The initialization must be relocated
@@ -78,6 +80,11 @@ void initialize_R(int verbose)
     char* r_argv[] = { "R", "--silent" };
     Rf_initEmbeddedR(r_argc, r_argv);
     init=1;
+  }
+  else{
+    if (verbose==1){
+      printf("The R environment already initialized\n");
+    }
   }
 }
 

@@ -121,24 +121,26 @@ To build the *callprebas.dll* shared library in *Cygwin terminal*:
 
 To run the `callprebas.exe` test program open *Windows Command Prompt[^cmd]*, go to *forClimate* directory and run the test program.  
 
-### Linking Delphi and C
+## Linking Delphi and C
 The shared library *callprebas.dll* has the functions *initialize_R*, *source* and *callprebas*. 
-The *initialize_R* function initializes the embedded R environment. The *source* function can be used 
-to source the necessary R files. These must be called before any calls to *callprebas* in the main program. 
-See the beginning of the *main* function in *callprebas.c* as an example:
+The *initialize_R* function initializes the Embedded R environment. The *source* function can be used 
+to source the necessary R files (as the source command in R). These must be called before any calls to
+*callprebas* in the main program. See the beginning of the *main* function in *callprebas.c* as an example:
 
 ```C
 int main()
 {
+  //Verbose argument for the test program passed on to various functions including callprebas
+  int verbose = 1;
   printf("Testing callprebas\n");
   printf("------------------\n");
-  printf("Initializing Embedded R\n");
+  printf("Initializing the Embedded R\n");
   //Initialize the embedded R environment. 
-  initialize_R();
+  initialize_R(verbose);
   //Sourcing R files
   printf("Sourcing R files\n");
-  source("prebascoefficients.r");
-  source("Rsrc/dGrowthPrebas.r");
+  source("prebascoefficients.r",verbose);
+  source("Rsrc/dGrowthPrebas.r",verbose);
   .....
 }
 ```
