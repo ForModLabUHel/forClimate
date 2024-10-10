@@ -10,8 +10,8 @@ int main()
   //Initialize the embedded R environment. 
   initialize_R(verbose);
   printf("Sourcing R files\n");
-  source("prebascoefficients.r",verbose);
   source("Rsrc/dGrowthPrebas.r",verbose);
+  source("prebascoefficients.r",verbose);
   printf("Test loop begins\n");
   printf("---------------------\n");
   //Test the call in a loop. Create initial data each time 
