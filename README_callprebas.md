@@ -110,16 +110,20 @@ Set-up *R_HOME* and *Path* environment variables with [Control Panel](https://le
 The *Path* variable is also a search path for shared libraries. 
 
 Install Cygwin and from the Cygwin installation window the `x86_64-w64-mingw32-gcc` compiler. To build and run `callprebas.exe` 
-is an interplay with Cygwin and Windows. Open *Cygwin terminal*, go to *forClimate* directory and build `callprebas.exe`:
+is an interplay with Cygwin and Windows. Open the *Cygwin terminal*, go to the *forClimate* directory and build `callprebas.exe`:
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebas.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
 
-To build the *callprebas.dll* shared library in *Cygwin terminal*:
+To build the *callprebas.dll* shared library in the *Cygwin terminal* and to link and run with the `callprebastest` program:
 
 	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
+	x86_64-w64-mingw32-gcc.exe  -o callprebastest.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -L. -lR -lRblas -lcallprebas callprebastest.c
 
-To run the `callprebas.exe` test program open *Windows Command Prompt[^cmd]*, go to *forClimate* directory and run the test program.  
+Note the required libraries and their directory locations with *-l* and *-L* compiler flags.
+
+To run the `callprebas.exe` or `callprebastest.exe` test program open the *Windows Command Prompt*[^cmd],
+go to the *forClimate* directory and run the test program.  
 
 ## Linking Delphi and C
 The shared library *callprebas.dll* has the functions *initialize_R*, *source* and *callprebas*. 
