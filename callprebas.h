@@ -22,6 +22,10 @@ extern void source(const char *name,int verbose);
 ///\param name The R file name
 ///\param verbose Print the file \p name on standard out
 extern void library(const char *name,int verbose);
+///\brief Read the Site info file for testing purposes
+extern SEXP prebassiteinfo();
+///\brief Read the model tree (Prebas layers) file for testing purposes
+extern SEXP prebasinitvar();
 ///\brief Initialize the Embedded R environment
 ///\param verbose Print the status of the initialization
 ///\important The mandatory call in the beginning of a program using the Embedded R.

@@ -44,7 +44,6 @@ void library(const char *name, int verbose)
   UNPROTECT(1);
 }
 
-///\brief Read the Site info file for testing purposes
 SEXP prebassiteinfo()
 {
   SEXP siteinfo_call;
@@ -71,7 +70,7 @@ void initialize_R(int verbose)
   static int init=0;
   if (!init){
     if (verbose == 1){
-      printf("The Embedded R not initialized, initializing R environment\n");
+      printf("Initializing R environment with  Rf_initEmbeddedR\n");
     }
     //Initialize R
     //Initialize the embedded R environment. The initialization must be relocated
@@ -83,7 +82,7 @@ void initialize_R(int verbose)
   }
   else{
     if (verbose==1){
-      printf("The R environment already initialized\n");
+      printf("The R environment already initialized (no initialization)\n");
     }
   }
 }
@@ -195,12 +194,12 @@ int main()
   //Initialize the embedded R environment. 
   initialize_R(verbose);
   printf("Sourcing R files\n");
-  source("prebascoefficients.r",verbose);
   source("Rsrc/dGrowthPrebas.r",verbose);
+  source("prebascoefficients.r",verbose);
   printf("Test loop begins\n");
   printf("---------------------\n");
   //Test the call in a loop. Create initial data each time 
-  for (int i=0; i < 1; i++){
+  for (int i=0; i < 5; i++){
     //Sample site info
     SEXP siteinfo = prebassiteinfo();
     double* site_info_v = REAL(siteinfo);
