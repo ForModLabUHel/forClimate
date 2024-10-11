@@ -5,17 +5,17 @@ The link function between *MottiWB* and *dGrowthPrebas* implemented with C/Embed
 
 ```C
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
-///\param site_info Vector of length 10 for values describing one site
-///\param length Length of the site_info vector (10 for a single site).
-///\param init_var Matrix for values describing model trees in Motti
-///\param rows Number of rows, i.e. variables describing model trees, in init_var (should be 7)
-///\param cols Number of columns used, i.e. number of model trees, in init_var
-///\param site_coord Vector of length 2 for (x,y) coordinates of the location. Check the coordinate system
-///\param start_5_year Start calendar year for the 5 year simulation period
-///\param[out] dH_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
-///\param|out] dD_result Matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
-///\param[out] dV_result Matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
-///\param verbose If verbose == 1 print debugging output for parameters and result values
+///\param[in] site_info Vector of length 10 for values describing one site
+///\param[in] length Length of the site_info vector (10 for a single site).
+///\param[in] init_var Row first matrix for values describing model trees in Motti
+///\param[in] rows Number of rows, i.e. variables describing model trees, in init_var (should be 7)
+///\param[in] cols Number of columns used, i.e. number of model trees, in init_var
+///\param[in] site_coord Vector of length 2 for (x,y) coordinates of the location. Check the coordinate system
+///\param[in] start_5_year Start calendar year for the 5 year simulation period
+///\param[out] dH_result Row first matrix (5 year rows x Number of model trees columns) containing coefficients for Height growth
+///\param|out] dD_result Row first matrix (5 year rows x Number of model trees columns) containing coefficients for Diameter growth
+///\param[out] dV_result Row first matrix (5 year rows x Number of model trees columns) containg coefficients for Volume growth
+///\param[in] verbose If verbose == 1 print debugging output for parameters and result values
 ///\pre The result matrices must have memory space for the results. 
 void callprebas(double site_info[],int length, double* init_var,long rows,long cols,double site_coord[],
                 int start_5_year,double* dH_result,double* dD_result,double* dV_result,int verbose)
@@ -34,6 +34,9 @@ before the call to *callprebas*. The *verbose* parameter allows to print the deb
 Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices..
 
 See the files *callprebas.h* and *callprebas.c* for implementation details.
+
+>[!IMPORTANT]
+>The input and output matrices are row first (The C language convention).
 
 ## prebascoefficients
 

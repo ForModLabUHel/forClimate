@@ -33,17 +33,17 @@ extern SEXP prebasinitvar();
 ///\post The static variable \p init is set to 1 (the Embedded R is initialized only once).
 void initialize_R(int verbose);
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
-///\param site_info Vector of length 10 for values describing one site
-///\param length Length of the site_info vector (10 for a single site).
-///\param init_var Matrix for values describing model trees in Motti
-///\param rows Number of rows, i.e. variables describing model trees, in init_var (should be 7)
-///\param cols Number of columns, i.e. number of model trees, in init_var
-///\param site_coord Vector of 2 for the (x,y) coordinates of the site
-///\param start_5_year Start calendar year for the 5 year simulation period
-///\param[out] dH_result Matrix (5 year rows x Number of model tree columns) containing coefficients for Height growth
-///\param|out] dD_result Matrix (5 year rows x Number of model tree columns) containing coefficients for Diameter growth
-///\param[out] dV_result Matrix (5 year rows x Number of model tree columns) containing coefficients for Volume growth
-///\param verbose If verbose == 1 print print debugging information during the simulation
+///\param[in] site_info Vector of length 10 for values describing one site
+///\param[in] length Length of the site_info vector (10 for a single site).
+///\param[in] init_var Row first matrix for values describing model trees in Motti
+///\param[in] rows Number of rows, i.e. variables describing model trees, in init_var (should be 7)
+///\param[in] cols Number of columns, i.e. number of model trees, in init_var
+///\param[in] site_coord Vector of 2 for the (x,y) coordinates of the site
+///\param[in] start_5_year Start calendar year for the 5 year simulation period
+///\param[out] dH_result Row first matrix (5 year rows x Number of model tree columns) containing coefficients for Height growth
+///\param|out] dD_result Row first matrix (5 year rows x Number of model tree columns) containing coefficients for Diameter growth
+///\param[out] dV_result Row first matrix (5 year rows x Number of model tree columns) containing coefficients for Volume growth
+///\param]in] verbose If verbose == 1 print print debugging information during the simulation
 ///\pre The result matrices must have memory space allocated for the results. 
 extern void callprebas(double site_info[], int length, double* init_var, long rows, long cols,
 		       double site_coord[], int start_5_year,
