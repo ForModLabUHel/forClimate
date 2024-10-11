@@ -117,7 +117,7 @@ is an interplay with Cygwin and Windows. Open the *Cygwin terminal*, go to the *
 
 	x86_64-w64-mingw32-gcc.exe -DMAIN -o callprebas.exe -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c
 
-To build the *callprebas.dll* shared library in the *Cygwin terminal* and to link and run with the `callprebastest` program:
+To build the *callprebas.dll* shared library in the *Cygwin terminal* and to link with the `callprebastest` program:
 
 	x86_64-w64-mingw32-gcc.exe -g -c -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas callprebas.c	
  	x86_64-w64-mingw32-gcc.exe -shared -o callprebas.dll callprebas.o -g -I"$R_HOME"/include -L"$R_HOME"/bin/x64 -lR -lRblas
