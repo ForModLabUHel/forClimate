@@ -31,12 +31,13 @@ The size of the result matrices for *dH*, *dD* and *dV* are implicitely known (5
 and the number of columns is the number of model trees) but the memory space must be reserved
 before the call to *callprebas*. The *verbose* parameter allows to print the debugging putput during the simaulation. 
 
-Note that the model trees are the matrix *columns* both in *init_var* and in the result matrices..
-
-See the files *callprebas.h* and *callprebas.c* for implementation details.
+>[!NOTE]
+>Model trees (i.e. Prebas layers) are the matrix *columns* both in *init_var* and in the result matrices..
 
 >[!IMPORTANT]
 >The input and output matrices are row first (The C language convention).
+
+See the files *callprebas.h* and *callprebas.c* for implementation details.
 
 ## prebascoefficients
 
