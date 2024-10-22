@@ -1,7 +1,7 @@
 # Embedded R interface between Motti and dGrowthPrebas
 
 ## callprebas
-The link function between *MottiWB* and *dGrowthPrebas* implemented with C/Embedded R:
+The link function *callprebas* between *MottiWB* and *dGrowthPrebas* implemented with C/Embedded R:
 
 ```C
 ///\brief Call dGrowthPrebas and return coeffients for Height, Diameter and Volume growths
