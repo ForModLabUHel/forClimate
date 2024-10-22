@@ -57,13 +57,17 @@ prebascoefficients<-function(siteInfo_siteX,initVar_siteX,siteCoords,startYear_o
 The current climate and the climate scenario are loaded once and maintained in memory for subsequent
 calls to *prebascoecffients*.
 
->[!NOTE]
+>[!IMPORTANT]
 >Currently *prebascoefficients* uses the *data/CurrClim.rdata* and *data/CanESM2.rcp45.rdata*
 >as the current climate and climate scenario respectively. These two files are of considerable size
 >and not in GitHub. See *prebascoefficients.r* for details.
 
+>[!IMPORTANT]
+>Currently *prebascoefficients.r* retrieves data from the Internet. 
+>Make sure yoy have Internet access.
+
 >[!NOTE]
->Make sure the right coordinate system is used.
+>Make sure the right coordinate system for climate data is used.
 
 ## TASKS
 Present-day status: The test program `callprebas` compiles and runs on Windows 10.
