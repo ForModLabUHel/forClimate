@@ -79,7 +79,7 @@ To complete the link between MottiWB and dGrowthPrebas:
   	- Use parameters for *dGrowthPrebas* from the real climate and climate scenario (PAR, CO2, VPD etc.)
   	- The function *prebascoefficients* can be tested independently in R for example using demo Site and Layers data available in
   	  forClimate.	
-- [X] Implement the two-way link MottiWB &harr; callprebas &harr; prebascoefficients &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari)   
+- [ ] Implement the two-way link MottiWB &harr; callprebas &harr; prebascoefficients &harr; dGrowthPrebas (Mika, Hannu, Daesung, Jari)   
 	- Determine additional parameters needed in *prebascoefficients* to run simulations from Motti
  		- For example: calendar year for the beginning of the 5 year simulation period, (x,y) coordinates for geograpich location.
   	- Note the *R Extensions* package allows up to five parameters in R function calls from C.
