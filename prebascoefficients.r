@@ -71,9 +71,9 @@ siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coo
 coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
 coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
 
-siteCoords <- siteCoords_4326
-siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
-siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
+siteCoords_initial <- siteCoords_4326
+siteCoords_initial[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
+siteCoords_initial[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
 
 # sample siteInfo_siteX -------------------------------------------------------------
 TestSiteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
@@ -92,17 +92,50 @@ base::dimnames(initVar_siteX) <- base::list(variable = treedata$variable, layer 
 # sample startYear_of_simulation input ------------------------------------
 startYear_of_simulation <- 2025 # This must be updated each time during the Motti simulation.
 
+# coordinates from MottiWB ------------------------------------------------
+coord_mottiWB_output <- data.table::fread("data/mottiWB_output_Stand_0-5.txt") # load your mottistand output txt file from MottiWB.
+
+coord_mottiWB_output[V1 %in% c(1, 2), METSIKKO]
+coord_mottiWB_txt <- base::as.numeric(coord_mottiWB_output[V1 %in% c(1, 2), METSIKKO])
+coord_mottiWB_3067 <- base::data.frame(x = coord_mottiWB_txt[2]*1000, y = coord_mottiWB_txt[1]*1000)
+
+coord_mottiWB_4326 <- sf::st_coordinates(st_transform(st_as_sf(coord_mottiWB_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+
+coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
+coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
+
+coord_mottiWB <- coord_mottiWB_4326
+coord_mottiWB[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - coord_mottiWB_4326[1]))]
+coord_mottiWB[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - coord_mottiWB_4326[2]))]
+
+# choose coordinate files either from initial input or MottiWB output -------------------------------------------------
+if (exists("coord_mottiWB")) {
+  siteCoords <- coord_mottiWB
+} else {
+  siteCoords <- siteCoords_initial
+}
+
 # prebascoefficients function ------------------------------------------------------
 prebascoefficients <- function(siteInfo_siteX,
                                initVar_siteX,
                                siteCoords,
                                startYear_of_simulation,
                                verbose){
-  ###Site coordinates must be dim(1,2) matrix
+  
+    ### Site coordinates must be dim(1,2) matrix
   if (is.vector(siteCoords)){
     ### The vector comes from 'callprebas'
-    siteCoords<-t(as.matrix(siteCoords))
+    siteCoords_callprebas <- siteCoords
+    coord_callprebas_3067 <- base::data.frame(x = siteCoords_callprebas[2]*1000, y = siteCoords_callprebas[1]*1000)
+    coord_claaprebas_4326 <- sf::st_coordinates(st_transform(st_as_sf(coord_callprebas_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+    coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
+    coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
+    coord_callprebas <- coord_mottiWB_4326
+    coord_callprebas[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - coord_claaprebas_4326[1]))]
+    coord_callprebas[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - coord_claaprebas_4326[2]))]
+    siteCoords<-t(as.matrix(coord_callprebas))
   }
+  
   if (verbose == 1){
     print("In R prebascoefficients")
     print("-----------------------------------")
