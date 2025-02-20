@@ -23,16 +23,16 @@ print_matrix<-function(m){
   cat("\n")
 }
 
-siteinfo<-function(fname){
-    siteInfo <- as.numeric(read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)])
-    #print(siteInfo)
-    return (siteInfo)
-}
+###siteinfo<-function(fname){
+###    siteInfo <- as.numeric(read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)])
+###    #print(siteInfo)
+###    return (siteInfo)
+###}
 
-initvar<-function(fname){
-    initVar <- as.matrix(read.csv("data/TestTreeInfo.csv",sep=" ")[,2:27])
-    return (initVar)
-}
+###initvar<-function(fname){
+###    initVar <- as.matrix(read.csv("data/TestTreeInfo.csv",sep=" ")[,2:27])
+###    return (initVar)
+###}
 
 library <- function (...) {
   packages <- as.character(match.call(expand.dots = FALSE)[[2]])
@@ -65,37 +65,37 @@ base::load("data/CanESM2.rcp45.rdata")
 climateChange_dataBase <- dat
 
 # sample site coordinate ---------------------------------------------------------
-coord_datapuu <- data.table::fread("data/arp_14586_1_34.txt") # load your inital input motti file in txt
+###coord_datapuu <- data.table::fread("data/arp_14586_1_34.txt") # load your inital input motti file in txt
 
-site_coord_txt <- base::as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
-site_coord_3067 <- base::data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
+###site_coord_txt <- base::as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
+###site_coord_3067 <- base::data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
 
 # transformed coordinates
-siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+###siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
 
-coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
-coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
+###coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
+###coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
 
-siteCoords <- siteCoords_4326
-siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
-siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
+###siteCoords <- siteCoords_4326
+###siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
+###siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
 
 # sample siteInfo_siteX -------------------------------------------------------------
-TestSiteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
+###TestSiteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
 
-siteInfo_siteX <- stats::setNames(base::as.numeric(TestSiteInfo), base::colnames(TestSiteInfo))
+###siteInfo_siteX <- stats::setNames(base::as.numeric(TestSiteInfo), base::colnames(TestSiteInfo))
 
 # sample initVar_siteX ------------------------------------------------------------------
-treedata <- read.csv("data/TestTreeInfo.csv", sep=" ")
+###treedata <- read.csv("data/TestTreeInfo.csv", sep=" ")
 
-treedata_t <- base::t(treedata[, -1])  
-base::colnames(treedata_t) <- treedata$variable 
-base::rownames(treedata_t) <- base::paste("layer", 1:nrow(treedata_t), sep=" ")
-initVar_siteX <- base::t(base::as.matrix(treedata_t))
-base::dimnames(initVar_siteX) <- base::list(variable = treedata$variable, layer = paste("layer", 1:nrow(treedata_t), sep=" "))
+###treedata_t <- base::t(treedata[, -1])  
+###base::colnames(treedata_t) <- treedata$variable 
+###base::rownames(treedata_t) <- base::paste("layer", 1:nrow(treedata_t), sep=" ")
+###initVar_siteX <- base::t(base::as.matrix(treedata_t))
+###base::dimnames(initVar_siteX) <- base::list(variable = treedata$variable, layer = paste("layer", 1:nrow(treedata_t), sep=" "))
 
 # sample startYear_of_simulation input ------------------------------------
-startYear_of_simulation <- 2025 # This must be updated each time during the Motti simulation.
+###startYear_of_simulation <- 2025 # This must be updated each time during the Motti simulation.
 
 # prebascoefficients function ------------------------------------------------------
 #writeLines(c("define function prebascoefficients"), "C:/dev/MyPrograms/MottiWB/routput.txt")
