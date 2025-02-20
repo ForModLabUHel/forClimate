@@ -8,6 +8,8 @@
 
 # base::setwd("C:/GitHub/forClimate") # Set your working directory
 
+#writeLines(c("prebascoefficientsForMain starts"), "C:/dev/MyPrograms/MottiWB/routput.txt")
+
 print_matrix<-function(m){
   rows=NROW(m)
   cols=NCOL(m)
@@ -44,11 +46,14 @@ library(prodlim)
 library(sf)
 
 # load dGrowthPrebas function ---------------------------------------------
+#writeLines(c("load dGrowthPrebas"), "C:/dev/MyPrograms/MottiWB/routput.txt")
 source("Rsrc/dGrowthPrebas.r")
 
 # load coordinate ID table --------------------------------------------------------
-coordFin <- data.table::fread("data/coordinates.dat")
+#if ( exists("coordFin) ) writeLines(c("coordFin already loaded"), "routput.txt") else
+#	coordFin <- data.table::fread("data/coordinates.dat")
 
+coordFin <- data.table::fread("data/coordinates.dat")
 # load current climate Rdata -----------------------------------------------
 # base::load("C:/GitHub/rcp_database/CurrClim.rdata") # load the current climate database (0.98 GB) from your local drive
 base::load("data/CurrClim.rdata")
@@ -60,7 +65,7 @@ base::load("data/CanESM2.rcp45.rdata")
 climateChange_dataBase <- dat
 
 # sample site coordinate ---------------------------------------------------------
-coord_datapuu <- data.table::fread("https://raw.githubusercontent.com/ForModLabUHel/forClimate/main/data/arp_14586_1_34.txt") # load your inital input motti file in txt
+coord_datapuu <- data.table::fread("data/arp_14586_1_34.txt") # load your inital input motti file in txt
 
 site_coord_txt <- base::as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
 site_coord_3067 <- base::data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
@@ -93,16 +98,22 @@ base::dimnames(initVar_siteX) <- base::list(variable = treedata$variable, layer 
 startYear_of_simulation <- 2025 # This must be updated each time during the Motti simulation.
 
 # prebascoefficients function ------------------------------------------------------
+#writeLines(c("define function prebascoefficients"), "C:/dev/MyPrograms/MottiWB/routput.txt")
 prebascoefficients <- function(siteInfo_siteX,
                                initVar_siteX,
                                siteCoords,
                                startYear_of_simulation,
                                verbose){
+  if (verbose==1){
+   # sink("prebascoefficients_log.txt")
+    print("prebascoefficients starts\n")
+  }
   ###Site coordinates must be dim(1,2) matrix
   if (is.vector(siteCoords)){
     ### The vector comes from 'callprebas'
     siteCoords<-t(as.matrix(siteCoords))
   }
+  
   if (verbose == 1){
     print("In R prebascoefficients")
     print("-----------------------------------")
@@ -130,7 +141,6 @@ prebascoefficients <- function(siteInfo_siteX,
   # extract currClimData from currClim_dataBase
   startYear_currClim <- 1980 # the start year of currClim_dataBase is 1980. If the database is changed, this argument must be updated accordingly.
   DataBaseFormat_currClim <- TRUE
-  #print("Before extractWeatherPrebas current climate")
   currClimData <- extractWeatherPrebas(coords = siteCoords,
                                        startYear = startYear_currClim,
                                        coordFin = coordFin,
@@ -139,7 +149,6 @@ prebascoefficients <- function(siteInfo_siteX,
                                        sourceData = "currClim")$dataBase
   
   # extract climateChangeData from climateChange_dataBase
-  #print("Before extractWeatherPrebas climateChange")
   startYear_climateChange <- 2022 # the start year of climateChange_dataBase_rcp45 is 2022. If the database is changed, this argument must be updated accordingly.
   DataBaseFormat_climateChange <- FALSE
   climateChangeData <- extractWeatherPrebas(coords = siteCoords,
@@ -165,7 +174,13 @@ prebascoefficients <- function(siteInfo_siteX,
   
   nYears_sim <- 5 # nYears_sim can be always 5 for dGrowthPrebas(). MottiWB can select the required number of years between 1 and 5 to simulate in Motti.
   startYearSim <- startYear_of_simulation - startYear_climateChange 
+    if (verbose==1){
+    cat("startYearSim",startYearSim,"\n")
+    }
   yearsSim <- startYearSim+1:nYears_sim  
+  if (verbose==1){
+    cat("yearsSim",yearsSim,"\n")
+  }
   day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
   
   PAR_clChange <- climateChangeData$PAR[,day_climateChange]
@@ -188,7 +203,9 @@ prebascoefficients <- function(siteInfo_siteX,
   newVPD_siteX <- VPD_clChange
   newCO2_siteX <- CO2_clChange
   
-  
+  if (verbose==1){
+  print("dGrowthExample_siteX <- dGrowthPrebas")
+  }  
   dGrowthExample_siteX <- dGrowthPrebas(nYears_sim,siteInfo_siteX,initVar_siteX,
                                         currPAR=PAR_siteX,newPAR=newPAR_siteX,
                                         currTAir=TAir_siteX,newTAir=newTAir_siteX,
@@ -208,10 +225,11 @@ prebascoefficients <- function(siteInfo_siteX,
     print("dV")
     print("--")
     print(dGrowthExample_siteX[3])
+  #sink()
   }
   return(dGrowthExample_siteX)
 }
-
+#"writeLines(c("prebascoefficients ends"), "C:/dev/MyPrograms/MottiWB/routput.txt")
 #print("Before call to prebascoefficients")
 #print("---------------------------------")
 #print("SiteInfo")
