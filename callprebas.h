@@ -1,10 +1,14 @@
 #ifndef CALLBREBAS_H
 #define CALLBREBAS_H
 #include <stdlib.h>
+#include <R.h>
 #include <Rinternals.h>
 #include <Rdefines.h>
 #include <Rembedded.h>
 #include <string.h>
+#include <windows.h>
+#include <stdio.h>
+#include <fcntl.h>
 ///\brief Print the vector content
 ///\param v The vector
 ///\param length The vector length
@@ -45,7 +49,10 @@ void initialize_R(int verbose);
 ///\param[out] dV_result Row first matrix (5 year rows x Number of model tree columns) containing coefficients for Volume growth
 ///\param]in] verbose If verbose == 1 print print debugging information during the simulation
 ///\pre The result matrices must have memory space allocated for the results. 
-extern void callprebas(double site_info[], int length, double* init_var, long rows, long cols,
-		       double site_coord[], int start_5_year,
-		       double* dH_result, double* dD_result, double* dV_result, int verbose);
+//void callprebas(double site_info[10], double init_var[7000], int numtrees, int treeproperties, double site_coord[2], int start_5_year, double dH_result[1000], double dD_result[1000], double dV_result[1000], int verbose);
+
+void callprebas(int iround, double site_info[10], double init_var[7000], int cols, int rows, double site_coord[2], int start_5_year, double dH_result[1000], double dD_result[1000], double dV_result[1000], int verbose);
+void callprebas2(double site_info[], int length, double* init_var, long rows, long cols,double site_coord[], int start_5_year,double* dH_result, double* dD_result, double* dV_result, int verbose);
+void callprebase(int iround);
+
 #endif
