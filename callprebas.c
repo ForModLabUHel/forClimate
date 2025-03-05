@@ -141,7 +141,7 @@ void callprebas(int iround,double site_info[10], double init_var[7000], int cols
   {
     initialize_R(verbose);
     source("Rsrc/dGrowthPrebas.r",verbose);
-    source("prebascoefficients.r",verbose);
+    source("Rsrc/prebascoefficients.r",verbose);
   }
 	
   //if (length != 10){
@@ -388,7 +388,7 @@ int main()
   initialize_R(verbose);
   printf("Sourcing R files\n");
   source("Rsrc/dGrowthPrebas.r",verbose);
-  source("prebascoefficients.r",verbose);
+  source("Rsrc/prebascoefficients.r",verbose);
   printf("Test loop begins\n");
   printf("---------------------\n");
   //Test the call in a loop. Create initial data each time 
