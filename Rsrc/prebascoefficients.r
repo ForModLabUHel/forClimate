@@ -71,14 +71,14 @@ climateChange_dataBase <- dat
 ###site_coord_3067 <- base::data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
 
 # transformed coordinates
-###siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
 
-###coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
-###coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
+coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
+coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
 
-###siteCoords <- siteCoords_4326
-###siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
-###siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
+siteCoords <- siteCoords_4326
+siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
+siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
 
 # sample siteInfo_siteX -------------------------------------------------------------
 ###TestSiteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
