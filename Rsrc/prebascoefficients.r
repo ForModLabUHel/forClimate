@@ -8,7 +8,7 @@
 
 # base::setwd("C:/GitHub/forClimate") # Set your working directory
 
-#writeLines(c("prebascoefficientsForMain starts"), "C:/dev/MyPrograms/MottiWB/routput.txt")
+#cat("sourcing prebascoefficients starts\n", file = "coeff_log.txt", append=TRUE)
 
 print_matrix<-function(m){
   rows=NROW(m)
@@ -46,11 +46,12 @@ library(prodlim)
 library(sf)
 
 # load dGrowthPrebas function ---------------------------------------------
-#writeLines(c("load dGrowthPrebas"), "C:/dev/MyPrograms/MottiWB/routput.txt")
-source("Rsrc/dGrowthPrebas.r")
+#writeLines(c("load dGrowthPrebas"), "coeff_log.txt")
+#cat("source Rsrc/dGrowthPrebas\n", file = "coeff_log.txt", append=TRUE)
+#source("Rsrc/dGrowthPrebas.r")
 
 # load coordinate ID table --------------------------------------------------------
-#if ( exists("coordFin) ) writeLines(c("coordFin already loaded"), "routput.txt") else
+#if ( exists("coordFin) ) writeLines(c("coordFin already loaded"), "coeff_log.txt") else
 #	coordFin <- data.table::fread("data/coordinates.dat")
 
 coordFin <- data.table::fread("data/coordinates.dat")
@@ -65,20 +66,21 @@ base::load("data/CanESM2.rcp45.rdata")
 climateChange_dataBase <- dat
 
 # sample site coordinate ---------------------------------------------------------
-###coord_datapuu <- data.table::fread("data/arp_14586_1_34.txt") # load your inital input motti file in txt
+#coord_datapuu <- data.table::fread("data/arp_14586_1_34.txt") # load your inital input motti file in txt
 
-###site_coord_txt <- base::as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
-###site_coord_3067 <- base::data.frame(x = site_coord_txt[2]*1000, y = site_coord_txt[1]*1000)
+#site_coord_txt <- base::as.numeric(coord_datapuu[V1 %in% c(1, 2), METSIKKO])
+#site_coord_3067 <- base::data.frame(x = 238.70000*1000, y = 6657.60010*1000)
+#site_coord_3067 <- base::data.frame(x = site_coord_txt[1]*1000, y = site_coord_txt[2]*1000)
 
 # transformed coordinates
-siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+#siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
 
-coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
-coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
+#coordFin_x <- base::unique(base::as.numeric(coordFin[, x]))
+#coordFin_y <- base::unique(base::as.numeric(coordFin[, y]))
 
-siteCoords <- siteCoords_4326
-siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
-siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
+#siteCoords <- siteCoords_4326
+#siteCoords[1] <- coordFin_x[base::which.min(base::abs(coordFin_x - siteCoords_4326[1]))]
+#siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_4326[2]))]
 
 # sample siteInfo_siteX -------------------------------------------------------------
 ###TestSiteInfo <- read.csv("data/TestSiteInfo.csv",sep=" ")[c(1:7,10:12)]
@@ -98,45 +100,50 @@ siteCoords[2] <- coordFin_y[base::which.min(base::abs(coordFin_y - siteCoords_43
 ###startYear_of_simulation <- 2025 # This must be updated each time during the Motti simulation.
 
 # prebascoefficients function ------------------------------------------------------
-#writeLines(c("define function prebascoefficients"), "C:/dev/MyPrograms/MottiWB/routput.txt")
+#writeLines(c("define function prebascoefficients"), "coeff_log.txt")
+#cat("define function prebascoefficients\n", file = "coeff_log.txt", append=TRUE)
 prebascoefficients <- function(siteInfo_siteX,
                                initVar_siteX,
                                siteCoords,
                                startYear_of_simulation,
                                verbose){
-  if (verbose==1){
-   # sink("prebascoefficients_log.txt")
-    print("prebascoefficients starts\n")
-  }
+
   ###Site coordinates must be dim(1,2) matrix
   if (is.vector(siteCoords)){
     ### The vector comes from 'callprebas'
     siteCoords<-t(as.matrix(siteCoords))
   }
+
+  # transform EPSG:3067 -coordinates into EPSG: 4326
+  if (siteCoords[1] > 100 ){
+      # library sf is supposed to be loaded at this point --> is it necessary to check it at all?
+      if(! "dplyr" %in% tolower((.packages()))){
+        library("sf")
+        (.packages())
+      }
+      #library(sf)
+    site_coord_3067 <- base::data.frame(x = siteCoords[1]*1000, y = siteCoords[2]*1000)
+    siteCoords_4326 <- sf::st_coordinates(st_transform(st_as_sf(site_coord_3067, coords = c("x", "y"), crs = 3067), crs = 4326))
+    siteCoords <- siteCoords_4326
+  }
   
   if (verbose == 1){
-    print("In R prebascoefficients")
-    print("-----------------------------------")
-    cat("SiteInfo",siteInfo_siteX,"\n")
-    print("-----------------------------------")
-    print("TreeInfo")
-    print("-----------------------------------")
-    print_matrix(initVar_siteX)
-    print("-----------------------------------")
-    cat("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n")
-    print("-----------------------------------")
-    cat("Start year",startYear_of_simulation,"\n")
-    print("-----------------------------------")
-    print("Coord Fin")
-    print("-----------------------------------")
-    print(coordFin)
-    print("-----------------------------------")
+    cat("-----------------------------------\n",  file= "coeff_log.txt", append=TRUE)
+    cat(paste("startYear_of_simulation",startYear_of_simulation,"\n"),  file= "coeff_log.txt", append=TRUE)
+    cat(paste("SiteInfo",siteInfo_siteX,"\n"),  file= "coeff_log.txt", append=TRUE)
+    #cat("TreeInfo\n",  file= "coeff_log.txt", append=TRUE)
+    #cat(paste("TreeInfo","Is matrix",is.matrix(initVar_siteX),"Dimensions",dim(initVar_siteX),"Trees",initVar_siteX,"\n"),  file= "coeff_log.txt", append=TRUE)
+    #print_matrix(initVar_siteX)
+    cat(paste("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n"),  file= "coeff_log.txt", append=TRUE)
+    cat("-----------------------------------\n",  file= "coeff_log.txt", append=TRUE)
+    #cat(paste(coordFin),"\n",  file= "coeff_log.txt", append=TRUE)
+    #cat("-----------------------------------\n",  file= "coeff_log.txt", append=TRUE)
+    if(startYear_of_simulation < 2022){
+      print("Error: startYear_of_simulation MUST be equal to or greater than 2022, which is currently the start year of the equipped future climate change database")
+      return(NULL)
+    }
   }
   
-  if(startYear_of_simulation < 2022){
-    print("Error: startYear_of_simulation MUST be equal to or greater than 2022, which is currently the start year of the equipped future climate change database")
-    return(NULL)
-  }
   
   # extract currClimData from currClim_dataBase
   startYear_currClim <- 1980 # the start year of currClim_dataBase is 1980. If the database is changed, this argument must be updated accordingly.
@@ -204,7 +211,10 @@ prebascoefficients <- function(siteInfo_siteX,
   newCO2_siteX <- CO2_clChange
   
   if (verbose==1){
-  print("dGrowthExample_siteX <- dGrowthPrebas")
+    cat("dGrowthExample_siteX <- dGrowthPrebas\n",  file= "coeff_log.txt", append=TRUE)
+    cat(paste("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n"),  file= "coeff_log.txt", append=TRUE)
+    cat("-----------------------------------\n",  file= "coeff_log.txt", append=TRUE)
+
   }  
   dGrowthExample_siteX <- dGrowthPrebas(nYears_sim,siteInfo_siteX,initVar_siteX,
                                         currPAR=PAR_siteX,newPAR=newPAR_siteX,
@@ -229,7 +239,7 @@ prebascoefficients <- function(siteInfo_siteX,
   }
   return(dGrowthExample_siteX)
 }
-#"writeLines(c("prebascoefficients ends"), "C:/dev/MyPrograms/MottiWB/routput.txt")
+#"writeLines(c("prebascoefficients ends"), "coeff_log.txt")
 #print("Before call to prebascoefficients")
 #print("---------------------------------")
 #print("SiteInfo")

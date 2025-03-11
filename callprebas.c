@@ -95,6 +95,12 @@ SEXP prebasinitvar()
 
 void initialize_R(int verbose)
 {
+  FILE *fout1 = freopen("CONIN$", "r", stdin);
+  FILE *fout2 = freopen("CONOUT$", "w", stderr);
+  FILE *fout3 = freopen("CONOUT$", "w", stdout);
+  HANDLE hStdout = CreateFile("CONOUT$",  GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);   
+
   static int init=0;
   if (!init){
     if (verbose == 1){
@@ -105,7 +111,9 @@ void initialize_R(int verbose)
     //in the main program to the context of 'callprebas' when linking together MottiWB and and dGrowthPrebas 
     int r_argc = 2;
     char* r_argv[] = { "R", "--silent" };
-    Rf_initEmbeddedR(r_argc, r_argv);
+    Rf_initEmbeddedR(r_argc, r_argv);   
+    source("Rsrc/dGrowthPrebas.r",verbose);
+    source("Rsrc/prebascoefficients.r",verbose);
     init=1;
   }
   else{
@@ -113,6 +121,10 @@ void initialize_R(int verbose)
       printf("The R environment already initialized (no initialization)\n");
     }
   }
+//  fclose(fout1);
+//  fclose(fout2);
+//  fclose(fout3);
+
 }
 
 void callprebas(int iround,double site_info[10], double init_var[7000], int cols, int rows, double site_coord[2], int start_5_year, double dH_result[1000], double dD_result[1000], double dV_result[1000], int verbose)
@@ -137,17 +149,19 @@ void callprebas(int iround,double site_info[10], double init_var[7000], int cols
     printf("---------------\n");
     printf("initializing R\n");
   }
-   if (iround == 1 )
-  {
+  
     initialize_R(verbose);
-    source("Rsrc/dGrowthPrebas.r",verbose);
-    source("Rsrc/prebascoefficients.r",verbose);
-  }
-	
+//   if (iround==1){
+//     source("Rsrc/dGrowthPrebas.r",verbose);
+//    source("Rsrc/prebascoefficients.r",verbose);
+//   }
   //if (length != 10){
   //  printf("Site Info vector must be 10 long instead of %d \n",length);
   //  exit(0);
  // }
+//   site_coord[1]<- 62.2;
+//   site_coord[0]<- 22.8;
+
   if (verbose){
     printf("SiteInfo\n");
     print_vector(site_info,length);

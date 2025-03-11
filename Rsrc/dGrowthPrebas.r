@@ -34,8 +34,8 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                     defaultThin = 0
                     ){
  
-cat("prebascoefficients starts\n", file = "dGrowthPrebas_log.txt")
-cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("dGrowthPrebas starts\n", file = "dGrowthPrebas_log.txt")
+###cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
 
  
   if(length(siteInfo)<=12){
@@ -43,11 +43,11 @@ cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
   }else{
     nSites <- nrow(siteInfo)  
   }
-#cat(paste("nSites ",nSites,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+  ##cat(paste("nSites ",nSites,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
   
   if(nSites>1){
-            print("nSites > 1, initCurr\n")
-
+            #print("nSites > 1, initCurr\n")
+            ##cat(paste("nSites ",nSites,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
     initCurr <- InitMultiSite(nYearsMS = rep(nYears,nSites),
                               PAR = currPAR,
                               VPD = currVPD,
@@ -60,7 +60,7 @@ cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
                               defaultThin = defaultThin)
     modOutCurr <- multiPrebas(initCurr)
     
-cat("nSites > 1, initNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("nSites > 1, initNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
     initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
                              PAR = newPAR,
                              VPD = newVPD,
@@ -92,46 +92,46 @@ cat("nSites > 1, initNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
     dV <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   }else{
 
-cat("nSites = 1,  modOutCurr <- prebas\n",  file="dGrowthPrebas_log.txt", append=TRUE)
-cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("nSites = 1,  modOutCurr <- prebas\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
 
-cat("currPAR\n",  file="dGrowthPrebas_log_currPAR.txt", append=FALSE)
-cat(paste(currPAR),  file="dGrowthPrebas_log_currPAR.txt", append=TRUE)
-cat("\n",  file="dGrowthPrebas_log_currPAR.txt", append=TRUE)
+###cat("currPAR\n",  file="dGrowthPrebas_log_currPAR.txt", append=FALSE)
+###cat(paste(currPAR),  file="dGrowthPrebas_log_currPAR.txt", append=TRUE)
+###cat("\n",  file="dGrowthPrebas_log_currPAR.txt", append=TRUE)
 
-cat("currVPD\n",  file="dGrowthPrebas_log_currVPD.txt", append=FALSE)
-cat(paste(currVPD),  file="dGrowthPrebas_log_currVPD.txt", append=TRUE)
-cat("\n",  file="dGrowthPrebas_log_currVPD.txt", append=TRUE)
+###cat("currVPD\n",  file="dGrowthPrebas_log_currVPD.txt", append=FALSE)
+###cat(paste(currVPD),  file="dGrowthPrebas_log_currVPD.txt", append=TRUE)
+###cat("\n",  file="dGrowthPrebas_log_currVPD.txt", append=TRUE)
 
-cat("currCO2\n",  file="dGrowthPrebas_log_currCO2.txt", append=FALSE)
-cat(paste(currCO2),  file="dGrowthPrebas_log_currCO2.txt", append=TRUE)
-cat("\n",  file="dGrowthPrebas_log_currCO2.txt", append=TRUE)
+###cat("currCO2\n",  file="dGrowthPrebas_log_currCO2.txt", append=FALSE)
+###cat(paste(currCO2),  file="dGrowthPrebas_log_currCO2.txt", append=TRUE)
+###cat("\n",  file="dGrowthPrebas_log_currCO2.txt", append=TRUE)
 
-cat("currTAir\n",  file="dGrowthPrebas_log_currTAir.txt", append=FALSE)
-cat(paste(currTAir),  file="dGrowthPrebas_log_currTAir.txt", append=TRUE)
-cat("\n",  file="dGrowthPrebas_log_currTAir.txt", append=TRUE)
+###cat("currTAir\n",  file="dGrowthPrebas_log_currTAir.txt", append=FALSE)
+###cat(paste(currTAir),  file="dGrowthPrebas_log_currTAir.txt", append=TRUE)
+###cat("\n",  file="dGrowthPrebas_log_currTAir.txt", append=TRUE)
 
-cat("currPrecip\n",  file="dGrowthPrebas_log_currPrecip.txt", append=FALSE)
-cat(paste(currPrecip),  file="dGrowthPrebas_log_currPrecip.txt", append=TRUE)
-cat("\n",  file="dGrowthPrebas_log_currPrecip.txt", append=TRUE)
+###cat("currPrecip\n",  file="dGrowthPrebas_log_currPrecip.txt", append=FALSE)
+###cat(paste(currPrecip),  file="dGrowthPrebas_log_currPrecip.txt", append=TRUE)
+###cat("\n",  file="dGrowthPrebas_log_currPrecip.txt", append=TRUE)
 
-#cat("siteInfo\n",  file="dGrowthPrebas_log.txt", append=FALSE)
-#cat(paste(siteInfo),  file="dGrowthPrebas_log.txt", append=TRUE)
-#cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("siteInfo\n",  file="dGrowthPrebas_log.txt", append=FALSE)
+####cat(paste(siteInfo),  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
 
-#cat("initVar\n",  file="dGrowthPrebas_log.txt", append=FALSE)
-#cat(paste(initVar),  file="dGrowthPrebas_log.txt", append=TRUE)
-#cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("initVar\n",  file="dGrowthPrebas_log.txt", append=FALSE)
+####cat(paste(initVar),  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
 
-#cat("ClCut\n",  file="dGrowthPrebas_log_ClCut.txt", append=FALSE)
-#cat(paste(ClCut),  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
-#cat("\n",  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
+####cat("ClCut\n",  file="dGrowthPrebas_log_ClCut.txt", append=FALSE)
+####cat(paste(ClCut),  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
+####cat("\n",  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
 
-#cat("defaultThin\n",  file="dGrowthPrebas_log.txt", append=FALSE)
-#cat(paste(defaultThin),  file="dGrowthPrebas_log.txt", append=TRUE)
-#cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("defaultThin\n",  file="dGrowthPrebas_log.txt", append=FALSE)
+####cat(paste(defaultThin),  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
 
-cat("calling prebas, current climate\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("calling prebas, current climate\n",  file="dGrowthPrebas_log.txt", append=TRUE)
 
     modOutCurr <- prebas(nYears = nYears,
                               PAR = currPAR,
@@ -144,8 +144,8 @@ cat("calling prebas, current climate\n",  file="dGrowthPrebas_log.txt", append=T
                               ClCut = ClCut,
                               defaultThin = defaultThin)
     
-#cat("nSites = 1, modOutNew <- prebas\n",  file="dGrowthPrebas_log.txt", append=TRUE)
-#cat("calling prebas, new climate\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("nSites = 1, modOutNew <- prebas\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("calling prebas, new climate\n",  file="dGrowthPrebas_log.txt", append=TRUE)
     modOutNew <- prebas(nYears = nYears,
                              PAR = newPAR,
                              VPD = newVPD,
@@ -156,17 +156,17 @@ cat("calling prebas, current climate\n",  file="dGrowthPrebas_log.txt", append=T
                              initVar = initVar,
                              ClCut = ClCut,
                              defaultThin = defaultThin)
-#cat("estimate growthCurr and growthNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("estimate growthCurr and growthNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
     growthCurr <- dGrowthVars(modOutCurr)
     growthNew <- dGrowthVars(modOutNew)
     
-#cat("estimate growth-correction factors\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("estimate growth-correction factors\n",  file="dGrowthPrebas_log.txt", append=TRUE)
     dH <-growthNew$dGrowthH/growthCurr$dGrowthH
     dD <-growthNew$dGrowthD/growthCurr$dGrowthD
     # dN <-growthNew$dGrowthN/growthCurr$dGrowthN
     # dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
-#cat("growth-correction factors estimated\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("growth-correction factors estimated\n",  file="dGrowthPrebas_log.txt", append=TRUE)
 
   }
 # ###filter data
@@ -174,12 +174,12 @@ cat("calling prebas, current climate\n",  file="dGrowthPrebas_log.txt", append=T
 #   dD[which(is.na(dD) | dD<0)] <- 1
 #   dV[which(is.na(dV) | dV<0)] <- 1
   
-#cat("dGrowthPrebas exits\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("dGrowthPrebas exits\n",  file="dGrowthPrebas_log.txt", append=TRUE)
   return(list(dH=dH,dD=dD,dV=dV)) #,dB=dB,dN=dN
 }
 
 dGrowthVars <- function(modOut){
-#cat("dGrowthVars starts\n",  file="dGrowthVars_log.txt", append=TRUE)
+##cat("dGrowthVars starts\n",  file="C:/dev/MyPrograms/MottiWB/dGrowthVars_log.txt", append=TRUE)
   if(class(modOut)=="multiPrebas"){
     nYears <- modOut$maxYears
     dimX <- dim(modOut$multiOut[,,11,,1]);dimX[2] <- nYears +1
@@ -251,7 +251,7 @@ dGrowthVars <- function(modOut){
       dGrowthN <- xx[2:(nYears+1)] - xx[1:nYears]
     }
   }
-#cat("dGrowthVars exits\n",  file="dGrowthVars_log.txt", append=TRUE)
+  ###cat("dGrowthVars exits\n",  file="C:/dev/MyPrograms/MottiWBd/GrowthVars_log.txt", append=TRUE)
   return(list(dGrowthH=dGrowthH,dGrowthD=dGrowthD,dGrowthB=dGrowthB,dGrowthN=dGrowthN))
 }
 
