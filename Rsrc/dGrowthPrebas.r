@@ -34,8 +34,8 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                     defaultThin = 0
                     ){
  
-###cat("dGrowthPrebas starts\n", file = "dGrowthPrebas_log.txt")
-###cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: dGrowthPrebas starts\n", file = "callpre_log.txt", append=TRUE)
+###cat(paste("nYears ",nYears,"\n"),  file="callpre_log.txt", append=TRUE)
 
  
   if(length(siteInfo)<=12){
@@ -43,11 +43,11 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
   }else{
     nSites <- nrow(siteInfo)  
   }
-  ##cat(paste("nSites ",nSites,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+#cat(paste("nSites ",nSites,"\n"),  file="callpre_log.txt", append=TRUE)
   
   if(nSites>1){
-            #print("nSites > 1, initCurr\n")
-            ##cat(paste("nSites ",nSites,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+            print("nSites > 1, initCurr\n")
+
     initCurr <- InitMultiSite(nYearsMS = rep(nYears,nSites),
                               PAR = currPAR,
                               VPD = currVPD,
@@ -60,7 +60,7 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                               defaultThin = defaultThin)
     modOutCurr <- multiPrebas(initCurr)
     
-###cat("nSites > 1, initNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+   ###cat("in dGrowthPrebas.r: nSites > 1, initNew\n",  file="callpre_log.txt", append=TRUE)
     initNew <- InitMultiSite(nYearsMS = rep(nYears,nSites),
                              PAR = newPAR,
                              VPD = newVPD,
@@ -92,46 +92,51 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
     dV <-modOutNew$multiOut[,,43,,1]/modOutCurr$multiOut[,,43,,1]
   }else{
 
-###cat("nSites = 1,  modOutCurr <- prebas\n",  file="dGrowthPrebas_log.txt", append=TRUE)
-###cat(paste("nYears ",nYears,"\n"),  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: nSites = 1,  modOutCurr <- prebas\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste("nYears ",nYears,"\n"),  file="callpre_log.txt", append=TRUE)
 
-###cat("currPAR\n",  file="dGrowthPrebas_log_currPAR.txt", append=FALSE)
-###cat(paste(currPAR),  file="dGrowthPrebas_log_currPAR.txt", append=TRUE)
-###cat("\n",  file="dGrowthPrebas_log_currPAR.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: currPAR\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste(currPAR),  file="callpre_log.txt", append=TRUE)
+###cat("\n",  file="callpre_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-###cat("currVPD\n",  file="dGrowthPrebas_log_currVPD.txt", append=FALSE)
-###cat(paste(currVPD),  file="dGrowthPrebas_log_currVPD.txt", append=TRUE)
-###cat("\n",  file="dGrowthPrebas_log_currVPD.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: currVPD\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste(currVPD),  file="callpre_log.txt", append=TRUE)
+###cat("\n",  file="callpre_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-###cat("currCO2\n",  file="dGrowthPrebas_log_currCO2.txt", append=FALSE)
-###cat(paste(currCO2),  file="dGrowthPrebas_log_currCO2.txt", append=TRUE)
-###cat("\n",  file="dGrowthPrebas_log_currCO2.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: currCO2\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste(currCO2),  file="callpre_log.txt", append=TRUE)
+###cat("\n",  file="callpre_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-###cat("currTAir\n",  file="dGrowthPrebas_log_currTAir.txt", append=FALSE)
-###cat(paste(currTAir),  file="dGrowthPrebas_log_currTAir.txt", append=TRUE)
-###cat("\n",  file="dGrowthPrebas_log_currTAir.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: currTAir\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste(currTAir),  file="callpre_log.txt", append=TRUE)
+###cat("\n",  file="callpre_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-###cat("currPrecip\n",  file="dGrowthPrebas_log_currPrecip.txt", append=FALSE)
-###cat(paste(currPrecip),  file="dGrowthPrebas_log_currPrecip.txt", append=TRUE)
-###cat("\n",  file="dGrowthPrebas_log_currPrecip.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: currPrecip\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste(currPrecip),  file="callpre_log.txt", append=TRUE)
+###cat("\n",  file="callpre_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-####cat("siteInfo\n",  file="dGrowthPrebas_log.txt", append=FALSE)
-####cat(paste(siteInfo),  file="dGrowthPrebas_log.txt", append=TRUE)
-####cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: siteInfo\n",  file="callpre_log.txt", append=FALSE)
+#cat(paste(siteInfo),  file="callpre_log.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-####cat("initVar\n",  file="dGrowthPrebas_log.txt", append=FALSE)
-####cat(paste(initVar),  file="dGrowthPrebas_log.txt", append=TRUE)
-####cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: initVar\n",  file="callpre_log.txt", append=TRUE)
+###cat(paste(initVar),  file="callpre_log.txt", append=TRUE)
+###cat("\n",  file="callpre_log.txt", append=TRUE)
 
-####cat("ClCut\n",  file="dGrowthPrebas_log_ClCut.txt", append=FALSE)
-####cat(paste(ClCut),  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
-####cat("\n",  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: ClCut\n",  file="dGrowthPrebas_log_ClCut.txt", append=FALSE)
+#cat(paste(ClCut),  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: \n",  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
 
-####cat("defaultThin\n",  file="dGrowthPrebas_log.txt", append=FALSE)
-####cat(paste(defaultThin),  file="dGrowthPrebas_log.txt", append=TRUE)
-####cat("\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: defaultThin\n",  file="callpre_log.txt", append=FALSE)
+#cat(paste(defaultThin),  file="callpre_log.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
-###cat("calling prebas, current climate\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: calling prebas, current climate\n",  file="callpre_log.txt", append=TRUE)
 
     modOutCurr <- prebas(nYears = nYears,
                               PAR = currPAR,
@@ -144,8 +149,8 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                               ClCut = ClCut,
                               defaultThin = defaultThin)
     
-####cat("nSites = 1, modOutNew <- prebas\n",  file="dGrowthPrebas_log.txt", append=TRUE)
-####cat("calling prebas, new climate\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: nSites = 1, modOutNew <- prebas\n",  file="callpre_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: calling prebas, new climate\n",  file="callpre_log.txt", append=TRUE)
     modOutNew <- prebas(nYears = nYears,
                              PAR = newPAR,
                              VPD = newVPD,
@@ -156,17 +161,27 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
                              initVar = initVar,
                              ClCut = ClCut,
                              defaultThin = defaultThin)
-####cat("estimate growthCurr and growthNew\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+####cat("in dGrowthPrebas.r: estimate growthCurr and growthNew\n",  file="callpre_log.txt", append=TRUE)
     growthCurr <- dGrowthVars(modOutCurr)
     growthNew <- dGrowthVars(modOutNew)
     
-####cat("estimate growth-correction factors\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: estimating growth-correction factors\n",  file="callpre_log.txt", append=TRUE)
     dH <-growthNew$dGrowthH/growthCurr$dGrowthH
     dD <-growthNew$dGrowthD/growthCurr$dGrowthD
     # dN <-growthNew$dGrowthN/growthCurr$dGrowthN
     # dB <-growthNew$dGrowthB/growthCurr$dGrowthB
     dV <-modOutNew$output[,43,,1]/modOutCurr$output[,43,,1]
-####cat("growth-correction factors estimated\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+
+   ###cat("in dGrowthPrebas.r: dH\n",  file="callpre_log.txt", append=TRUE)
+   ###cat(paste(dH),  file="callpre_log.txt", append=TRUE)
+   ###cat("\n",  file="callpre_log.txt", append=TRUE)
+   ###cat("in dGrowthPrebas.r: dD\n",  file="callpre_log.txt", append=TRUE)
+   ###cat(paste(dD),  file="callpre_log.txt", append=TRUE)
+   ###cat("\n",  file="callpre_log.txt", append=TRUE)
+   ###cat("in dGrowthPrebas.r: dV\n",  file="callpre_log.txt", append=TRUE)
+   ###cat(paste(dV),  file="callpre_log.txt", append=TRUE)
+   ###cat("\n",  file="callpre_log.txt", append=TRUE)
+   ###cat("in dGrowthPrebas.r: growth-correction factors estimated\n",  file="callpre_log.txt", append=TRUE)
 
   }
 # ###filter data
@@ -174,12 +189,12 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
 #   dD[which(is.na(dD) | dD<0)] <- 1
 #   dV[which(is.na(dV) | dV<0)] <- 1
   
-####cat("dGrowthPrebas exits\n",  file="dGrowthPrebas_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: dGrowthPrebas returns\n",  file="callpre_log.txt", append=TRUE)
   return(list(dH=dH,dD=dD,dV=dV)) #,dB=dB,dN=dN
 }
 
 dGrowthVars <- function(modOut){
-##cat("dGrowthVars starts\n",  file="C:/dev/MyPrograms/MottiWB/dGrowthVars_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: dGrowthVars starts\n",  file="callpre_log.txt", append=TRUE)
   if(class(modOut)=="multiPrebas"){
     nYears <- modOut$maxYears
     dimX <- dim(modOut$multiOut[,,11,,1]);dimX[2] <- nYears +1
@@ -251,7 +266,7 @@ dGrowthVars <- function(modOut){
       dGrowthN <- xx[2:(nYears+1)] - xx[1:nYears]
     }
   }
-  ###cat("dGrowthVars exits\n",  file="C:/dev/MyPrograms/MottiWBd/GrowthVars_log.txt", append=TRUE)
+###cat("in dGrowthPrebas.r: dGrowthVars exits\n",  file="callpre_log.txt", append=TRUE)
   return(list(dGrowthH=dGrowthH,dGrowthD=dGrowthD,dGrowthB=dGrowthB,dGrowthN=dGrowthN))
 }
 
@@ -259,6 +274,7 @@ dGrowthVars <- function(modOut){
 
 
 averageWeather <- function(inputX,nYearsRun){
+###cat("in dGrowthPrebas.r: averageWeather starts\n",  file="callpre_log.txt", append=TRUE)
   require(data.table)
   nYearsX <- ncol(inputX)/365
   xx <- data.table(t(inputX))
@@ -268,7 +284,7 @@ averageWeather <- function(inputX,nYearsRun){
   yy <- data.matrix(reshape(averageX, idvar = "variable", timevar = "doy", direction = "wide"))[,2:366]
   # yy <- as.numeric(yy)
   yy2 = yy[, rep(1:365, nYearsRun)]
-  
+###cat("in dGrowthPrebas.r: averageWeather returns\n",  file="callpre_log.txt", append=TRUE)  
   return(yy2)
 }
 
@@ -282,6 +298,7 @@ extractIDs <- function(coords,dataBase){
 }
 
 extractWeatherPrebas <- function(coords,startYear,coordFin,DataBaseFormat,dat,sourceData){
+###cat("in dGrowthPrebas.r: extractWeatherPrebas starts\n",  file="callpre_log.txt", append=TRUE)
   IDs <- apply(coords,1,extractIDs,coordFin)
   IDs2 <- unique(coordFin[IDs,3:4])
   newIDs <- 1:nrow(IDs2)
@@ -309,6 +326,7 @@ extractWeatherPrebas <- function(coords,startYear,coordFin,DataBaseFormat,dat,so
   climateX$actualYear <- climateX$year + 1979 
   climateX <- climateX[actualYear >= startYear]
   if(DataBaseFormat==TRUE){
+    ###cat("in dGrowthPrebas.r: extractWeatherPrebas returns, CurrWeather\n",  file="callpre_log.txt", append=TRUE)
     return(list(dataBase=climateX,climIDs = newIDsSites))
   }else{
     nIDs <- length(unique(climateX$idNew))
@@ -321,11 +339,13 @@ extractWeatherPrebas <- function(coords,startYear,coordFin,DataBaseFormat,dat,so
       Precip[i,] = climateX[idNew==i]$Precip
       CO2[i,] = climateX[idNew==i]$CO2
     }
+    ###cat("in dGrowthPrebas.r: extractWeatherPrebas returns, ClimChange\n",  file="callpre_log.txt", append=TRUE)
     return(list(PAR=PAR,VPD=VPD,TAir=TAir,Precip=Precip,CO2=CO2,climIDs = newIDsSites))
   }
 }
 
 sampleTypicalYears <- function(climateIn,nYears=5){
+    ###cat("in dGrowthPrebas.r: sampleTypicalYears starts\n",  file="callpre_log.txt", append=TRUE)
   Tseason <- climateIn[doy %in% 150:250,mean(TAir),by=c("year","id")]
   setnames(Tseason,"V1","Tair")
   Tseason[,quant40:= quantile(Tair,0.25),by="id"]
@@ -353,5 +373,6 @@ sampleTypicalYears <- function(climateIn,nYears=5){
     Precip[i,] = oo$Precip
     CO2[i,] = oo$CO2
   }
+    ###cat("in dGrowthPrebas.r: sampleTypicalYears returns\n",  file="callpre_log.txt", append=TRUE)
   return(list(PAR=PAR,VPD=VPD,TAir=TAir,Precip=Precip,CO2=CO2))
 }

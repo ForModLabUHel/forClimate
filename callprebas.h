@@ -9,15 +9,18 @@
 #include <windows.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <direct.h>
 ///\brief Print the vector content
 ///\param v The vector
 ///\param length The vector length
 extern void print_vector(double v[],int length);
+extern void fprint_vector(FILE *f,double v[],int length);
 ///\brief Print the 2D matrix content
 ///\param m The 2D matrix
 ///\param rows The number of rows in the matrix \p m
 ///\param cols The number of columns in the matrix \p m
 extern void print_matrix(double* m,int rows,int cols);
+extern void fprint_matrix(FILE *f,double* m,int rows,int cols);
 ///\brief Execute the `source` R command
 ///\param name The R file name
 ///\param verbose Print the file \p name on standard out
@@ -52,7 +55,6 @@ void initialize_R(int verbose);
 //void callprebas(double site_info[10], double init_var[7000], int numtrees, int treeproperties, double site_coord[2], int start_5_year, double dH_result[1000], double dD_result[1000], double dV_result[1000], int verbose);
 
 void callprebas(int iround, double site_info[10], double init_var[7000], int cols, int rows, double site_coord[2], int start_5_year, double dH_result[1000], double dD_result[1000], double dV_result[1000], int verbose);
-void callprebas2(double site_info[], int length, double* init_var, long rows, long cols,double site_coord[], int start_5_year,double* dH_result, double* dD_result, double* dV_result, int verbose);
+void callprebasForMain(double site_info[], int length, double* init_var, long rows, long cols,double site_coord[], int start_5_year,double* dH_result, double* dD_result, double* dV_result, int verbose);
 void callprebase(int iround);
-
 #endif
