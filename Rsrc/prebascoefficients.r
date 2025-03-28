@@ -110,14 +110,28 @@ prebascoefficients <- function(siteInfo_siteX,
                                initVar_siteX,
                                siteCoords,
                                startYear_of_simulation,
-                               verbose){
+                               iverbose){
+  
+   #// iverbose is variable for launching the current-climate -sampling
+   #// if intChangeCurrentclimate = 1 and verbose = 1, then int_verbose = 100 + 10 + 1 = 111
+   #// if intChangeCurrentclimate = 1 and verbose = 0, then int_verbose = 100 + 10 + 0 = 110
+   #// if intChangeCurrentclimate = 0 and verbose = 1, then int_verbose = 100 +  0 + 1 = 101
+   #// if intChangeCurrentclimate = 0 and verbose = 0, then int_verbose = 100 +  0 + 0 = 100
+   #// iverbose = 100 +  10 * intChangeCurrentclimate  + verbose;
+      intChangeCurrentclimate <- trunc((iverbose-100)/10)
+      verbose <- iverbose - 100 - 10*intChangeCurrentclimate
+  
   if (verbose==1){
+      ###cat("function prebascoefficients starts\n",  file= "callpre_log.txt", append=TRUE)   
+      ###cat(paste("iverbose ",iverbose,"\n"),  file="callpre_log.txt", append=TRUE) 
+      ###cat(paste("verbose ",verbose,"\n"),  file="callpre_log.txt", append=TRUE) 
+      ###cat(paste("intChangeCurrentclimate ",intChangeCurrentclimate,"\n"),  file="callpre_log.txt", append=TRUE) 
    # sink("prebascoefficients_log.txt")
     ###cat("-----------------------------------\n",  file= "callpre_log.txt", append=TRUE)
     ###cat("function prebascoefficients starts\n",  file= "callpre_log.txt", append=TRUE)   
     print("prebascoefficients starts\n")
   }
-  ###Site coordinates must be dim(1,2) matrix
+
   ###Site coordinates must be dim(1,2) matrix
   if (is.vector(siteCoords)){
     ### The vector comes from 'callprebas'
@@ -164,39 +178,48 @@ prebascoefficients <- function(siteInfo_siteX,
   # extract currClimData from currClim_dataBase
   ###cat("extract currClimData, call extractWeatherPrebas\n",  file= "callpre_log.txt", append=TRUE)
 
-  startYear_currClim <- 1980 # the start year of currClim_dataBase is 1980. If the database is changed, this argument must be updated accordingly.
-  DataBaseFormat_currClim <- TRUE
-  currClimData <- extractWeatherPrebas(coords = siteCoords,
-                                       startYear = startYear_currClim,
-                                       coordFin = coordFin,
-                                       DataBaseFormat = DataBaseFormat_currClim,
-                                       dat = currClim_dataBase,
-                                       sourceData = "currClim")$dataBase
-  
-  # extract climateChangeData from climateChange_dataBase
-  ###cat("extract climateChangeData, call extractWeatherPrebas\n",  file= "callpre_log.txt", append=TRUE)
+if (intChangeCurrentclimate==1){
+    ###cat(paste("intChangeCurrentclimate ",intChangeCurrentclimate,"\n"),  file="callpre_log.txt", append=TRUE) 
+    startYear_currClim <- 1980 # the start year of currClim_dataBase is 1980. If the database is changed, this argument must be updated accordingly.
+    DataBaseFormat_currClim <- TRUE
+    currClimData <- extractWeatherPrebas(coords = siteCoords,
+                                        startYear = startYear_currClim,
+                                        coordFin = coordFin,
+                                        DataBaseFormat = DataBaseFormat_currClim,
+                                        dat = currClim_dataBase,
+                                        sourceData = "currClim")$dataBase
+    
+      # extract typicalSample for current climate data
+      ###cat("extract typicalSample, call sampleTypicalYears\n",  file= "callpre_log.txt", append=TRUE)
 
-  startYear_climateChange <- 2022 # the start year of climateChange_dataBase_rcp45 is 2022. If the database is changed, this argument must be updated accordingly.
-  DataBaseFormat_climateChange <- FALSE
-  climateChangeData <- extractWeatherPrebas(coords = siteCoords,
-                                            startYear = startYear_climateChange,
-                                            coordFin = coordFin,
-                                            DataBaseFormat = DataBaseFormat_climateChange,
-                                            dat = climateChange_dataBase,
-                                            sourceData="climChange")
-  
-  
-  # extract typicalSample for current climate data
-    ###cat("extract typicalSample, call sampleTypicalYears\n",  file= "callpre_log.txt", append=TRUE)
+    typicalSample <- sampleTypicalYears(currClimData)
+    PAR_sample<-as.numeric(typicalSample$PAR)
+    Precip_sample<-as.numeric(typicalSample$Precip)
+    TAir_sample<-as.numeric(typicalSample$TAir)
+    VPD_sample<-as.numeric(typicalSample$VPD)
+    CO2_sample<-as.numeric(typicalSample$CO2)
+    
 
-  typicalSample <- sampleTypicalYears(currClimData)
-  PAR_sample<-as.numeric(typicalSample$PAR)
-  Precip_sample<-as.numeric(typicalSample$Precip)
-  TAir_sample<-as.numeric(typicalSample$TAir)
-  VPD_sample<-as.numeric(typicalSample$VPD)
-  CO2_sample<-as.numeric(typicalSample$CO2)
-  
-  
+    # extract climateChangeData from climateChange_dataBase
+    ###cat("extract climateChangeData, call extractWeatherPrebas\n",  file= "callpre_log.txt", append=TRUE)
+
+    startYear_climateChange <- 2022 # the start year of climateChange_dataBase_rcp45 is 2022. If the database is changed, this argument must be updated accordingly.
+    DataBaseFormat_climateChange <- FALSE
+    climateChangeData <- extractWeatherPrebas(coords = siteCoords,
+                                              startYear = startYear_climateChange,
+                                              coordFin = coordFin,
+                                              DataBaseFormat = DataBaseFormat_climateChange,
+                                              dat = climateChange_dataBase,
+                                              sourceData="climChange")
+    
+    # current climate data for dGrowthPrebas function
+    PAR_siteX <- PAR_sample
+    Precip_siteX <- Precip_sample
+    TAir_siteX <- TAir_sample
+    VPD_siteX <- VPD_sample
+    CO2_siteX <- CO2_sample
+  }
+
   # extract climate from climate change database
   # startYear_of_simulation MUST be equal to or greater than the start year of the future climate change database (it is currently 2022)
   # StartYearSim must be always a positive number.
@@ -217,13 +240,6 @@ prebascoefficients <- function(siteInfo_siteX,
   TAir_clChange <- climateChangeData$TAir[,day_climateChange]
   VPD_clChange <- climateChangeData$VPD[,day_climateChange]
   CO2_clChange <- climateChangeData$CO2[,day_climateChange]
-  
-  # current climate data for dGrowthPrebas function
-  PAR_siteX <- PAR_sample
-  Precip_siteX <- Precip_sample
-  TAir_siteX <- TAir_sample
-  VPD_siteX <- VPD_sample
-  CO2_siteX <- CO2_sample
   
   # future change climate data for dGrowthPrebas function
   newPAR_siteX <- PAR_clChange

@@ -1,4 +1,18 @@
 #include "callprebas.h"
+// a global variable that defines when the current climate is (re)sampled
+// 1 = sample now
+// 0 = keep the sample
+static int intChangeCurrentclimate = 1;
+
+void ChangeCurrentClimate()
+{
+  intChangeCurrentclimate = 1;
+}
+
+void UseCurrentClimate()
+{
+  intChangeCurrentclimate = 0;
+}
 
 SEXP what_sexp_is_this(SEXP x) {
   printf("SEXPTYPE: %i = %s \n", TYPEOF(x), type2char(TYPEOF(x)));
@@ -187,6 +201,13 @@ void callprebas(int iround,double site_info[10], double init_var[7000], int cols
                                 NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);   
    
    int length = 10;
+   // a local variable for launching the current-climate -sampling
+   // if intChangeCurrentclimate = 1 and verbose = 1, then int_verbose = 100 + 10 + 1 = 111
+   // if intChangeCurrentclimate = 1 and verbose = 0, then int_verbose = 100 + 10 + 0 = 110
+   // if intChangeCurrentclimate = 0 and verbose = 1, then int_verbose = 100 +  0 + 1 = 101
+   // if intChangeCurrentclimate = 0 and verbose = 0, then int_verbose = 100 +  0 + 0 = 100
+   
+   int int_verbose = 100 +  intChangeCurrentclimate * 10 + verbose;
 
   FILE *f;
 
@@ -260,11 +281,15 @@ if (verbose == 1){
    }
   SEXP site_coord_r = PROTECT(allocVector(REALSXP,2));
   memcpy(REAL(site_coord_r),site_coord,2*sizeof(double));
-  //Copy start of 5 year period to R integer
+  //Copy verbose to R integer 
+  SEXP int_verbose_r = ScalarInteger(int_verbose);
+  
+  //Copy start of 5 year period to R integer 
   SEXP start_5_year_r = ScalarInteger(start_5_year);
   //Copy verbose to R integer
   SEXP verbose_r = ScalarInteger(verbose);  
   //Set-up the call to prebascoeffients in R (see coeffiecients.r)
+  
  if (verbose){
    f = fopen("callpre_log.txt", "a"); 
      fprintf(f,"callpreb: Set-up the call to prebascoeffients in R\n");  
@@ -275,15 +300,17 @@ if (verbose == 1){
 //  printf("Rf_install over\n");  
 //  if(!isFunction(funfun)) error("'funfun' must be a function");
 //  if(isFunction(funfun)) printf("'funfun' is a function");
+
  if (verbose){
    fclose(f);
    fprintf(f,"callpreb: Calling prebascoefficients, start 5 period from %d\n",start_5_year);
    fprintf(f,"callpreb: coeff_call initiated\n");  
  fclose(f);
  }
+
 //  SEXP coeff_call = PROTECT(lang6(funfun,site_info_r,init_var_r,site_coord_r,start_5_year_r,verbose_r));
 SEXP coeff_call;
-coeff_call = PROTECT(lang6(install("prebascoefficients"),site_info_r,init_var_r,site_coord_r,start_5_year_r,verbose_r));
+coeff_call = PROTECT(lang6(install("prebascoefficients"),site_info_r,init_var_r,site_coord_r,start_5_year_r,int_verbose_r));
 int errorOccurred;
   //Return value is a list for dH, dD and dV, coeffients for heigth, diameter and volume growth. 
  if (verbose){
