@@ -110,17 +110,12 @@ prebascoefficients <- function(siteInfo_siteX,
                                initVar_siteX,
                                siteCoords,
                                startYear_of_simulation,
-                               iverbose){
+                               icontrol){
   
-   #// iverbose is variable for launching the current-climate -sampling
-   #// if intChangeCurrentclimate = 1 and verbose = 1, then int_verbose = 100 + 10 + 1 = 111
-   #// if intChangeCurrentclimate = 1 and verbose = 0, then int_verbose = 100 + 10 + 0 = 110
-   #// if intChangeCurrentclimate = 0 and verbose = 1, then int_verbose = 100 +  0 + 1 = 101
-   #// if intChangeCurrentclimate = 0 and verbose = 0, then int_verbose = 100 +  0 + 0 = 100
-   #// iverbose = 100 +  10 * intChangeCurrentclimate  + verbose;
-      intChangeCurrentclimate <- trunc((iverbose-100)/10)
-      verbose <- iverbose - 100 - 10*intChangeCurrentclimate
-  
+   #// icontrol is vector for [1] controlling (debug-)printing and  [2] launching the current-climate -sampling
+   
+      verbose = icontrol[1]
+      intChangeCurrentclimate  = icontrol[2]
   if (verbose==1){
       ###cat("function prebascoefficients starts\n",  file= "callpre_log.txt", append=TRUE)   
       ###cat(paste("iverbose ",iverbose,"\n"),  file="callpre_log.txt", append=TRUE) 
