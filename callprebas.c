@@ -206,8 +206,9 @@ void callprebas(int iround,double site_info[10], double init_var[7000], int cols
    int_control[0] = verbose;
    // intChangeCurrentclimate is a variable for launching the current-climate -sampling
    int_control[1] = intChangeCurrentclimate;
-
+   intChangeCurrentclimate = 0;
    FILE *f;
+   
    
 if (verbose == 1){   
     f = fopen("callpre_log.txt", "a"); 

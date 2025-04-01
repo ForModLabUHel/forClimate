@@ -43,7 +43,7 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
   }else{
     nSites <- nrow(siteInfo)  
   }
-#cat(paste("nSites ",nSites,"\n"),  file="callpre_log.txt", append=TRUE)
+####cat(paste("nSites ",nSites,"\n"),  file="callpre_log.txt", append=TRUE)
   
   if(nSites>1){
             print("nSites > 1, initCurr\n")
@@ -121,7 +121,7 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
 ###cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
 ####cat("in dGrowthPrebas.r: siteInfo\n",  file="callpre_log.txt", append=FALSE)
-#cat(paste(siteInfo),  file="callpre_log.txt", append=TRUE)
+####cat(paste(siteInfo),  file="callpre_log.txt", append=TRUE)
 ####cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
 ###cat("in dGrowthPrebas.r: initVar\n",  file="callpre_log.txt", append=TRUE)
@@ -129,11 +129,11 @@ dGrowthPrebas <- function(nYears,siteInfo,initVar,
 ###cat("\n",  file="callpre_log.txt", append=TRUE)
 
 ####cat("in dGrowthPrebas.r: ClCut\n",  file="dGrowthPrebas_log_ClCut.txt", append=FALSE)
-#cat(paste(ClCut),  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
+####cat(paste(ClCut),  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
 ####cat("in dGrowthPrebas.r: \n",  file="dGrowthPrebas_log_ClCut.txt", append=TRUE)
 
 ####cat("in dGrowthPrebas.r: defaultThin\n",  file="callpre_log.txt", append=FALSE)
-#cat(paste(defaultThin),  file="callpre_log.txt", append=TRUE)
+####cat(paste(defaultThin),  file="callpre_log.txt", append=TRUE)
 ####cat("in dGrowthPrebas.r: \n",  file="callpre_log.txt", append=TRUE)
 
 ###cat("in dGrowthPrebas.r: calling prebas, current climate\n",  file="callpre_log.txt", append=TRUE)

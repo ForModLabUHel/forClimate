@@ -117,14 +117,13 @@ prebascoefficients <- function(siteInfo_siteX,
       verbose = icontrol[1]
       intChangeCurrentclimate  = icontrol[2]
   if (verbose==1){
-      ###cat("function prebascoefficients starts\n",  file= "callpre_log.txt", append=TRUE)   
-      ###cat(paste("iverbose ",iverbose,"\n"),  file="callpre_log.txt", append=TRUE) 
-      ###cat(paste("verbose ",verbose,"\n"),  file="callpre_log.txt", append=TRUE) 
-      ###cat(paste("intChangeCurrentclimate ",intChangeCurrentclimate,"\n"),  file="callpre_log.txt", append=TRUE) 
+      cat("function prebascoefficients starts\n",  file= "callpre_log.txt", append=TRUE)   
+      cat(paste("verbose ",verbose,"\n"),  file="callpre_log.txt", append=TRUE) 
+      cat(paste("intChangeCurrentclimate ",intChangeCurrentclimate,"\n"),  file="callpre_log.txt", append=TRUE) 
    # sink("prebascoefficients_log.txt")
     ###cat("-----------------------------------\n",  file= "callpre_log.txt", append=TRUE)
     ###cat("function prebascoefficients starts\n",  file= "callpre_log.txt", append=TRUE)   
-    print("prebascoefficients starts\n")
+    #print("prebascoefficients starts\n")
   }
 
   ###Site coordinates must be dim(1,2) matrix
@@ -147,22 +146,22 @@ prebascoefficients <- function(siteInfo_siteX,
   }
   
   if (verbose == 1){
-    print("In R prebascoefficients")
-    print("-----------------------------------")
-    ###cat("SiteInfo",siteInfo_siteX,"\n",  file= "callpre_log.txt", append=TRUE)   
-    print("-----------------------------------")
-    print("TreeInfo")
-    print("-----------------------------------")
+    #print("In R prebascoefficients")
+    #print("-----------------------------------")
+    cat("SiteInfo",siteInfo_siteX,"\n",  file= "callpre_log.txt", append=TRUE)   
+    #print("-----------------------------------")
+    #print("TreeInfo")
+    #print("-----------------------------------")
     print_matrix(initVar_siteX)
-    print("-----------------------------------")
-    ###cat("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n",  file= "callpre_log.txt", append=TRUE)
-    print("-----------------------------------")
-    ###cat("Start year",startYear_of_simulation,"\n",  file= "callpre_log.txt", append=TRUE)
-    print("-----------------------------------")
-    print("Coord Fin")
-    print("-----------------------------------")
-    print(coordFin)
-    print("-----------------------------------")
+    #print("-----------------------------------")
+    cat("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n",  file= "callpre_log.txt", append=TRUE)
+    #print("-----------------------------------")
+    cat("Start year",startYear_of_simulation,"\n",  file= "callpre_log.txt", append=TRUE)
+    #print("-----------------------------------")
+    #print("Coord Fin")
+    #print("-----------------------------------")
+    #print(coordFin)
+    #print("-----------------------------------")
   }
   
   if(startYear_of_simulation < 2022){
@@ -173,10 +172,20 @@ prebascoefficients <- function(siteInfo_siteX,
   # extract currClimData from currClim_dataBase
   ###cat("extract currClimData, call extractWeatherPrebas\n",  file= "callpre_log.txt", append=TRUE)
 
+    startYear_climateChange <- 2022 # the start year of climateChange_dataBase_rcp45 is 2022. If the database is changed, this argument must be updated accordingly.
+
 if (intChangeCurrentclimate==1){
-    ###cat(paste("intChangeCurrentclimate ",intChangeCurrentclimate,"\n"),  file="callpre_log.txt", append=TRUE) 
+  # in this block, the current climate is extracted and sampled. There is some stochasticity involved in sampling, and there are cases 
+  # when the local climate needs to be kept stable and thus resampling is not preferred.
+
+  if (verbose == 1){
+    cat(paste("intChangeCurrentclimate phase 1",intChangeCurrentclimate,"\n"),  file="callpre_log.txt", append=TRUE) 
+    }
     startYear_currClim <- 1980 # the start year of currClim_dataBase is 1980. If the database is changed, this argument must be updated accordingly.
     DataBaseFormat_currClim <- TRUE
+  if (verbose == 1){
+    cat("currClimData <- extractWeatherPrebas\n",  file="callpre_log.txt", append=TRUE) 
+    }
     currClimData <- extractWeatherPrebas(coords = siteCoords,
                                         startYear = startYear_currClim,
                                         coordFin = coordFin,
@@ -185,9 +194,18 @@ if (intChangeCurrentclimate==1){
                                         sourceData = "currClim")$dataBase
     
       # extract typicalSample for current climate data
-      ###cat("extract typicalSample, call sampleTypicalYears\n",  file= "callpre_log.txt", append=TRUE)
+        if (verbose == 1){
+          if (exists("currClimData") ){
+        cat("currClimData exists \n",  file= "callpre_log.txt", append=TRUE)            
+          } else
+          {
+        cat("currClimData does not exist! \n",  file= "callpre_log.txt", append=TRUE)            
+          }
+        cat("extract typicalSample, call sampleTypicalYears\n",  file= "callpre_log.txt", append=TRUE)
+        }
 
-    typicalSample <- sampleTypicalYears(currClimData)
+    # extract TypicalSample and make it global <<-
+    typicalSample <<- sampleTypicalYears(currClimData)
     PAR_sample<-as.numeric(typicalSample$PAR)
     Precip_sample<-as.numeric(typicalSample$Precip)
     TAir_sample<-as.numeric(typicalSample$TAir)
@@ -195,10 +213,51 @@ if (intChangeCurrentclimate==1){
     CO2_sample<-as.numeric(typicalSample$CO2)
     
 
-    # extract climateChangeData from climateChange_dataBase
-    ###cat("extract climateChangeData, call extractWeatherPrebas\n",  file= "callpre_log.txt", append=TRUE)
+    # load current climate data variables for dGrowthPrebas function and make them global
+    PAR_siteX <<- PAR_sample
+    Precip_siteX <<- Precip_sample
+    TAir_siteX <<- TAir_sample
+    VPD_siteX <<- VPD_sample
+    CO2_siteX <<- CO2_sample
+  }
+      # extract typicalSample for current climate data
+        if (verbose == 1){
+          if (exists("typicalSample") ){
+        cat("typicalSample exists \n",  file= "callpre_log.txt", append=TRUE)            
+          } else
+          {
+        cat("typicalSample does not exist! \n",  file= "callpre_log.txt", append=TRUE)            
+          }
+        }
 
-    startYear_climateChange <- 2022 # the start year of climateChange_dataBase_rcp45 is 2022. If the database is changed, this argument must be updated accordingly.
+
+if (verbose == 1){
+    cat("ChangeCurrentclimate over \n",  file="callpre_log.txt", append=TRUE) 
+    }
+  
+  # extract climate from climate change database
+  # startYear_of_simulation MUST be equal to or greater than the start year of the future climate change database (it is currently 2022)
+  # StartYearSim must be always a positive number.
+  
+  nYears_sim <- 5 # nYears_sim can be always 5 for dGrowthPrebas(). MottiWB can select the required number of years between 1 and 5 to simulate in Motti.
+   if (verbose == 1){
+    cat("nYears_sim",nYears_sim,"\n",file= "callpre_log.txt", append=TRUE)
+    }
+  startYearSim <- startYear_of_simulation - startYear_climateChange 
+   if (verbose == 1){
+    cat("startYearSim",startYearSim,"\n",file= "callpre_log.txt", append=TRUE)
+    }
+
+    if (verbose==1){
+    cat("phase 2",startYearSim,"\n",file= "callpre_log.txt", append=TRUE)
+    }
+  yearsSim <- startYearSim+1:nYears_sim  
+  if (verbose==1){
+    cat("yearsSim",yearsSim,"\n",file= "callpre_log.txt", append=TRUE)
+    }
+
+  day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
+  
     DataBaseFormat_climateChange <- FALSE
     climateChangeData <- extractWeatherPrebas(coords = siteCoords,
                                               startYear = startYear_climateChange,
@@ -207,31 +266,31 @@ if (intChangeCurrentclimate==1){
                                               dat = climateChange_dataBase,
                                               sourceData="climChange")
     
-    # current climate data for dGrowthPrebas function
-    PAR_siteX <- PAR_sample
-    Precip_siteX <- Precip_sample
-    TAir_siteX <- TAir_sample
-    VPD_siteX <- VPD_sample
-    CO2_siteX <- CO2_sample
-  }
+        if (verbose == 1){
+            if (exists("climateChangeData") ){
+          cat("climateChangeData exists \n",  file= "callpre_log.txt", append=TRUE)            
+            } else
+            {
+          cat("climateChangeData does not exist! \n",  file= "callpre_log.txt", append=TRUE)            
+            }
+        }
 
-  # extract climate from climate change database
-  # startYear_of_simulation MUST be equal to or greater than the start year of the future climate change database (it is currently 2022)
-  # StartYearSim must be always a positive number.
-  
-  nYears_sim <- 5 # nYears_sim can be always 5 for dGrowthPrebas(). MottiWB can select the required number of years between 1 and 5 to simulate in Motti.
-  startYearSim <- startYear_of_simulation - startYear_climateChange 
     if (verbose==1){
-    ###cat("startYearSim",startYearSim,"\n")
+    cat("phase 2: getting climate change variables",startYearSim,"\n",file= "callpre_log.txt", append=TRUE)
     }
-  yearsSim <- startYearSim+1:nYears_sim  
-  if (verbose==1){
-    ###cat("yearsSim",yearsSim,"\n")
-  }
-  day_climateChange <- rep((yearsSim-1)*365,each=365) + 1:365
-  
   PAR_clChange <- climateChangeData$PAR[,day_climateChange]
+    if (verbose==1){
+    cat("phase 3:  after PAR_clChange\n",file= "callpre_log.txt", append=TRUE)
+    }
   Precip_clChange <- climateChangeData$Precip[,day_climateChange]
+    if (verbose==1){
+    cat("phase 3:  after Precip_clChange\n",file= "callpre_log.txt", append=TRUE)
+    }
+        # extract climateChangeData from climateChange_dataBase
+  if (verbose == 1){
+    cat("extract climateChangeData, call extractWeatherPrebas\n",  file= "callpre_log.txt", append=TRUE)
+    }
+
   TAir_clChange <- climateChangeData$TAir[,day_climateChange]
   VPD_clChange <- climateChangeData$VPD[,day_climateChange]
   CO2_clChange <- climateChangeData$CO2[,day_climateChange]
@@ -244,9 +303,36 @@ if (intChangeCurrentclimate==1){
   newCO2_siteX <- CO2_clChange
   
   if (verbose==1){
-    ###cat("dGrowthExample_siteX <- dGrowthPrebas\n",  file= "callpre_log.txt", append=TRUE)
+    cat("dGrowthExample_siteX <- dGrowthPrebas\n",  file= "callpre_log.txt", append=TRUE)
     cat(paste("Site coordinates","Is matrix",is.matrix(siteCoords),"Dimensions",dim(siteCoords),"Coordinates",siteCoords,"\n"),  file= "callpre_log.txt", append=TRUE)
-    ###cat("calling function dGrowthExample_siteX\n",  file= "callpre_log.txt", append=TRUE)
+
+cat("in prebascoefficients.r: PAR_siteX\n",  file="callpre_log.txt", append=TRUE)
+cat(paste(PAR_siteX),  file="callpre_log.txt", append=TRUE)
+cat("\n",  file="callpre_log.txt", append=TRUE)
+cat("in prebascoefficients.r: \n",  file="callpre_log.txt", append=TRUE)
+
+#cat("in prebascoefficients.r: VPD_siteX\n",  file="callpre_log.txt", append=TRUE)
+#cat(paste(VPD_siteX),  file="callpre_log.txt", append=TRUE)
+#cat("\n",  file="callpre_log.txt", append=TRUE)
+#cat("in prebascoefficients.r: \n",  file="callpre_log.txt", append=TRUE)
+
+cat("in prebascoefficients.r: CO2_siteX\n",  file="callpre_log.txt", append=TRUE)
+cat(paste(CO2_siteX),  file="callpre_log.txt", append=TRUE)
+cat("\n",  file="callpre_log.txt", append=TRUE)
+cat("in prebascoefficients.r: \n",  file="callpre_log.txt", append=TRUE)
+
+cat("in prebascoefficients.r: newCO2_siteX\n",  file="callpre_log.txt", append=TRUE)
+cat(paste(newCO2_siteX),  file="callpre_log.txt", append=TRUE)
+cat("\n",  file="callpre_log.txt", append=TRUE)
+cat("in prebascoefficients.r: \n",  file="callpre_log.txt", append=TRUE)
+
+#cat("in prebascoefficients.r: currPrecip\n",  file="callpre_log.txt", append=TRUE)
+#cat(paste(Precip_siteX),  file="callpre_log.txt", append=TRUE)
+#cat("\n",  file="callpre_log.txt", append=TRUE)
+#cat("in prebascoefficients.r: \n",  file="callpre_log.txt", append=TRUE)
+
+
+    cat("prebascoefficients calling function dGrowthExample_siteX\n",  file= "callpre_log.txt", append=TRUE)
   }  
   dGrowthExample_siteX <- dGrowthPrebas(nYears_sim,siteInfo_siteX,initVar_siteX,
                                         currPAR=PAR_siteX,newPAR=newPAR_siteX,
