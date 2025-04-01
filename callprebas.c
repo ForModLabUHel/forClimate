@@ -191,6 +191,7 @@ void initialize_R(int verbose)
 
 }
 
+// callprebas is a layer connecting the main (Object Pascal) program to a R-application.
 void callprebas(int iround,double site_info[10], double init_var[7000], int cols, int rows, double site_coord[2], int start_5_year, double dH_result[1000], double dD_result[1000], double dV_result[1000], int verbose)
 
 {
@@ -430,7 +431,7 @@ return;
 
 }
 
-
+// Test procedure for C main program 
 void callprebasForMain(double site_info[], int length, double* init_var, long rows, long cols,
 		double site_coord[], int start_5_year,
 		double* dH_result, double* dD_result, double* dV_result, int verbose)
@@ -590,6 +591,7 @@ int main()
 
 #endif
 
+// Test procedure "callprebase" 
 void callprebase(int iround)
 {
   //Verbose argument for the test program passed on to various functions including callprebas
